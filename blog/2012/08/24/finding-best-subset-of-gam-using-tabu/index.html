@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Finding the Best Subset of a GAM using Tabu Search and Visualizing It in R - Andrew Landgraf's Blog</title>
+  <meta name="author" content="Andrew Landgraf">
+
+  
+  <meta name="description" content="Finding the best subset of variables for a regression is a very common task in statistics and machine learning. There are statistical methods based &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andland.github.io/blog/2012/08/24/finding-best-subset-of-gam-using-tabu">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Andrew Landgraf's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Andrew Landgraf's Blog</a></h1>
+  
+    <h2>Statistically Significant</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andland.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Finding the Best Subset of a GAM Using Tabu Search and Visualizing It in R</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-24T00:00:00-04:00" pubdate data-updated="true">Aug 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+Finding the best subset of variables for a regression is a very common task in statistics and machine learning. There are statistical methods based on asymptotic normal theory that can help you decide whether to add or remove a variable at a time. The problem with this is that it is a greedy approach and you can easily get stuck in a local mode. Another approach is to look at all possible subsets of the variables and see which one maximizes an objective function (accuracy on a test set, for example).<br /><br />Heuristics are required if the number of variables, <i>p</i>, gets large (&gt;40) because the number of possible subsets is equal to 2^<i>p</i>, excluding interactions. One method that works well is called <a href="http://en.wikipedia.org/wiki/Tabu_search">tabu search</a> (TS). It is a more general optimization method, but in the case of finding the best subset, it is similar to stepwise methods. At any point, it will try to improve the objective function the most by adding or removing one variable. One difference is that TS will not add or remove variables that have been recently added or removed. This avoids the optimization from getting stuck at a local maximum. There are more details to the algorithm that you can read up on if you would like.<br /><br />There is a <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">tabuSearch<span style="font-family: Arial,Helvetica,sans-serif;"> </span></span>package in <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">R</span> that implements this algorithm. I wanted to find a best subset regression using generalized additive models (GAMs) of the package <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">mgcv</span>. An issue arose, because you need to specify which terms are smooth and which are not in a formula to use <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">mgcv</span>. The general form of the formula looks like:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">gam(y ~ s(x1) + s(x2) + x3, data=train)</span><br />where <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">x1</span> and <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">x2</span> are smooth terms and <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">x3</span> is treated like it is in a linear model.<br /><br />My data set has a combination of continuous variables, which I want to treat as smooth, and categorical variables, which I want to treat as factors. For each variable in the subset, I need to identify whether it is a factor or not, and then creating a string of the variable with or without <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">s()</span>. <br /><br />For example, <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">th</span> is a vector of 0&#8217;s and 1&#8217;s which indicate whether each variable (column) is in the regression. I used the housing data set from <a href="http://archive.ics.uci.edu/ml/datasets/Housing">UCI ML repository</a>. With 13 explanatory variables, there are 8192 possible main effects models. I am predicting MEDV, so I start the formula string with &#8220;MEDV ~&#8221;. Then I loop through each element of <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">th</span>. If it is 1 then I want to add it to the formula. I check if it is a factor and if so I just add the name of the variable plus a &#8220;+&#8221;. If it is continuous, I add the column name with &#8221;<span style="font-family: &quot;Courier New&quot;,Courier,monospace;">s()</span>&#8221; around it. Finally I convert the string to a formula using <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">formula()</span>. I can plug in this formula into the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">gam</span> function. <br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;">num.cols=<a href="http://inside-r.org/r-doc/base/sum"><span style="color: #003399; font-weight: bold;">sum</span></a><span style="color: #009900;">(</span>th<span style="color: #009900;">)</span><br />fo.str=<span style="color: blue;">"MEDV ~"</span><br />cum.cols=<span style="color: #cc66cc;">0</span><br /><span style="color: black; font-weight: bold;">for</span> <span style="color: #009900;">(</span>i <span style="color: black; font-weight: bold;">in</span> <span style="color: #cc66cc;">1</span>:<a href="http://inside-r.org/r-doc/base/length"><span style="color: #003399; font-weight: bold;">length</span></a><span style="color: #009900;">(</span>th<span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />  <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span>th<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span>&gt;<span style="color: #cc66cc;">0</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />    <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/is.factor"><span style="color: #003399; font-weight: bold;">is.factor</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">[</span><span style="color: #339933;">,</span>i<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />      fo.str=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span><span style="color: #009900;">[</span>i<span style="color: #009900;">]</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">" "</span><span style="color: #009900;">)</span><br />    <span style="color: #009900;">}</span> <span style="color: black; font-weight: bold;">else</span> <span style="color: #009900;">{</span><br />      fo.str=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #339933;">,</span><span style="color: blue;">" s("</span><span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span><span style="color: #009900;">[</span>i<span style="color: #009900;">]</span><span style="color: #339933;">,</span><span style="color: blue;">")"</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">""</span><span style="color: #009900;">)</span><br />    <span style="color: #009900;">}</span><br />    cum.cols=cum.cols+<span style="color: #cc66cc;">1</span><br />    <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span>cum.cols&lt;num.cols<span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />      fo.str=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #339933;">,</span><span style="color: blue;">"+"</span><span style="color: #009900;">)</span><br />    <span style="color: #009900;">}</span><br />  <span style="color: #009900;">}</span><br /><span style="color: #009900;">}</span><br />fo=<a href="http://inside-r.org/r-doc/stats/as.formula"><span style="color: #003399; font-weight: bold;">as.formula</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><br />For evaluating the subsets, I split the data into training, validation, and testing. I trained the subset on the training data set and measured the R-squared on the prediction of the validation set. The full code can be found below.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/mgcv"><span style="color: #003399; font-weight: bold;">mgcv</span></a><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span>tabuSearch<span style="color: #009900;">)</span><br /><span style="color: #666666; font-style: italic;"># http://archive.ics.uci.edu/ml/datasets/Housing</span><br /><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a>=<a href="http://inside-r.org/r-doc/utils/read.table"><span style="color: #003399; font-weight: bold;">read.table</span></a><span style="color: #009900;">(</span><span style="color: blue;">"http://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data"</span><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">)</span>=<a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span><span style="color: blue;">"CRIM"</span><span style="color: #339933;">,</span> <span style="color: blue;">"ZN"</span><span style="color: #339933;">,</span> <span style="color: blue;">"INDUS"</span><span style="color: #339933;">,</span> <span style="color: blue;">"CHAS"</span><span style="color: #339933;">,</span> <span style="color: blue;">"NOX"</span><span style="color: #339933;">,</span> <span style="color: blue;">"RM"</span><span style="color: #339933;">,</span> <span style="color: blue;">"AGE"</span><span style="color: #339933;">,</span> <span style="color: blue;">"DIS"</span><span style="color: #339933;">,</span> <span style="color: blue;">"RAD"</span><span style="color: #339933;">,</span> <span style="color: blue;">"TAX"</span><span style="color: #339933;">,</span> <span style="color: blue;">"PTRATIO"</span><span style="color: #339933;">,</span> <span style="color: blue;">"B"</span><span style="color: #339933;">,</span> <span style="color: blue;">"LSTAT"</span><span style="color: #339933;">,</span> <span style="color: blue;">"MEDV"</span><span style="color: #009900;">)</span><br />&nbsp;<br /><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a>$CHAS=<a href="http://inside-r.org/r-doc/base/as.factor"><span style="color: #003399; font-weight: bold;">as.factor</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a>$CHAS<span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a>$RAD=<a href="http://inside-r.org/r-doc/base/as.factor"><span style="color: #003399; font-weight: bold;">as.factor</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a>$RAD<span style="color: #009900;">)</span> <span style="color: #666666; font-style: italic;"># Changed to factor bc only 9 unique values</span><br /><a href="http://inside-r.org/r-doc/base/summary"><span style="color: #003399; font-weight: bold;">summary</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">)</span><br />&nbsp;<br /><a href="http://inside-r.org/r-doc/base/set.seed"><span style="color: #003399; font-weight: bold;">set.seed</span></a><span style="color: #009900;">(</span><span style="color: #cc66cc;">20120823</span><span style="color: #009900;">)</span><br />cv=<a href="http://inside-r.org/r-doc/base/sample"><span style="color: #003399; font-weight: bold;">sample</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/nrow"><span style="color: #003399; font-weight: bold;">nrow</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />train=<a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">[</span>cv<span style="color: #009900;">[</span><span style="color: #cc66cc;">1</span>:<span style="color: #cc66cc;">300</span><span style="color: #009900;">]</span><span style="color: #339933;">,</span><span style="color: #009900;">]</span><br />valid=<a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">[</span>cv<span style="color: #009900;">[</span><span style="color: #cc66cc;">301</span>:<span style="color: #cc66cc;">400</span><span style="color: #009900;">]</span><span style="color: #339933;">,</span><span style="color: #009900;">]</span><br />test=<a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">[</span>cv<span style="color: #009900;">[</span><span style="color: #cc66cc;">401</span>:<a href="http://inside-r.org/r-doc/base/nrow"><span style="color: #003399; font-weight: bold;">nrow</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/MASS/housing"><span style="color: #003399; font-weight: bold;">housing</span></a><span style="color: #009900;">)</span><span style="color: #009900;">]</span><span style="color: #339933;">,</span><span style="color: #009900;">]</span><br />&nbsp;<br />ssto=<a href="http://inside-r.org/r-doc/base/sum"><span style="color: #003399; font-weight: bold;">sum</span></a><span style="color: #009900;">(</span><span style="color: #009900;">(</span>valid$MEDV-<a href="http://inside-r.org/r-doc/base/mean"><span style="color: #003399; font-weight: bold;">mean</span></a><span style="color: #009900;">(</span>valid$MEDV<span style="color: #009900;">)</span><span style="color: #009900;">)</span>^<span style="color: #cc66cc;">2</span><span style="color: #009900;">)</span><br />evaluate &lt;- <a href="http://inside-r.org/r-doc/base/function"><span style="color: #003399; font-weight: bold;">function</span></a><span style="color: #009900;">(</span>th<span style="color: #009900;">)</span><span style="color: #009900;">{</span> <br />  num.cols=<a href="http://inside-r.org/r-doc/base/sum"><span style="color: #003399; font-weight: bold;">sum</span></a><span style="color: #009900;">(</span>th<span style="color: #009900;">)</span><br />  <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span>num.cols == <span style="color: #cc66cc;">0</span><span style="color: #009900;">)</span> <a href="http://inside-r.org/r-doc/base/return"><span style="color: #003399; font-weight: bold;">return</span></a><span style="color: #009900;">(</span><span style="color: #cc66cc;">0</span><span style="color: #009900;">)</span><br />  fo.str=<span style="color: blue;">"MEDV ~"</span><br />  cum.cols=<span style="color: #cc66cc;">0</span><br />  <span style="color: black; font-weight: bold;">for</span> <span style="color: #009900;">(</span>i <span style="color: black; font-weight: bold;">in</span> <span style="color: #cc66cc;">1</span>:<a href="http://inside-r.org/r-doc/base/length"><span style="color: #003399; font-weight: bold;">length</span></a><span style="color: #009900;">(</span>th<span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />    <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span>th<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span>&gt;<span style="color: #cc66cc;">0</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />      <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/is.factor"><span style="color: #003399; font-weight: bold;">is.factor</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">[</span><span style="color: #339933;">,</span>i<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />        fo.str=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span><span style="color: #009900;">[</span>i<span style="color: #009900;">]</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">" "</span><span style="color: #009900;">)</span><br />      <span style="color: #009900;">}</span> <span style="color: black; font-weight: bold;">else</span> <span style="color: #009900;">{</span><br />        fo.str=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #339933;">,</span><span style="color: blue;">" s("</span><span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span><span style="color: #009900;">[</span>i<span style="color: #009900;">]</span><span style="color: #339933;">,</span><span style="color: blue;">")"</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">""</span><span style="color: #009900;">)</span><br />      <span style="color: #009900;">}</span><br />      cum.cols=cum.cols+<span style="color: #cc66cc;">1</span><br />      <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span>cum.cols&lt;num.cols<span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />        fo.str=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #339933;">,</span><span style="color: blue;">"+"</span><span style="color: #009900;">)</span><br />      <span style="color: #009900;">}</span><br />    <span style="color: #009900;">}</span><br />  <span style="color: #009900;">}</span><br /><span style="color: #666666; font-style: italic;">#   colnames(train)[c(th,0)==1]</span><br />  fo=<a href="http://inside-r.org/r-doc/stats/as.formula"><span style="color: #003399; font-weight: bold;">as.formula</span></a><span style="color: #009900;">(</span>fo.str<span style="color: #009900;">)</span><br />  gam1 &lt;- <a href="http://inside-r.org/r-doc/mgcv/gam"><span style="color: #003399; font-weight: bold;">gam</span></a><span style="color: #009900;">(</span>fo<span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/utils/data"><span style="color: #003399; font-weight: bold;">data</span></a>=train<span style="color: #009900;">)</span><br />  pred1 &lt;- <a href="http://inside-r.org/r-doc/stats/predict"><span style="color: #003399; font-weight: bold;">predict</span></a><span style="color: #009900;">(</span>gam1<span style="color: #339933;">,</span>valid<span style="color: #339933;">,</span>se=<span style="color: black; font-weight: bold;">FALSE</span><span style="color: #009900;">)</span><br />  sse &lt;- <a href="http://inside-r.org/r-doc/base/sum"><span style="color: #003399; font-weight: bold;">sum</span></a><span style="color: #009900;">(</span><span style="color: #009900;">(</span>pred1-valid$MEDV<span style="color: #009900;">)</span>^<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>na.rm=<span style="color: black; font-weight: bold;">TRUE</span><span style="color: #009900;">)</span><br />  <a href="http://inside-r.org/r-doc/base/return"><span style="color: #003399; font-weight: bold;">return</span></a><span style="color: #009900;">(</span><span style="color: #cc66cc;">1</span>-sse/ssto<span style="color: #009900;">)</span><br /><span style="color: #009900;">}</span><br />&nbsp;<br />res &lt;- tabuSearch<span style="color: #009900;">(</span>size = <a href="http://inside-r.org/r-doc/base/ncol"><span style="color: #003399; font-weight: bold;">ncol</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span>-<span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span> iters = <span style="color: #cc66cc;">20</span><span style="color: #339933;">,</span> objFunc = evaluate<span style="color: #339933;">,</span> listSize = <span style="color: #cc66cc;">5</span><span style="color: #339933;">,</span><br />                  config = <a href="http://inside-r.org/r-doc/stats/rbinom"><span style="color: #003399; font-weight: bold;">rbinom</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/ncol"><span style="color: #003399; font-weight: bold;">ncol</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span>-<span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span><span style="color: #cc66cc;">.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> nRestarts = <span style="color: #cc66cc;">4</span><span style="color: #339933;">,</span>verbose=<span style="color: black; font-weight: bold;">TRUE</span><span style="color: #009900;">)</span></pre></div></div><br />It was able to find a subset with a 0.8678 R-squared on the validation set (and 0.8349 on the test set). The formula found was:<br /><span class="Apple-style-span" style="-webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: #e1e2e5; border-collapse: separate; color: black; font-family: 'Lucida Console'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: 15px; orphans: 2; text-align: -webkit-left; text-indent: 0px; text-transform: none; white-space: pre-wrap; widows: 2; word-spacing: 0px;"></span><br /><pre class="GDXA2EVBEAB" style="border-bottom-style: none; border-color: initial; border-left-style: none; border-right-style: none; border-top-style: none; border-width: initial; font-family: 'Lucida Console'; font-size: 10pt !important; line-height: 1.2; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; outline-color: initial; outline-style: none; outline-width: initial; white-space: pre-wrap !important;" tabindex="0">MEDV ~ s(CRIM) + s(INDUS) + s(NOX) + s(RM) + s(DIS) + RAD + s(TAX) + s(PTRATIO) + s(LSTAT).</pre><br /><br /><h3>Visualizing the results</h3>The tabu search gave me a subset which it thinks is best. But I would like to get a better handle on how it derived it, or if there were lots of models with similar quality, but different variables. Or if there were variables that were always in the top performing models. I created a heat plot that showed whether or not a variable was in the regression or not at each iteration.<br /><br />Below you can see which variables were included in each iteration. There are a few variables that seem to be more important because they are included in almost every iteration, like LSAT, PTRATIO,and RM. But this doesn&#8217;t tell me which iterations were the best.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-h7QkQGRQv7c/UDZm5Lfp40I/AAAAAAAAHKY/EDABwfjZ5R8/s1600/tabu1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-h7QkQGRQv7c/UDZm5Lfp40I/AAAAAAAAHKY/EDABwfjZ5R8/s1600/tabu1.png" /></a></div><br />In the chart below, I shaded each region by the ranking of model in that iteration. The higher ranking mean it did better. It is not easy, but we can glean a little more information from this chart. The models with RAD and DIS do significantly better than the models without them, even though they are not in every iteration. Further, the models with AGE seem a bit worse than those without it.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-TJKQO3ItVkQ/UDZm5o2REyI/AAAAAAAAHKg/UqqyqZ6EELs/s1600/tabu2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-TJKQO3ItVkQ/UDZm5o2REyI/AAAAAAAAHKg/UqqyqZ6EELs/s1600/tabu2.png" /></a></div><br />The R code to make these plots is below.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/stats/reshape"><span style="color: #003399; font-weight: bold;">reshape</span></a><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/packages/cran/ggplot2">ggplot2</a><span style="color: #009900;">)</span><span style="color: #339933;">;</span> theme_set<span style="color: #009900;">(</span>theme_bw<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />&nbsp;<br />tabu.df=<a href="http://inside-r.org/r-doc/base/data.frame"><span style="color: #003399; font-weight: bold;">data.frame</span></a><span style="color: #009900;">(</span>res$configKeep<span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span>tabu.df<span style="color: #009900;">)</span>=<a href="http://inside-r.org/r-doc/base/colnames"><span style="color: #003399; font-weight: bold;">colnames</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span><span style="color: #009900;">[</span><span style="color: #cc66cc;">1</span>:<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/ncol"><span style="color: #003399; font-weight: bold;">ncol</span></a><span style="color: #009900;">(</span>train<span style="color: #009900;">)</span>-<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span><span style="color: #009900;">]</span><br />tabu.df$Iteration=<span style="color: #cc66cc;">1</span>:<a href="http://inside-r.org/r-doc/base/nrow"><span style="color: #003399; font-weight: bold;">nrow</span></a><span style="color: #009900;">(</span>tabu.df<span style="color: #009900;">)</span><br />tabu.df$RSquared=res$eUtilityKeep<br />tabu.df$Rank=<a href="http://inside-r.org/r-doc/base/rank"><span style="color: #003399; font-weight: bold;">rank</span></a><span style="color: #009900;">(</span>tabu.df$RSquared<span style="color: #009900;">)</span><br />tabu.melt=melt<span style="color: #009900;">(</span>tabu.df<span style="color: #339933;">,</span>id=<a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span><span style="color: blue;">"Iteration"</span><span style="color: #339933;">,</span><span style="color: blue;">"RSquared"</span><span style="color: #339933;">,</span><span style="color: blue;">"Rank"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />tabu.melt$RSquared=<a href="http://inside-r.org/r-doc/base/ifelse"><span style="color: #003399; font-weight: bold;">ifelse</span></a><span style="color: #009900;">(</span>tabu.melt$value==<span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span>tabu.melt$RSquared<span style="color: #339933;">,</span><span style="color: #cc66cc;">0</span><span style="color: #009900;">)</span><br />tabu.melt$Rank=<a href="http://inside-r.org/r-doc/base/ifelse"><span style="color: #003399; font-weight: bold;">ifelse</span></a><span style="color: #009900;">(</span>tabu.melt$value==<span style="color: #cc66cc;">1</span><span style="color: #339933;">,</span>tabu.melt$Rank<span style="color: #339933;">,</span><span style="color: #cc66cc;">0</span><span style="color: #009900;">)</span><br /><span style="color: #009900;">(</span>pHeat01 &lt;- <a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>tabu.melt<span style="color: #339933;">,</span> aes<span style="color: #009900;">(</span>Iteration<span style="color: #339933;">,</span>variable<span style="color: #009900;">)</span><span style="color: #009900;">)</span> + geom_tile<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>fill = value<span style="color: #009900;">)</span><span style="color: #009900;">)</span> +<br />  scale_fill_gradient<span style="color: #009900;">(</span>low = <span style="color: blue;">"white"</span><span style="color: #339933;">,</span> high = <span style="color: blue;">"steelblue"</span><span style="color: #339933;">,</span>guide=<span style="color: black; font-weight: bold;">FALSE</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br /><span style="color: #009900;">(</span>pHeatRank &lt;- <a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>tabu.melt<span style="color: #339933;">,</span> aes<span style="color: #009900;">(</span>Iteration<span style="color: #339933;">,</span>variable<span style="color: #009900;">)</span><span style="color: #009900;">)</span> + geom_tile<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>fill = Rank<span style="color: #009900;">)</span><span style="color: #009900;">)</span> +<br />  scale_fill_gradient<span style="color: #009900;">(</span>low = <span style="color: blue;">"white"</span><span style="color: #339933;">,</span> high = <span style="color: blue;">"steelblue"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>anonymous</div>
+<div class='content'>
+Good post!<br /><br />Nice approach with the heat map to go beyond just accepting the optimal solution. I agree that variables seem to be important because they are present in every iteration, but this could perhaps also mean that the tabu search was trapped in a subregion - perhaps the search move operator which only adds or deletes a single variable is not powerful enough to escape this region. Some possible remedies for exploring a larger part of the search landscape (if indeed this is a problem) might be:<br /><br />- Multiple tabu searches, each with a randomized set of initial variables in the model<br />- Other move operators. How about finding correlation clusters among the variables, then let a move add or delete the entire cluster? Both move operators can be used in the search, using some metaheuristics to guide them.<br />- Use metaheuristic techniques like &quot;ruin and recreate&quot; during the tabu search; occasionally, &quot;ruin&quot; the model by removing a random subset of the variables.<br /><br />One more thought. With the tabu search already in place for regression, it wouldn´t be too hard to explore some nonlinear models. You could create temp variables that are products of the original variables, then let the tabu search add or delete these as well. Do you think such an approach would have any merit in this case?<br /></div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew</div>
+<div class='content'>
+@Anonymous I would also like to see how this does compared to the more standard methods. It will take a little effort to implement in this example, though, because these variable selection techniques are not implemented for GAMs (as far as I know). http://www.statmethods.net/stats/regression.html has a nice summary of different methods available for linear models. You are right that the whole point of using a TS is that it will be better than the other methods, so it would be good to have validation. Maybe I could do a comparison for linear models&#8230;<br /><br />I described the meat of the TS algorithm in the post. If you want more info, I found this reference informative http://www.math.ntua.gr/~fouskakis/Publications/4.pdf </div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew</div>
+<div class='content'>
+@anspiess That is probably a good idea. But one reason to use Tabu Search is that it will speed up the time to find the best model. Running it many times will defeat this purpose. Running time for the parameters used was long already because GAMs take longer to train than LMs (~ 9 mins). In terms of better understanding TS, your idea would be useful. For what its worth, I ran it again with a different CV split and the chosen model was the same except it added s(ZN) and removed s(PTRATIO).</div>
+</div>
+<div class='comment'>
+<div class='author'>anspiess</div>
+<div class='content'>
+Might it be feasible to sample training and test set a few hundred times to see how stable variable selection is?</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+I wonder how this method is better than using F test, t test or information criterion? did you compare tabusearch to other methods (for linear models)? maybe it its faster than standard methods? I would be grateful for answers:)  if it its possible maybe you can describe this algorithm more closely.</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Andrew Landgraf</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-24T00:00:00-04:00" pubdate data-updated="true">Aug 24<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gam/'>GAM</a>, <a class='category' href='/blog/categories/r/'>R</a>, <a class='category' href='/blog/categories/visualization/'>Visualization</a>, <a class='category' href='/blog/categories/ggplot/'>ggplot</a>, <a class='category' href='/blog/categories/optimization/'>optimization</a>, <a class='category' href='/blog/categories/tabu-search/'>tabu search</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://andland.github.io/blog/2012/08/24/finding-best-subset-of-gam-using-tabu/" data-via="" data-counturl="http://andland.github.io/blog/2012/08/24/finding-best-subset-of-gam-using-tabu/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/08/10/a-matrix-factorization-model-for/" title="Previous Post: A Matrix Factorization Model for Hitter/Pitcher Matchups">&laquo; A Matrix Factorization Model for Hitter/Pitcher Matchups</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/05/quick-post-about-getting-and-plotting/" title="Next Post: Quick Post About Getting and Plotting Polls in R">Quick Post About Getting and Plotting Polls in R &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/copying-data-from-excel-to-r-and-back_24/">Copying Data From Excel to R and Back</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/23/text-decryption-using-mcmc/">Text Decryption Using MCMC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/14/restricted-boltzmann-machines-in-r/">Restricted Boltzmann Machines in R</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew Landgraf -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

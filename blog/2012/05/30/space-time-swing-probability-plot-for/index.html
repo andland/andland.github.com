@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Space Time Swing Probability Plot for Ichiro - Andrew Landgraf's Blog</title>
+  <meta name="author" content="Andrew Landgraf">
+
+  
+  <meta name="description" content="I was having some fun with PITCHf/x data and generalize additive models. PITCHf/x keeps track of the trajectory, path, location of every pitch in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andland.github.io/blog/2012/05/30/space-time-swing-probability-plot-for">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Andrew Landgraf's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Andrew Landgraf's Blog</a></h1>
+  
+    <h2>Statistically Significant</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andland.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Space Time Swing Probability Plot for Ichiro</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-30T00:00:00-04:00" pubdate data-updated="true">May 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+I was having some fun with PITCHf/x data and generalize additive models. <a href="http://en.wikipedia.org/wiki/PITCHf/x">PITCHf/x</a> keeps track of the trajectory, path, location of every pitch in the MLB. It is pretty accurate and opens up baseball to more analyses than ever before. <a href="http://en.wikipedia.org/wiki/Generalized_additive_model">Generalized additive models</a> (GAMs) are statistical models that put minimal assumptions on the type of model you are fitting. Traditional statistical models are linear, in that they assume that the response variable you are modelling is a linear function of the explanatory variables. GAMs just assumes that the relationship is &#8220;smooth.&#8221; <a href="http://www.stat.ubc.ca/%7Ematias/rgam/binomial.png">Here </a>is a good example of a relationship that may have traditionally been modeled as linear, but it is a much better assumption that the relationship is smooth.<br /><br />I fit a GAM to PITCHf/x data. The response is whether or not Ichiro swung. The explanatory variables are pitch location on the x, pitch location on the z, and the day of the year. Obviously, we expect the probability of swinging to change as the pitch is closer or further away from the center of the strike zone. Additionally, I was interested in seeing his swinging propensity changed as the year went on.<br /><br /><div class="separator" style="clear: both; text-align: center;"><object class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://i.ytimg.com/vi/44X9VXXjYPI/0.jpg" height="266" width="320"><param name="movie" value="http://www.youtube.com/v/44X9VXXjYPI?version=3&f=user_uploads&c=google-webdrive-0&app=youtube_gdata" />  <param name="bgcolor" value="#FFFFFF" />  <embed width="320" height="266"  src="http://www.youtube.com/v/44X9VXXjYPI?version=3&f=user_uploads&c=google-webdrive-0&app=youtube_gdata" type="application/x-shockwave-flash"></embed></object></div><br />You can see that the probability of swinging is smooth in both location and time. Also, you can see (ever so slightly) that the probability of swinging increased as the year went on. Looking at <a href="http://www.baseball-reference.com/players/split.cgi?id=suzukic01&amp;year=2010&amp;t=b#half">the splits</a>, you can see that his walk percentage was 28/395 (7.1%) in the first half and 17/337 (5.0%) in the second half. This is in agreement with the swing probability increasing,<br /><br />I used the <a href="http://people.bath.ac.uk/sw283/mgcv/tampere/mgcv.pdf">mgcv </a>package in R to run the GAM. I created an image for every day and stitched them together into a movie with <a href="http://ffmpeg.org/">ffmpeg</a>. The R code is <a href="https://docs.google.com/open?id=0B21DLJKq18K9ejNUX0RXQnlJam8">here</a>.</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Andrew Landgraf</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-30T00:00:00-04:00" pubdate data-updated="true">May 30<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gam/'>GAM</a>, <a class='category' href='/blog/categories/r/'>R</a>, <a class='category' href='/blog/categories/visualization/'>Visualization</a>, <a class='category' href='/blog/categories/baseball/'>baseball</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://andland.github.io/blog/2012/05/30/space-time-swing-probability-plot-for/" data-via="" data-counturl="http://andland.github.io/blog/2012/05/30/space-time-swing-probability-plot-for/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/05/25/sending-text-in-r/" title="Previous Post: Sending a Text in R">&laquo; Sending a Text in R</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/06/15/rounding-in-r/" title="Next Post: Rounding in R">Rounding in R &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/copying-data-from-excel-to-r-and-back_24/">Copying Data From Excel to R and Back</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/23/text-decryption-using-mcmc/">Text Decryption Using MCMC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/14/restricted-boltzmann-machines-in-r/">Restricted Boltzmann Machines in R</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew Landgraf -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

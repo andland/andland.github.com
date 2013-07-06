@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: MATLAB | Andrew Landgraf's Blog]]></title>
+  <link href="http://andland.github.io/blog/categories/matlab/atom.xml" rel="self"/>
+  <link href="http://andland.github.io/"/>
+  <updated>2013-07-06T10:33:05-04:00</updated>
+  <id>http://andland.github.io/</id>
+  <author>
+    <name><![CDATA[Andrew Landgraf]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Magical Sparse Matrix]]></title>
+    <link href="http://andland.github.io/blog/2012/07/20/the-magical-sparse-matrix/"/>
+    <updated>2012-07-20T00:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2012/07/20/the-magical-sparse-matrix</id>
+    <content type="html"><![CDATA[<div class='post'>
+I have been toying around with Kaggle's <a href="http://www.kaggle.com/c/msdchallenge/">Million Song Dataset Challenge</a> recently because I have some interest in <a href="http://en.wikipedia.org/wiki/Collaborative_filtering">collaborative filtering</a> (using <a href="http://www2.research.att.com/%7Evolinsky/papers/ieeecomputer.pdf" target="_blank">matrix factorization</a>). I haven't made much progress with the competition (all 3 of my submissions are below the baseline), but I have learned a few things about dealing with large amounts of data.<br /><br />The goal of the competition is to predict the 500 most likely songs each of 110,000 users will listen to next. As the name implies, there are 1,000,000 songs in the full dataset. To simplify things, I decided to concentrate on the most popular songs. I created a 110,000 x 2,000 matrix of 0's and 1's. Row i, column j is 1 if user i had listened to song j (the jth most popular song) and 0 if user i had not. As you can imagine, there are a lot more 0's than 1's in this matrix. The first few rows and columns look like this:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 ...</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">...</span></div><br />This matrix was about 430 Mb and took a while to load into MATLAB. So I wisened up and created a <a href="http://en.wikipedia.org/wiki/Sparse_matrix">sparse matrix</a>. A sparse matrix realizes that most of the values are 0's and does not record them. Instead, it lists the locations of the non-zero elements and what the value is. For example, this is what the first few rows of the sparse matrix looks like:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">1 3 1<br />1 7 1<br />1 10 1<br />1 13 1<br />1 82 1<br />1 717 1<br />2 1111 1<br />2 2972 1<br />2 3516 1</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">...</span></div><br />The first column is the row number, the second is the column number, and the third is the value at that location. In this application, all the values are 1. For this matrix, I used the 50,000 most popular songs (instead of just 2,000), and the size was much smaller -- just 17 Mb.<br /><br />It is easy to load the sparse matrix into MATLAB with the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">spconvert</span> command, and many of MATLAB's functions (like singular value decomposition) are optimized for sparse matrices.</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rounding in R]]></title>
+    <link href="http://andland.github.io/blog/2012/06/15/rounding-in-r/"/>
+    <updated>2012-06-15T00:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2012/06/15/rounding-in-r</id>
+    <content type="html"><![CDATA[<div class='post'>
+Forgive me if you are already aware of this, but I found it quite alarming. I know that most code is interpreted by the computer in binary and we input in decimal, so problems can arise in conversion and with <a href="http://en.wikipedia.org/wiki/Floating_point">floating point</a>. But the example I have below is so simple that it really surprised me.<br /><br />I was converting a function from R into MATLAB so that a colleague could use it. I tested it out on the same data and got slightly different results. Digging into the problem, the difference was due to the fact that R was rounding 4.5 to 4 and MATLAB was rounding it to 5. I thought the "4.5" must have really been "4.49999...". But that was not so.<br /><br />For example, this is the result of the <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html">round</a> function for a few numbers.<br /><pre class="brush: r">&gt; round(0.5,0)<br />[1] 0<br />&gt; round(1.5,0)<br />[1] 2<br />&gt; round(2.5,0)<br />[1] 2<br />&gt; round(3.5,0)<br />[1] 4<br />&gt; round(4.5,0)<br />[1] 4<br />&gt; round(5.5,0)<br />[1] 6<br />&gt; round(6.5,0)<br />[1] 6<br /></pre><br />Do you see a pattern?<br /><br />I tried this on versions 2.13.1 and 2.14.0. I ran the same with MATLAB and it gave the expected results. I am not any kind of expert on computer sciences, so I was not sure why this is happening. <a href="http://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html">Converting </a>any decimal number that ends in .5 into binary results in a finite length binary number. For example, 4.5 is 100.1 in binary. Because of this, I wouldn't think the error would be due to floating points, but I really don't know.<br /><br />Looking at the <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html">documentation</a> for round, I found the reason. It states in the notes, "Note that for rounding off a 5, the <a href="http://en.wikipedia.org/wiki/IEEE_754-2008#Rounding_rules">IEC 60559 standard</a> is expected to be used, ‘<em>go to the even digit</em>’." It is a little comforting knowing that there is a logic behind it and that R is abiding to some standard. But why isn't MATLAB abiding by the same standard? Also, I think most people expect numbers ending in .5 to round up, not the nearest even digit.</div>
+
+
+<h2>Comments</h2>
+
+
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Analytic Bastard</div>
+<div class='content'>
+kudos Blaise</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Andrew wrote &quot;Also, I think most people expect numbers ending in .5 to round up (not the nearest even digit)&quot;. This kind of rounding is in German called &quot;kaufmännische Rundung&quot; (rounding in commerce). For this purpose I use the following function:<br /><br />#Definition of a function for &quot;rounding in commerce&quot;<br />cround = function(x,n){<br />vorz = sign(x)<br />z = abs(x)*10^n<br />z = z + 0.5<br />z = trunc(z)<br />z = z/10^n<br />z*vorz<br />}<br /><br /># Example<br />&gt; round(seq(0.5,6.5,1),0)<br />[1] 0 2 2 4 4 6 6<br />&gt; cround(seq(0.5,6.5,1),0)<br />[1] 1 2 3 4 5 6 7</div>
+</div>
+<div class='comment'>
+<div class='author'>cellocgw</div>
+<div class='content'>
+This &quot;round to even&quot; approach has been accepted by just about everyone (except matlab, and no surprise, except Msoft Excel).  <br />Sadly, the flame wars over &quot;round to even&quot; vs. &quot;round up&quot; continue, rather the way people argue about &quot;0.999... != 1&quot;<br /><br />PS: @a Tom:  I&#39;m highly skeptical of your <br />claim about 2.46--&gt;3.  Do you have a citation?</div>
+</div>
+<div class='comment'>
+<div class='author'>a Tom</div>
+<div class='content'>
+I&#39;m ever amazed that something so seemingly basic can have so many different approaches.<br /><br />I understand that in many middle east countries they start with the far right digit and round up or down, so 2.46 is rounded to 3!</div>
+</div>
+<div class='comment'>
+<div class='author'>Blaise</div>
+<div class='content'>
+This is discussed in Don Knuth&#39;s 1973 classic Seminumerical Algorithms. He gives the following example of what can happen when 5s are always rounded upwards. Suppose u = 10000000 and v = 0.5555556. Then u + v = 1.5555556. If we subtract v from this  result we get u&#39; = 1.0000001. Adding and then subtracting v from u&#39; and we get 1.0000002 and if we do it again we get 1.0000003 and so on. He says &quot;This phenomenon, called drift, will not occur when we use a stable rounding rule based on the parity of the least significant digit.&quot;</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+I was the #2 anonymous poster. Echoing Ben, I think that for ease of teaching, the &quot;round 5 up&quot; method is taught to children (and adults?) below the university level, and only if you go on for advance work is the more complicated method taught.<br /><br />Can you imagine trying to teach a 10 or 12 year old the IEC 60559 standard? Unfortunately, this is the method most adults are used to...<br /><br />I agree, it is a little troubling that Matlab doesn&#39;t abide by the standard. Yet another reason to stick with R!</div>
+</div>
+<div class='comment'>
+<div class='author'>Ben Bolker</div>
+<div class='content'>
+Wikipedia ( http://en.wikipedia.org/wiki/Rounding#Round_half_to_even ) says of round-to-even:<br /><br />This method also treats positive and negative values symmetrically, and therefore is free of overall bias if the original numbers are positive or negative with equal probability. In addition, for most reasonable distributions of y values, the expected (average) value of the rounded numbers is essentially the same as that of the original numbers, even if the latter are all positive (or all negative). However, this rule will still introduce a positive bias for even numbers (including zero), and a negative bias for the odd ones.<br /><br />So round-to-even seems to have *slightly* better numerical properties than &quot;round ties away from zero&quot;, which is what is (I think) most often taught, because it&#39;s easier to understand. http://www.mathworks.com/matlabcentral/fileexchange/6752 gives a MATLAB function for &quot;round to even&quot;.<br /><br />If I had to guess I would predict that in borderline cases (which this certainly is) MATLAB would favor &quot;do what will lead to happier users&quot; and R would favor &quot;do what is thought to be the best numerical practice&quot;.</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Hi,<br />I&#39;m not sure I understand what you mean by &quot;expected results&quot;?<br /><br />Regarding rounding, I was taught to round numbers ending in &quot;1, 2, 3, and 4&quot; *down*, and numbers that ended in &quot;6, 7, 8, 9&quot; *up*. Then, specifically regarding &quot;5&quot;, if the preceding digit is odd, round up and if the preceding digit is even, to round down. <br /><br />As you can see, this will then result in 50% of the numbers being rounded up, and 50% rounded down. If you round *down* on &quot;1, 2, 3, 4&quot; and round up on &quot;5, 6, 7, 8, 9&quot; you are rounding up 5/9th&#39;s of the time, and so introducing a bias.<br /><br />It sounds like R is handling it the way I would. Is that what you were wondering about?</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+To learn something about how computers handle numbers, especially as it relates to statistics and econometrics:<br /><br />B. D. McCullough and H. D. Vinod<br />&quot;The Numerical Reliability of Econometric Software,&quot;<br />Journal of Economic Literature 37(2), 633-665, 1999 <br /><br />A temporary link is available here:<br />http://www.pages.drexel.edu/~bdm25/jel.pdf</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

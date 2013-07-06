@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Factor Analysis of Baseball's Hall of Fame Voters - Andrew Landgraf's Blog</title>
+  <meta name="author" content="Andrew Landgraf">
+
+  
+  <meta name="description" content="Factor Analysis of Baseball&#8217;s Hall of Fame Voters body, td { font-family: sans-serif; background-color: white; font-size: 12px; margin: 8px &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andland.github.io/blog/2013/01/09/factor-analysis-of-baseballs-hall-of">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Andrew Landgraf's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Andrew Landgraf's Blog</a></h1>
+  
+    <h2>Statistically Significant</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andland.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Factor Analysis of Baseball's Hall of Fame Voters</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-09T00:00:00-05:00" pubdate data-updated="true">Jan 9<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+<!-- saved from url=(0014)about:internet --><html><head>  <title>Factor Analysis of Baseball&#8217;s Hall of Fame Voters</title> <style type="text/css">body, td {    font-family: sans-serif;    background-color: white;    font-size: 12px;    margin: 8px; }  tt, code, pre {    font-family: &#8216;DejaVu Sans Mono&#8217;, &#8216;Droid Sans Mono&#8217;, &#8216;Lucida Console&#8217;, Consolas, Monaco, monospace; }  h1 {     font-size:2.2em;  }  h2 {     font-size:1.8em;  }  h3 {     font-size:1.4em;  }  h4 {     font-size:1.0em;  }  h5 {     font-size:0.9em;  }  h6 {     font-size:0.8em;  }  a:visited {    color: rgb(50%, 0%, 50%); }  pre {     margin-top: 0;    max-width: 95%;    border: 1px solid #ccc;    white-space: pre-wrap; }  pre code {    display: block; padding: 0.5em; }  code.r, code.cpp {    background-color: #F8F8F8; }  table, td, th {   border: none; }  blockquote {    color:#666666;    margin:0;    padding-left: 1em;    border-left: 0.5em #EEE solid; }  hr {    height: 0px;    border-bottom: none;    border-top-width: thin;    border-top-style: dotted;    border-top-color: #999999; }  @media print {    * {        background: transparent !important;        color: black !important;        filter:none !important;        -ms-filter: none !important;     }     body {        font-size:12pt;        max-width:100%;     }            a, a:visited {        text-decoration: underline;     }     hr {        visibility: hidden;       page-break-before: always;    }     pre, blockquote {        padding-right: 1em;        page-break-inside: avoid;     }     tr, img {        page-break-inside: avoid;     }     img {        max-width: 100% !important;     }     @page :left {        margin: 15mm 20mm 15mm 10mm;     }          @page :right {        margin: 15mm 10mm 15mm 20mm;     }     p, h2, h3 {        orphans: 3; widows: 3;     }     h2, h3 {        page-break-after: avoid;     } }  </style> <style type="text/css">   pre .operator,    pre .paren {      color: rgb(104, 118, 135)    }     pre .literal {      color: rgb(88, 72, 246)    }     pre .number {      color: rgb(0, 0, 205);    }     pre .comment {      color: rgb(76, 136, 107);    }     pre .keyword {      color: rgb(0, 0, 255);    }     pre .identifier {      color: rgb(0, 0, 0);    }     pre .string {      color: rgb(3, 106, 7);    } </style> <script type="text/javascript">var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>&#8220;;t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName(&#8220;pre&#8221;);for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|&#92;?|&#92;[|&#92;{|&#92;(|&#92;^|&#92;^=|&#92;||&#92;|=|&#92;|&#92;||~&#8221;;this.ER=&#8221;(?![&#92;s&#92;S])&#8221;;this.BE={b:&#8221;&#92;&#92;.&#8221;,r:0};this.ASM={cN:&#8221;string&#8221;,b:&#8221;&#8217;&#8221;,e:&#8221;&#8217;&#8221;,i:&#8221;&#92;n&#8221;,c:[this.BE],r:0};this.QSM={cN:&#8221;string&#8221;,b:&#8217;&#8221;&#8217;,e:&#8217;&#8221;&#8217;,i:&#8221;&#92;n&#8221;,c:[this.BE],r:0};this.CLCM={cN:&#8221;comment&#8221;,b:&#8221;//&#8221;,e:&#8221;$&#8221;};this.CBLCLM={cN:&#8221;comment&#8221;,b:&#8221;/&#92;*&#8221;,e:&#8221;&#92;*/&#8221;};this.HCM={cN:&#8221;comment&#8221;,b:&#8221;#&#8221;,e:&#8221;$&#8221;};this.NM={cN:&#8221;number&#8221;,b:this.NR,r:0};this.CNM={cN:&#8221;number&#8221;,b:this.CNR,r:0};this.BNM={cN:&#8221;number&#8221;,b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{&#8220;false&#8221;:1,&#8221;int&#8221;:1,&#8221;float&#8221;:1,&#8221;while&#8221;:1,&#8221;private&#8221;:1,&#8221;char&#8221;:1,&#8221;catch&#8221;:1,&#8221;export&#8221;:1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,&#8221;const&#8221;:1,struct:1,&#8221;for&#8221;:1,static_cast:2,union:1,namespace:1,unsigned:1,&#8221;long&#8221;:1,&#8221;throw&#8221;:1,&#8221;volatile&#8221;:2,&#8221;static&#8221;:1,&#8221;protected&#8221;:1,bool:1,template:1,mutable:1,&#8221;if&#8221;:1,&#8221;public&#8221;:1,friend:2,&#8221;do&#8221;:1,&#8221;return&#8221;:1,&#8221;goto&#8221;:1,auto:1,&#8221;void&#8221;:2,&#8221;enum&#8221;:1,&#8221;else&#8221;:1,&#8221;break&#8221;:1,&#8221;new&#8221;:1,extern:1,using:1,&#8221;true&#8221;:1,&#8221;class&#8221;:1,asm:1,&#8221;case&#8221;:1,typeid:1,&#8221;short&#8221;:1,reinterpret_cast:2,&#8221;default&#8221;:1,&#8221;double&#8221;:1,register:1,explicit:1,signed:1,typename:1,&#8221;try&#8221;:1,&#8221;this&#8221;:1,&#8221;switch&#8221;:1,&#8221;continue&#8221;:1,wchar_t:1,inline:1,&#8221;delete&#8221;:1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:&#8221;</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">&#8220;,k:a,r:10,c:[&#8220;self&#8221;]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:&#8221;number&#8221;,b:&#8221;&#92;b0[xX][0-9a-fA-F]+[Li]?&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:0},{cN:&#8221;number&#8221;,b:&#8221;&#92;b&#92;d+(?:[eE][+&#92;-]?&#92;d*)?L&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:0},{cN:&#8221;number&#8221;,b:&#8221;&#92;b&#92;d+&#92;.(?!&#92;d)(?:i&#92;b)?&#8221;,e:hljs.IMMEDIATE_RE,r:1},{cN:&#8221;number&#8221;,b:&#8221;&#92;b&#92;d+(?:&#92;.&#92;d*)?(?:[eE][+&#92;-]?&#92;d*)?i?&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:0},{cN:&#8221;number&#8221;,b:&#8221;&#92;.&#92;d+(?:[eE][+&#92;-]?&#92;d*)?i?&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:1},{cN:&#8221;keyword&#8221;,b:&#8221;(?:tryCatch|library|setGeneric|setGroupGeneric)&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:10},{cN:&#8221;keyword&#8221;,b:&#8221;&#92;.&#92;.&#92;.&#8221;,e:hljs.IMMEDIATE_RE,r:10},{cN:&#8221;keyword&#8221;,b:&#8221;&#92;.&#92;.&#92;d+(?![&#92;w.])&#8221;,e:hljs.IMMEDIATE_RE,r:10},{cN:&#8221;keyword&#8221;,b:&#8221;&#92;b(?:function)&#8221;,e:hljs.IMMEDIATE_RE,r:2},{cN:&#8221;keyword&#8221;,b:&#8221;(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:1},{cN:&#8221;literal&#8221;,b:&#8221;(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:10},{cN:&#8221;literal&#8221;,b:&#8221;(?:NULL|TRUE|FALSE|T|F|Inf|NaN)&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:1},{cN:&#8221;identifier&#8221;,b:&#8221;[a-zA-Z.][a-zA-Z0-9._]*&#92;b&#8221;,e:hljs.IMMEDIATE_RE,r:0},{cN:&#8221;operator&#8221;,b:&#8221;<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}}; hljs.initHighlightingOnLoad(); </script>        <br />Recently, Nate Silver wrote <a href="http://fivethirtyeight.blogs.nytimes.com/2013/01/08/suspicion-of-steroid-use-could-keep-bagwell-and-piazza-out-of-hall/">a post</a> which analyzed how voters who voted for and against Barry Bonds for Baseball&#8217;s Hall of Fame differed. Not surprisingly, those who voted for Bonds were more likely to vote for other suspected steroids users (like Roger Clemens). This got me thinking that this would make an interesting case study for factor analysis to see if there are latent factors that drive hall of fame voting.<br /><br />The Twitter user @leokitty has kept track of all the known ballots of the voters in a <a href="https://docs.google.com/spreadsheet/ccc?key=0Aqc4QTMoPrdtdDQxaDYzd1lLOGpOdUdrcnNNNWNXa2c&amp;authkey=CPyuwqIJ&amp;authkey=CPyuwqIJ#gid=6">spreadsheet</a>. The spreadsheet is a matrix that has one row for each voter and one column for each player being voted upon. (Players need 75% of the vote to make it to the hall of fame.) I removed all players that had no votes and all voters that had given a partial ballot.<br /><br />(This matrix either has a 1 or a 0 in each entry, corresponding to whether a voter voted for the player or not. Note that this kind of matrix is similar to the data that is analyzed in information retrieval. I will be decomposing the (centered) matrix using singular value decomposition to run the factor analysis. This is the same technique used for latent semantic indexing in information retrieval.)<br /><br />Starting with the analysis, there is a drop off of the variance  after the first 2 factors, which means it might make sense to look only at the first 2 (which is good because I was only planning on doing so).<br /><br /><pre><code class="r">votes = read.csv("HOF votes.csv", row.names = 1, header = TRUE)<br />pca = princomp(votes)<br />screeplot(pca, type = "l", main = "Scree Plot")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-hLkeU-zL-Ak/UO2Yd0B5z4I/AAAAAAAAHo4/dH27nksEiHM/s1600/unnamed-chunk-2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-hLkeU-zL-Ak/UO2Yd0B5z4I/AAAAAAAAHo4/dH27nksEiHM/s1600/unnamed-chunk-2.png" /></a></div><br />Looking at the loadings, it appears that the first principal component corresponds strongly to steroid users, which Bonds and Clemens having large negative values and other suspected steroid users being on the negative end. The players on the positive end have no steroid suspicions.<br /><br /><pre><code class="r">dotchart(sort(pca$loadings[, 1]), main = "First Principal Component")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-K6MEN_9PcHs/UO2Yd69LeeI/AAAAAAAAHok/Lcb2apHZdC0/s1600/unnamed-chunk-3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-K6MEN_9PcHs/UO2Yd69LeeI/AAAAAAAAHok/Lcb2apHZdC0/s1600/unnamed-chunk-3.png" /></a></div>The second component isn&#8217;t as easy to decipher. The players at the negative end seem to players that are preferred by analytically minded analysts (think Moneyball). Raines, Trammell, and Martinez have more support among this group of voters. Morris, however, has less support among these voters and he isn&#8217;t that far separated from them.<br /><br />There also may be some secondary steroid association in the component as well separating players who have proof of steroid use versus those which have no proof but “look like” they took steroids. For example, there is no hard evidence that Bagwell or Piazza took steroids, but they were very muscular and hit a lot of home runs, so they are believed to have taken steroids. There is some sort of evidence the top five players of this component did take steroids.<br /><br /><pre><code class="r">dotchart(sort(pca$loadings[, 2]), main = "Second Principal Component")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-mKFEcj6ISQU/UO2Yd7ZFDQI/AAAAAAAAHoo/ZBwJgKbcLI4/s1600/unnamed-chunk-4.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-mKFEcj6ISQU/UO2Yd7ZFDQI/AAAAAAAAHoo/ZBwJgKbcLI4/s1600/unnamed-chunk-4.png" /></a></div><br />Projecting the votes onto two dimensions, we can look at how the voters for Bonds and Clemens split up. You can see there is a strong horizontal split between the voters for and against Bonds/Clemens. There are also 3 voters that voted for Bonds, but not Clemens.<br /><br /><pre><code class="r">ggplot(data.frame(cbind(pca$scores[, 1:2], votes))) + geom_point(aes(Comp.1, <br />    Comp.2, colour = as.factor(Barry.Bonds), shape = as.factor(Roger.Clemens)), <br />    size = 4) + coord_equal() + labs(colour = "Bonds", shape = "Clemens")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-nQoFe3Gnk4c/UO2YeZBYwkI/AAAAAAAAHos/KftZv63_S6E/s1600/unnamed-chunk-5.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-nQoFe3Gnk4c/UO2YeZBYwkI/AAAAAAAAHos/KftZv63_S6E/s1600/unnamed-chunk-5.png" /></a></div><br />Similarly, I can look at how the voters split up on the issue of steroids by looking at both Bonds and Bagwell. The voters in the upper left do not care about steroid use, but believe that Bagwell wasn&#8217;t good enough to make it to the hall of fame. The voters in the lower right do care about steroid use, but believe that Bagwell was innocent of any wrongdoing.<br /><br /><pre><code class="r">ggplot(data.frame(cbind(pca$scores[, 1:2], votes))) + geom_point(aes(Comp.1, <br />    Comp.2, colour = as.factor(paste(Roger.Clemens, "/", Jeff.Bagwell))), size = 4) + <br />    geom_hline(aes(0), size = 0.2) + geom_vline(aes(0), size = 0.2) + coord_equal() + <br />    labs(colour = "Bonds / Bagwell")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-k4AoH_kJlyc/UO2YfOqnS0I/AAAAAAAAHow/mETFQ33dXVI/s1600/unnamed-chunk-6.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-k4AoH_kJlyc/UO2YfOqnS0I/AAAAAAAAHow/mETFQ33dXVI/s1600/unnamed-chunk-6.png" /></a></div><br />We can also look at a similar plot with Schilling instead of Bagwell. The separation here appears to be stronger.<br /><br /><pre><code class="r">ggplot(data.frame(cbind(pca$scores[, 1:2], votes))) + geom_point(aes(Comp.1, <br />    Comp.2, colour = as.factor(paste(Barry.Bonds, "/", Curt.Schilling))), size = 4) + <br />    geom_hline(aes(0), size = 0.2) + geom_vline(aes(0), size = 0.2) + coord_equal() + <br />    labs(colour = "Bonds / Schilling")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-aSA3fUNxSGY/UO2YftHu8HI/AAAAAAAAHo0/e2Itd9TkE60/s1600/unnamed-chunk-7.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-aSA3fUNxSGY/UO2YftHu8HI/AAAAAAAAHo0/e2Itd9TkE60/s1600/unnamed-chunk-7.png" /></a></div><br />Finally, we can look at a biplot (using code from <a href="http://stackoverflow.com/questions/6578355/plotting-pca-biplot-with-ggplot2">here</a>).<br /><br /><pre><code class="r">PCbiplot &lt;- function(PC = fit, x = "PC1", y = "PC2") {<br />    # PC being a prcomp object<br />    library(grid)<br />    data &lt;- data.frame(obsnames = row.names(PC$x), PC$x)<br />    plot &lt;- ggplot(data, aes_string(x = x, y = y)) + geom_text(alpha = 0.4, <br />        size = 3, aes(label = obsnames))<br />    plot &lt;- plot + geom_hline(aes(0), size = 0.2) + geom_vline(aes(0), size = 0.2)<br />    datapc &lt;- data.frame(varnames = rownames(PC$rotation), PC$rotation)<br />    mult &lt;- min((max(data[, y]) - min(data[, y])/(max(datapc[, y]) - min(datapc[, <br />        y]))), (max(data[, x]) - min(data[, x])/(max(datapc[, x]) - min(datapc[, <br />        x]))))<br />    datapc &lt;- transform(datapc, v1 = 0.7 * mult * (get(x)), v2 = 0.7 * mult * <br />        (get(y)))<br />    plot &lt;- plot + coord_equal() + geom_text(data = datapc, aes(x = v1, y = v2, <br />        label = varnames), size = 5, vjust = 1, color = "red")<br />    plot &lt;- plot + geom_segment(data = datapc, aes(x = 0, y = 0, xend = v1, <br />        yend = v2), arrow = arrow(length = unit(0.2, "cm")), alpha = 0.75, color = "red")<br />    plot<br />}<br /><br />fit &lt;- prcomp(votes, scale = F)<br />PCbiplot(fit)<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-MPuCAW6v_zw/UO2YgMRas1I/AAAAAAAAHpA/pHzLYPdb0k4/s1600/unnamed-chunk-8.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-MPuCAW6v_zw/UO2YgMRas1I/AAAAAAAAHpA/pHzLYPdb0k4/s1600/unnamed-chunk-8.png" /></a></div>I could have also attempted to rotate the factors to make them more interpretable, but they appeared to have easy interpretation as is. Since we were looking at 2-d plots, rotation would not have made a difference in interpreting the plots. It is also common to use a likelihood approach to estimate factors. I chose to use the principal component method because the data are definitely not normal (being 0&#8217;s and 1&#8217;s).</head></html></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Andrew Landgraf</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-09T00:00:00-05:00" pubdate data-updated="true">Jan 9<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/factor-analysis/'>Factor Analysis</a>, <a class='category' href='/blog/categories/hall-of-fame/'>Hall of Fame</a>, <a class='category' href='/blog/categories/r/'>R</a>, <a class='category' href='/blog/categories/visualization/'>Visualization</a>, <a class='category' href='/blog/categories/baseball/'>baseball</a>, <a class='category' href='/blog/categories/statistics/'>statistics</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://andland.github.io/blog/2013/01/09/factor-analysis-of-baseballs-hall-of/" data-via="" data-counturl="http://andland.github.io/blog/2013/01/09/factor-analysis-of-baseballs-hall-of/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/05/quick-post-about-getting-and-plotting/" title="Previous Post: Quick Post About Getting and Plotting Polls in R">&laquo; Quick Post About Getting and Plotting Polls in R</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/01/14/restricted-boltzmann-machines-in-r/" title="Next Post: Restricted Boltzmann Machines in R">Restricted Boltzmann Machines in R &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/24/copying-data-from-excel-to-r-and-back_24/">Copying Data From Excel to R and Back</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/23/text-decryption-using-mcmc/">Text Decryption Using MCMC</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/14/restricted-boltzmann-machines-in-r/">Restricted Boltzmann Machines in R</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Andrew Landgraf -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
