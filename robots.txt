@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://andland.github.io/sitemap.xml 
