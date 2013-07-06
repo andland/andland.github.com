@@ -1,0 +1,65 @@
+---
+layout: post
+title: "Copying Data from Excel to R and Back"
+date: 2013-02-24
+comments: false
+categories:
+ - data
+ - R
+---
+
+<div class='post'>
+A lot of times we are given a data set in Excel format and we want to run a quick analysis using R's functionality to look at advanced statistics or make better visualizations. There are packages for importing/exporting data from/to Excel, but I have found them to be hard to work with or only work with old versions of Excel (*.xls, not *.xlsx). So for a one time analysis, I usually save the file as a csv and import it into R.<br /><br />This can be a little burdensome if you are trying to do something quick and creates a file that needs to be cleaned up later. An easier option is to copy and paste the data directly into R. This can be done by using "clipboard" as the file and specifying that it is tab delimited, since that is how Excel's clipboard stores the data.<br /><br />For example, say you have a table in excel you want to copy into R. First, copy it in Excel.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-qPkCaCo_zWw/USpK8GLtKsI/AAAAAAAAHq0/9LrZwb05LVg/s1600/Capture.PNG" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-qPkCaCo_zWw/USpK8GLtKsI/AAAAAAAAHq0/9LrZwb05LVg/s1600/Capture.PNG" /></a></div><div class="separator" style="clear: both; text-align: center;"></div><br />Then go into R and use this function.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;">read.excel &lt;- <a href="http://inside-r.org/r-doc/base/function"><span style="color: #003399; font-weight: bold;">function</span></a><span style="color: #009900;">(</span>header=<span style="color: black; font-weight: bold;">TRUE</span><span style="color: #339933;">,</span>...<span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />  <a href="http://inside-r.org/r-doc/utils/read.table"><span style="color: #003399; font-weight: bold;">read.table</span></a><span style="color: #009900;">(</span><span style="color: blue;">"clipboard"</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">"<span style="color: #000099; font-weight: bold;">\t</span>"</span><span style="color: #339933;">,</span>header=header<span style="color: #339933;">,</span>...<span style="color: #009900;">)</span><br /><span style="color: #009900;">}</span><br />&nbsp;<br />dat=read.excel<span style="color: #009900;">(</span><span style="color: #009900;">)</span></pre></div></div><br />This function specifies that you are reading data from the clipboard, that it is tab delimited, and that it has a header.<br /><br />Similarly, you can copy from R to Excel using the same logic. Here I also make <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">row.name=FALSE</span> as default since I rarely have meaningful row names and they mess up the header alignment.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;">write.excel &lt;- <a href="http://inside-r.org/r-doc/base/function"><span style="color: #003399; font-weight: bold;">function</span></a><span style="color: #009900;">(</span>x<span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/base/row.names"><span style="color: #003399; font-weight: bold;">row.names</span></a>=<span style="color: black; font-weight: bold;">FALSE</span><span style="color: #339933;">,</span>col.names=<span style="color: black; font-weight: bold;">TRUE</span><span style="color: #339933;">,</span>...<span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />  <a href="http://inside-r.org/r-doc/utils/write.table"><span style="color: #003399; font-weight: bold;">write.table</span></a><span style="color: #009900;">(</span>x<span style="color: #339933;">,</span><span style="color: blue;">"clipboard"</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">"<span style="color: #000099; font-weight: bold;">\t</span>"</span><span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/base/row.names"><span style="color: #003399; font-weight: bold;">row.names</span></a>=<a href="http://inside-r.org/r-doc/base/row.names"><span style="color: #003399; font-weight: bold;">row.names</span></a><span style="color: #339933;">,</span>col.names=col.names<span style="color: #339933;">,</span>...<span style="color: #009900;">)</span><br /><span style="color: #009900;">}</span><br />&nbsp;<br />write.excel<span style="color: #009900;">(</span>dat<span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><br />These functions can be added to you .RProfile so that they are always ready for a quick analysis!<br /><br />Obviously, this technique does not encourage reproducible research. It is meant to be used for quick, ad hoc analysis and plotting; not something you would use for an analysis that needs to be done on a regular basis.<br /><br /></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Marek Sz</div>
+<div class='content'>
+I create similar functions and got few tips. For reading from excel following settings can be useful:<br />na.strings = &quot;&quot; # to prevent replacing NA string to missing value<br />comment.char = &quot;&quot; # to not loose everything after # sign<br />quote = &quot;&quot; # or &#39; or &quot; could mess with data<br />check.names = FALSE # if you want column names as in excel (spaces, special characters, etc.). You need to use `column name` in R to reference such columns.<br /><br />For writing na=&quot;&quot; replace missing values by empty string and not &quot;NA&quot; as on default.<br /><br />Second thing is that you can increase size of clipboard by using e.g. &quot;clipboard-10240&quot; instead of &quot;clipboard&quot; (it&#39;s a size in Kb, so it&#39;s around 10Mb; see help for connection, section Clipboard) which allow to copy and paste larger tables.</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+rkward (http://rkward.sourceforge.net/) has a very nifty feature (Edit -&gt; Paste Special...), that allows you to paste the copied data directly into your R source code, already formatted as a single string, vector or matrix. </div>
+</div>
+<div class='comment'>
+<div class='author'>William Yarberry</div>
+<div class='content'>
+Excellent article.  Real people are always busy and this is just the kind of article that helps us all.  I have been doing scan() but when you start entering a few thousand rows that way, it gets a bit slow.  </div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+scan() allows you to just paste...<br /><br />y &lt;- scan()</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Thank you for these!!<br /></div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Thank you for the tip, this will help me a lot.<br />Also, it seems that, libreOffice also uses clipboard to store copied things. This function also works for libreOffice</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+I can&#39;t resist: you could just use<br />read.delim(&quot;clipboard&quot;)<br /><br />(The &quot;clipboard&quot; parameter is &#39;doze only for the foreseeable future)<br /><br />From &quot;?read.delim&quot;<br />read.delim(file, header = TRUE, sep = &quot;\t&quot;, quote=&quot;\&quot;&quot;, dec=&quot;.&quot;,<br />           fill = TRUE, comment.char=&quot;&quot;, ...)</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Thank you very much Tony for your quick answer (on a  Sunday afternoon!!). <br /><br />Ernesto</div>
+</div>
+<div class='comment'>
+<div class='author'>Tony Hirst</div>
+<div class='content'>
+@Ernesto It seems that on a Mac, you can use pbpaste ( http://stackoverflow.com/questions/9035674/r-function-to-copy-to-clipboard-on-mac-osx )<br /><br />read.clipboard.mac &lt;- function(header=TRUE,...) {<br />  read.table(pipe(&quot;pbpaste&quot;),sep=&quot;\t&quot;,header=header,...)<br />}<br /> </div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Thank you very much. Very useful. I work in both Windows and Mac Environments. The trick you show seems to work only in Windows. Any idea what to do in Mac? Thanks in advance,<br /><br />Ernesto</div>
+</div>
+</div>

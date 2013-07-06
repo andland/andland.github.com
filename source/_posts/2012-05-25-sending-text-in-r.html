@@ -1,0 +1,11 @@
+---
+layout: post
+title: "Sending a Text in R"
+date: 2012-05-25
+comments: false
+categories:
+ - R
+---
+
+<div class='post'>
+Don't you hate it when you are running a long piece of code and you keep checking the results every 15 minutes, hoping it will finish? There is a better way.<br /><br />I got the idea from <a href="http://jbdeaton.com/2012/send-yourself-an-sms-via-python/">here</a>. He uses a Python script and the text interface is not free. I thought someone must have already thought of this for R. There is an easy solution. You can send an email fairly easily in R. You can also send <a href="http://allthingsmarked.com/2006/09/04/howto-send-free-text-messages-through-email/">text messages as emails</a>. <a href="http://www.decisionstats.com/send-email-by-r/">This page </a>gives a few examples of how to send an email in R. Sending a text via email will depend on what carrier you have and I am sure standard text message fees apply.You can only send 20 emails a day with this package, but that probably won't be a big deal.<br /><br />It is basically a one-liner. Here is the code I used:<br /><pre class="brush: r">install.packages("mail",repos="http://cran.case.edu/")<br />library(mail)<br />sendmail("5555555555@txt.att.net", <br />         subject="Notification from R",message="MCMC Finished", password="rmail")<br /></pre><br />That's it!<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s1600/photo.PNG" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="320" src="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s320/photo.PNG" width="212" /></a></div></div>
