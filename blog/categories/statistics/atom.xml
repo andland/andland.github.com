@@ -4,7 +4,7 @@
   <title><![CDATA[Category: statistics | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/statistics/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-01-06T15:15:01-05:00</updated>
+  <updated>2014-01-06T16:07:42-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[When Did CD102.5 Book the Summerfest Artists?]]></title>
+    <link href="http://andland.github.io/blog/2013/08/27/when-did-cd1025-book-summerfest-artists/"/>
+    <updated>2013-08-27T00:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2013/08/27/when-did-cd1025-book-summerfest-artists</id>
+    <content type="html"><![CDATA[<div class='post'>
+<iframe frameborder="0" height="4775" scrolling="no" src="https://dl.dropboxusercontent.com/u/17648661/CD101summerfest.html" width="100%">&amp;lt;p&amp;gt;Loading ...&amp;lt;/p&amp;gt;</iframe></div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What Is the Probability of a 16 Seed Beating a 1 Seed?]]></title>
@@ -91,6 +102,16 @@ Great work! Sometimes I use Persi&#39;s example for teaching MCMC,<br />there ar
 
 
 <div class='comments'>
+<div class='comment'>
+<div class='author'>Abhijeet Patil</div>
+<div class='content'>
+hi,m new to random forest.. i ve some doubts..<br />1)&quot;we need to choose m number of variables randomly for each node..&quot;-can u pleas explain it..<br />OR<br />2)&quot;take 1 bootstrap sample,choose some variables and create a decision tree&quot;-is it correct??<br /></div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Could you tell me what the numbers mean when ctree and randonForest return variable importance numbers please? I can get the output but I don&#39;t know how to interpret them.<br /><br />Than you very much.</div>
+</div>
 <div class='comment'>
 <div class='author'>Anonymous</div>
 <div class='content'>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Random forest | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/random-forest/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-01-06T15:15:01-05:00</updated>
+  <updated>2014-01-06T16:07:42-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -26,6 +26,16 @@
 
 
 <div class='comments'>
+<div class='comment'>
+<div class='author'>Abhijeet Patil</div>
+<div class='content'>
+hi,m new to random forest.. i ve some doubts..<br />1)&quot;we need to choose m number of variables randomly for each node..&quot;-can u pleas explain it..<br />OR<br />2)&quot;take 1 bootstrap sample,choose some variables and create a decision tree&quot;-is it correct??<br /></div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Could you tell me what the numbers mean when ctree and randonForest return variable importance numbers please? I can get the output but I don&#39;t know how to interpret them.<br /><br />Than you very much.</div>
+</div>
 <div class='comment'>
 <div class='author'>Anonymous</div>
 <div class='content'>

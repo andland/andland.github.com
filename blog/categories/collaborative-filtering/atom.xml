@@ -4,7 +4,7 @@
   <title><![CDATA[Category: collaborative filtering | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/collaborative-filtering/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-01-06T15:15:01-05:00</updated>
+  <updated>2014-01-06T16:07:42-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -26,6 +26,26 @@
 
 
 <div class='comments'>
+<div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+There are no biases in this implementation. You could make v_1=1, but there still wouldn&#39;t be biases in the hidden units.</div>
+</div>
+<div class='comment'>
+<div class='author'>sidharth</div>
+<div class='content'>
+where are the biases ? have you included them in the weights ?</div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+The weights are randomly initialized, so any 2 runs will give different results. However, if your figure looks similar to mine, in that it looks like the weights represent numbers, I would say it is working correctly.</div>
+</div>
+<div class='comment'>
+<div class='author'>Xiaolin Gui</div>
+<div class='content'>
+Thank you for sharing your code.I found the output figure had different with yours when I  do the experiment. I have load the MNIST image data successfully. And the data&#39;s format is 784 ×60000.  The pixels have been binarization. &gt;= 127——&gt;1.<br />I hope you give me some advice.<br />email:guixiaolinde@gmail.com </div>
+</div>
 <div class='comment'>
 <div class='author'>Anonymous</div>
 <div class='content'>
