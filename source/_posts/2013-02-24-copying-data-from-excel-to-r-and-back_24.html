@@ -13,6 +13,11 @@ A lot of times we are given a data set in Excel format and we want to run a quic
 <h2>Comments</h2>
 <div class='comments'>
 <div class='comment'>
+<div class='author'>Justin Tapp</div>
+<div class='content'>
+I&#39;m using this function in R for Windows. When I view the data numerically, it&#39;s fine. But when I go to plot the data I get nonsense. How to describe it...the window has 0 to 250 on the x-axis (regardless of my data series) and white boxes across the middle. </div>
+</div>
+<div class='comment'>
 <div class='author'>Marek Sz</div>
 <div class='content'>
 I create similar functions and got few tips. For reading from excel following settings can be useful:<br />na.strings = &quot;&quot; # to prevent replacing NA string to missing value<br />comment.char = &quot;&quot; # to not loose everything after # sign<br />quote = &quot;&quot; # or &#39; or &quot; could mess with data<br />check.names = FALSE # if you want column names as in excel (spaces, special characters, etc.). You need to use `column name` in R to reference such columns.<br /><br />For writing na=&quot;&quot; replace missing values by empty string and not &quot;NA&quot; as on default.<br /><br />Second thing is that you can increase size of clipboard by using e.g. &quot;clipboard-10240&quot; instead of &quot;clipboard&quot; (it&#39;s a size in Kb, so it&#39;s around 10Mb; see help for connection, section Clipboard) which allow to copy and paste larger tables.</div>
