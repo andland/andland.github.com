@@ -98,6 +98,26 @@
 <h2>Comments</h2>
 <div class='comments'>
 <div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+There are no biases in this implementation. You could make v_1=1, but there still wouldn&#39;t be biases in the hidden units.</div>
+</div>
+<div class='comment'>
+<div class='author'>sidharth</div>
+<div class='content'>
+where are the biases ? have you included them in the weights ?</div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+The weights are randomly initialized, so any 2 runs will give different results. However, if your figure looks similar to mine, in that it looks like the weights represent numbers, I would say it is working correctly.</div>
+</div>
+<div class='comment'>
+<div class='author'>Xiaolin Gui</div>
+<div class='content'>
+Thank you for sharing your code.I found the output figure had different with yours when I  do the experiment. I have load the MNIST image data successfully. And the data&#39;s format is 784 ×60000.  The pixels have been binarization. &gt;= 127——&gt;1.<br />I hope you give me some advice.<br />email:guixiaolinde@gmail.com </div>
+</div>
+<div class='comment'>
 <div class='author'>Anonymous</div>
 <div class='content'>
 I have managed to import the training data (from the Coursera website) into R:<br /><br />library(R.matlab)<br />dat = readMat(&quot;data_set.mat&quot;)<br />&#8230;&#8230;<br />weights=rbm(num_hidden=30, training_data= dat$data[,,1]$training[[1]], learning_rate=.09, n_iterations=5000,<br />            mini_batch_size=100, momentum=0.9)<br /></div>
@@ -186,23 +206,23 @@ Do you have a sample of training data?</div>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/27/when-did-cd1025-book-summerfest-artists/">When Did CD102.5 Book the Summerfest Artists?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025's Playlist</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
       </li>
     
       <li class="post">
         <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/24/copying-data-from-excel-to-r-and-back_24/">Copying Data From Excel to R and Back</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/23/text-decryption-using-mcmc/">Text Decryption Using MCMC</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/01/14/restricted-boltzmann-machines-in-r/">Restricted Boltzmann Machines in R</a>
       </li>
     
   </ul>
