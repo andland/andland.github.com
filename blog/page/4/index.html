@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Statistically Significant</title>
+  <meta name="author" content="Andrew Landgraf">
+
+  
+  <meta name="description" content="I was having some fun with PITCHf/x data and generalize additive models. PITCHf/x keeps track of the trajectory, path, location of every pitch in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andland.github.io/blog/page/4">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Statistically Significant" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Statistically Significant</a></h1>
+  
+    <h2>Andrew Landgraf's Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andland.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Blog Archives</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/projects">Shiny</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/30/space-time-swing-probability-plot-for/">Space Time Swing Probability Plot for Ichiro</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-30T00:00:00-04:00" pubdate data-updated="true">May 30<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I was having some fun with PITCHf/x data and generalize additive models. <a href="http://en.wikipedia.org/wiki/PITCHf/x">PITCHf/x</a> keeps track of the trajectory, path, location of every pitch in the MLB. It is pretty accurate and opens up baseball to more analyses than ever before. <a href="http://en.wikipedia.org/wiki/Generalized_additive_model">Generalized additive models</a> (GAMs) are statistical models that put minimal assumptions on the type of model you are fitting. Traditional statistical models are linear, in that they assume that the response variable you are modelling is a linear function of the explanatory variables. GAMs just assumes that the relationship is &#8220;smooth.&#8221; <a href="http://www.stat.ubc.ca/%7Ematias/rgam/binomial.png">Here </a>is a good example of a relationship that may have traditionally been modeled as linear, but it is a much better assumption that the relationship is smooth.<br /><br />I fit a GAM to PITCHf/x data. The response is whether or not Ichiro swung. The explanatory variables are pitch location on the x, pitch location on the z, and the day of the year. Obviously, we expect the probability of swinging to change as the pitch is closer or further away from the center of the strike zone. Additionally, I was interested in seeing his swinging propensity changed as the year went on.<br /><br /><div class="separator" style="clear: both; text-align: center;"><object class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://i.ytimg.com/vi/44X9VXXjYPI/0.jpg" height="266" width="320"><param name="movie" value="http://www.youtube.com/v/44X9VXXjYPI?version=3&f=user_uploads&c=google-webdrive-0&app=youtube_gdata" />  <param name="bgcolor" value="#FFFFFF" />  <embed width="320" height="266"  src="http://www.youtube.com/v/44X9VXXjYPI?version=3&f=user_uploads&c=google-webdrive-0&app=youtube_gdata" type="application/x-shockwave-flash"></embed></object></div><br />You can see that the probability of swinging is smooth in both location and time. Also, you can see (ever so slightly) that the probability of swinging increased as the year went on. Looking at <a href="http://www.baseball-reference.com/players/split.cgi?id=suzukic01&amp;year=2010&amp;t=b#half">the splits</a>, you can see that his walk percentage was 28/395 (7.1%) in the first half and 17/337 (5.0%) in the second half. This is in agreement with the swing probability increasing,<br /><br />I used the <a href="http://people.bath.ac.uk/sw283/mgcv/tampere/mgcv.pdf">mgcv </a>package in R to run the GAM. I created an image for every day and stitched them together into a movie with <a href="http://ffmpeg.org/">ffmpeg</a>. The R code is <a href="https://docs.google.com/open?id=0B21DLJKq18K9ejNUX0RXQnlJam8">here</a>.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/25/sending-text-in-r/">Sending a Text in R</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-25T00:00:00-04:00" pubdate data-updated="true">May 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Don&#8217;t you hate it when you are running a long piece of code and you keep checking the results every 15 minutes, hoping it will finish? There is a better way.<br /><br />I got the idea from <a href="http://jbdeaton.com/2012/send-yourself-an-sms-via-python/">here</a>. He uses a Python script and the text interface is not free. I thought someone must have already thought of this for R. There is an easy solution. You can send an email fairly easily in R. You can also send <a href="http://allthingsmarked.com/2006/09/04/howto-send-free-text-messages-through-email/">text messages as emails</a>. <a href="http://www.decisionstats.com/send-email-by-r/">This page </a>gives a few examples of how to send an email in R. Sending a text via email will depend on what carrier you have and I am sure standard text message fees apply.You can only send 20 emails a day with this package, but that probably won&#8217;t be a big deal.<br /><br />It is basically a one-liner. Here is the code I used:<br /><pre class="brush: r">install.packages("mail",repos="http://cran.case.edu/")<br />library(mail)<br />sendmail("5555555555@txt.att.net", <br />         subject="Notification from R",message="MCMC Finished", password="rmail")<br /></pre><br />That&#8217;s it!<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s1600/photo.PNG" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="320" src="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s320/photo.PNG" width="212" /></a></div></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/20/cleveland-indians/">Cleveland Indians&#8217; Attendance</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-20T00:00:00-04:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Recently, Chris Perez, the closer for the Indians, displayed <a href="http://throwinheat.mlblogs.com/2012/05/20/chris-perez-expands-on-his-comments-mark-shapiro-responds/">some frustration </a>with the fans for not supporting the team. Currently, they have the <a href="http://www.baseball-reference.com/leagues/current_attendance.shtml">lowest attendance </a>in the majors &#8211; by a decent margin. The Indians are averaging about 15,000 fans per home game, while the next closest team, the Oakland A&#8217;s, is averaging 19,000. It seemed like an odd time for Perez to bring this up because they <a href="http://www.baseball-reference.com/teams/CLE/2012-schedule-scores.shtml">have had </a>attendance in the 29,000s each of the last two home games. So that intrigued me to look into the numbers of what causes attendance to vary.<br /><br />I looked at <a href="http://www.baseball-reference.com/teams/CLE/2011-schedule-scores.shtml">2011 attendance data </a>for the Cleveland Indians only. I had a strong suspicion that a popular opponent would definitely and weekend games cause attendance to increase. Also, there is usually some press at the beginning of the season that claims no one wants to go to the games because it is too cold for baseball. (There is also more competing entertainment at the beginning of the season.)<br /><br />What I found to be significant (based on an exploratory approach) are summarized in the graph below. This plot explores the relationship of attendance with 5 other variables. I plotted attendance on the y-axis and the date on the x-axis. I don&#8217;t expect date to have any effect, but it organizes other aspects well (and you can see opening day had the highest attendance of the year). Instead of plotting points, I plotted the name of the opponent. You can see there are some larger attendances when they are playing the New York Yankees and the Cincinnati Reds, for example. The color of the team name indicates whether they are playing on the weekend or not and the size indicates the <a href="http://academic.udayton.edu/kissock/http/Weather/citylistUS.htm">temperature</a>. Probably the biggest effect, weekend games outdraw weekday games consistently. The colder temperatures are only in the beginning of the season, and seem to have a noticeable effect (at least for the coldest days).<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s1600/IndainsAttendance2011.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="633" src="https://lh3.ggpht.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s640/IndainsAttendance2011.jpeg" width="640" /></a></div><br /><br />I also looked into how many games above .500 the team was and how close they were in the division race. Neither of these showed any correlation, at least at the marginal level. This is interesting because the main reason Chris Perez is frustrated is that the team is winning, so the fans should be supporting them. This shows that wining did not make much of a difference within a single year. This should be more prevalent over multiple years.<br /><br />Some other information that might be useful is the quality of the opponent or whether the ace of the opposing pitching staff is starting. I only included temperature and not precipitation or any other weather information.<br /><br />Here is the basic R code I used: <br /><pre class="brush: r">library(ggplot2)<br />ggplot(data=home.attend,aes(x=Date,y=Attendance,colour=Weekend,label=Opp,size=Temp))+<br />  geom_text()+scale_size(to = c(2, 5))+theme_bw()&nbsp;</pre><pre class="brush: r">&nbsp;</pre><i><b>Update (9/21/2013)</b></i>:<br />Since attendance is still a hot topic, I created the same plot for the 2013 season so far.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="426" src="https://lh3.ggpht.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-mT8HBGEKwak/Uj5EauQomGI/AAAAAAAAH84/qB4e0VE6n94/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div><br /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/05/whats-up-with-alber-pujols/">What&#8217;s Up With Albert Pujols?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-05T00:00:00-04:00" pubdate data-updated="true">May 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+After signing a huge deal with the Angels, Pujols has been having a really bad year. He hasn&#8217;t hit a home run this year, breaking a career long streak. So I thought it would be a good idea to use some statistics to tell how good or bad we think Pujols will actually be this year.<br /><br />Coming into the year, he had a career .328/.420/.617 career AVG/OBP/SLG. Through one month, he has a .194/.237/.269. So what do we expect out of Pujols for the rest of the year?<br /><br />In Bayesian statistical terms, we can quantify our prior beliefs about Pujols from his history before this year. Below are histograms and fitted distributions of Pujols&#8217; yearly batting lines from 2001 to 2011. His numbers are well above normal and he has been the best player in baseball for a while.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-eBkY_jm8kn0/T6WDvtfUlZI/AAAAAAAAGss/dNE4TkjFC6I/s1600/pujols.bmp" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-eBkY_jm8kn0/T6WDvtfUlZI/AAAAAAAAGss/dNE4TkjFC6I/s1600/pujols.bmp" /></a></div>So coming into this year, we would expect him to have a batting average between .290 and .370, with .330 being the most likely, for example.<br /><br />Combining our prior expectations with the data we have observed from this year, we can get our posterior beliefs. When we do that, we get a posterior expectation that Pujols is a true .312/.379/.451 hitter. The league averages from 2001 to 2011 are .263/.331/.418, so he is still expected to be well above the average player, even with the poor start. If we use data from just this year, we do not have enough data to give us an accurate reflection of how good he is. If we combine the data with our prior beliefs, we get a better indication of what to expect. Below is a table that compares these numbers.<br /><br /><style type="text/css">.nobrtable br { display: none } </style><br /><div class="nobrtable"><table border="2" bordercolor="#3366cc" cellpadding="3" cellspacing="3" style="background-color: white;"><tbody><tr style="background-color: #3366cc; color: white; padding-bottom: 4px; padding-top: 5px;"> <th><br /></th><th>AVG</th><th>OBP</th><th>SLG</th></tr><tr><td>League</td><td>.263</td><td>.331</td><td>.418</td></tr><tr><td>Prior</td><td>.328</td><td>.420</td><td>.617</td></tr><tr><td>This Year</td><td>.194</td><td>.237</td><td>.269</td></tr><tr><td>Posterior</td><td>.312</td><td>.379</td><td>.451</td></tr></tbody></table></div><br />Finally, we can also get the whole posterior distribution (not just the expectation). I have plotted the prior and posterior distributions on the same graph. You can see that Pujols&#8217; bad month has caused our beliefs about him to decrease quite a bit. Most notable is the slugging percentage, which is likely because of his career-long homerless streak.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-ZmO18a8vj0w/T6WLW6LnjsI/AAAAAAAAGs4/ll2ab7sGJAg/s1600/pujols-prior+and+posterior.bmp" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-ZmO18a8vj0w/T6WLW6LnjsI/AAAAAAAAGs4/ll2ab7sGJAg/s1600/pujols-prior+and+posterior.bmp" /></a></div><br />What Bayesian analysis does is shrinks (or regresses) the data from this year to the prior average. This is&nbsp; the same idea of regressing to the overall mean that is talked about frequently in sabermetric blogs. The difference is that regressing to the mean usually regresses to the average player in the league. With Bayesian analysis, we can regress to our prior expectation about the specific player (Albert Pujols). I believe this approach will give us better results in most cases.<br /><br />The R code to do the analysis can be found <a href="https://docs.google.com/open?id=0B21DLJKq18K9NkNJb0lQRHNqbHM">here</a>. I used data from <a href="http://www.baseball-reference.com/players/p/pujolal01.shtml">Baseball Reference</a>.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+Just a follow up: From May 6 to the end of the season he had a .305/.365/.569 split. The posterior expectation of .312/.379/.451 matches the average and on base percentage well, but his actual slugging is quite a bit higher than the posterior distribution would have predicted.<br /><br />Not sure what to make of this except to say he had a really bad start with slugging, which may have been caused more by random chance than the other two. And obviously the distributional assumptions are an approximation to reality.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/17/visualizing-correlations-of-matrix/">Visualizing the Correlations of a Matrix</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-17T00:00:00-05:00" pubdate data-updated="true">Feb 17<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Correlation matrices are a common way to look at the dependence of a set of variables. When the variables have spatial relationships, the correlation matrix loses some information.<br /><br />Lets say you have repeated observations, each one being a matrix. For example, you could have yearly observations of health statistics for a spatial grid. Lets say the grid is n by p (n*p variables) and there are m observations of the grid. If we want to get the correlations of each element of the grid, the typical way to do that would be to convert the matrix of variables into a vector of length n*p, and then calculate the correlation matrix of the vector. When you do that, however, it will no longer be obvious which of the variables are on the same row/column or are close to each other. So the typical correlation matrix is not satisfactory.<br /><br />What I propose is a set of <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples </a>of correlation matrices. Instead of having an n*p by n*p correlation matrix, we will have an n by p grid of correlation matrices, each correlation matrix representing the correlation with the variable in that position of the matrix. Below is an example.<br /><br /><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-uKlTWBzaYhQ/Tz7SB8nALQI/AAAAAAAAF7c/ioCipoIuVgg/s1600/matrix+cor+plot.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-uKlTWBzaYhQ/Tz7SB8nALQI/AAAAAAAAF7c/ioCipoIuVgg/s1600/matrix+cor+plot.png" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-lv9XCCr-k0E/Tz7PVojdkfI/AAAAAAAAF7U/tFH2H8im_3Q/s1600/matrix+cor+plot.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div>The above example is just random data, so all correlations are spurious. Blue is positive, red is negative, and white is no correlation. You can see in the row 1, column 1 matrix that the 1st row and 1st column is dark blue. This is because this is the correlation with itself. Similarly in all other rows and columns.<br /><br />Using a real example might display the usefulness more clearly. I am on a project estimating elements of a matrix with only the row totals and column totals. I simulated data many times and kept track of the errors. I was interested in how the errors in the different cells are correlated with each other. Below, you can see that the errors in the same row or column are positively correlated with each other, while the errors in other rows and columns are negatively correlated. This pops out at you with the below plot, but would have been difficult to figure out with a typical correlation matrix.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-wSVkWLxaxH8/Tz7NN6lNobI/AAAAAAAAF7M/wQ7T-B-3Kx0/s1600/Correlation+of+Errors+Matrix1.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="400" src="http://1.bp.blogspot.com/-wSVkWLxaxH8/Tz7NN6lNobI/AAAAAAAAF7M/wQ7T-B-3Kx0/s400/Correlation+of+Errors+Matrix1.jpg" width="400" /></a></div><br />Code:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;"># Generate random data for the example</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;">reps=10<br />mat.data=array(0,c(4,5,reps))<br />for (i in 1:reps) {<br />&nbsp; mat.data[,,i]=matrix(rmultinom(1,20,rep(1,4*5)/(4*5)),4,5)<br />}</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;">matrix.cor.plot(mat.data)</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;"><br /># the function<br />matrix.cor.plot &lt;- function(mat.data) {<br />&nbsp; #mat.data should be a nrow by ncol by nrep array<br />&nbsp; <br />&nbsp; nrow=dim(mat.data)[1]<br />&nbsp; ncol=dim(mat.data)[2]<br />#&nbsp;&nbsp; nrep=dim(mat.data)[3]<br />&nbsp; <br />&nbsp; par(mfrow=c(nrow,ncol),cex=.75,bty=&#8221;o&#8221;,mar=c(1, 1, 1, 1) + 0.1)<br />&nbsp; <br />&nbsp; # red is -1, white is 0, blue is +1<br />&nbsp; rgb.palette &lt;- colorRampPalette(c(&#8220;red&#8221;,&#8221;white&#8221;,&#8221;blue&#8221;), space = &#8220;rgb&#8221;)<br />&nbsp; <br />&nbsp; for (r in 1:nrow) {<br />&nbsp;&nbsp;&nbsp; for (c in 1:ncol) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=matrix(0,nrow,ncol)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (r2 in 1:nrow) { for (c2 in 1:ncol) {cor.mat[r2,c2]=cor(mat.data[r,c,],mat.data[r2,c2,]) } }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=t(cor.mat)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=cor.mat[,ncol(cor.mat):1]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image(cor.mat,zlim=c(-1,1),col=rgb.palette(120),axes = FALSE,main=paste(&#8220;Row:&#8221;,r,&#8221;Col:&#8221;,c))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box()<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp; }<br />}</span></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/27/when-did-cd1025-book-summerfest-artists/">When Did CD102.5 Book the Summerfest Artists?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025&#8217;s Playlist</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Andrew Landgraf -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'andland';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

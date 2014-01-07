@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Statistically Significant</title>
+  <meta name="author" content="Andrew Landgraf">
+
+  
+  <meta name="description" content="That title is quite a mouthful. This quarter, I have been reading papers on Spectral Clustering for a reading group. The basic goal of clustering is &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://andland.github.io/blog/page/5">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Statistically Significant" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Statistically Significant</a></h1>
+  
+    <h2>Andrew Landgraf's Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:andland.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Blog Archives</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/projects">Shiny</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/12/unsupervised-image-segmentation-with/">Unsupervised Image Segmentation With Spectral Clustering With R</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-12T00:00:00-05:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+That title is quite a mouthful. This quarter, I have been reading papers on <a href="http://en.wikipedia.org/wiki/Spectral_clustering">Spectral Clustering</a> for a reading group. The basic goal of clustering is to find groups of data points that are similar to each other. Also, data points in one group should be dissimilar to data in other clusters. This way you can summarize your data by saying there are a few groups to consider instead of all the points. Clustering is an unsupervised learning method in that there are no &#8220;true&#8221; groups that you are comparing the clusters to.<br /><br />There are many ways to do this, two of the most popular are k-means and hierarchical clustering. Spectral clustering is nice because it gives you as much flexibility as you want to define how pairs of data points are similar or dissimilar. K-means only works well for data that are grouped in elliptically shaped, whereas spectral clustering can theoretically work well for any group. For example, the data in <a href="http://www.ml.uni-saarland.de/code/pSpectralClustering/images/clusters_11b_notitle2.png" target="_blank">this image</a> is easily clustered by spectral, but would not be by k-means. The flexibility of spectral clustering can also be a burden in that there are an infinite ways to group points.<br /><br />The basic idea (and all the flexibility) behind spectral clustering is that you define the similarity between any two data points however you want, and put them in a matrix. So if you have 100 data points, you will end up with a 100x100 matrix, where the rth row and cth column is the similarity between the rth data point and the cth data point. You can define &#8220;similarity&#8221; any way you want. Popular methods are Euclidean distance, a kernel function of the Euclidean distance, or a k nearest neighbors approach.<br /><br />Once you have the similarity matrix, you need to create a normalized/unnormalized <a href="http://en.wikipedia.org/wiki/Laplacian_matrix">Laplacian</a> matrix, then calculate the eigenvectors and eigenvalues of the the Laplacian. Finally, use the k-means algorithm on the eigenvalues corresponding to the k smallest eigenvectors. This will give you k clusters (something else you need to specify).<br /><br />The other day, someone in my office was working a project of <a href="http://en.wikipedia.org/wiki/Image_segmentation">Image Segmentation</a> (a topic I know nothing about) for a machine learning class. I thought this would be a perfect application for spectral clustering because you can define similarity of pixels in terms of both the contrast of the pixel as well as the proximity to nearby pixels. I downloaded a few pictures from the<span id="goog_358016683"></span><span id="goog_358016684"></span> <a href="http://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/">Berkeley Segmentation Dataset Benchmark</a> website.<br /><br />One thing I quickly found was that even these moderately sized pictures were too big to create a similarity matrix for in R. A typical image is 481x321=154401 pixels. So a similarity matrix between all the pixels would be 154401x154401=23 billion elements. R only allows 2^31-1=2.1 billion elements in a matrix. Even if I could create the matrix, it would take forever to calculate the eigenvectors and eigenvalues. [Note: Some people from my department actually tackled <a href="http://www.stat.osu.edu/~taoshi/research/papers/2011_Schuetter_Shi_JCGS.pdf" target="_blank">this exact problem</a> using sampling methods.]<br /><br />So I had to reduce the size of the image. For this I just created an image of a factor of the original dimension (about 10 to 20 times smaller), and averaged the contrast of all the points that were collapsed. I also experimented with smoothing the image first and then doing the averaging In some cases it helped in some it hurt, I think.<br /><br />For example here is an original picture.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300/html/images/plain/normal/gray/86016.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300/html/images/plain/normal/gray/86016.jpg" /></a></div><br />Then I smoothed using the image.smooth function of the fields package.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-Rd4S9Z1Y5IE/Tzf9PWxlGII/AAAAAAAAF6M/xBUzV_EMDrE/s1600/smooth.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.ggpht.com/-Rd4S9Z1Y5IE/Tzf9PWxlGII/AAAAAAAAF6M/xBUzV_EMDrE/s1600/smooth.jpeg" /></a></div>Then I reduced the dimension by a factor of 10 and averaged the original pixels. The resulting image is below. You can see there is a decent loss of information in the averaging.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-tzIV9TQYHVI/Tzf9cKaR9YI/AAAAAAAAF6U/2sne_VgLUJQ/s1600/averaged.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.ggpht.com/-tzIV9TQYHVI/Tzf9cKaR9YI/AAAAAAAAF6U/2sne_VgLUJQ/s1600/averaged.jpeg" /></a></div><br />Finally, for the similarity, I only considered pixels that were within 3 horizontally or vertically to be similar (otherwise 0). Also, for those within 3, I used a Gaussian kernel of the difference in contrast with variance equal to 0.01. I chose this number because the variance in the data was about 0.01. Varying both of these parameters wildly affected quality of the results. I also tried using a k nearest neighbors similarity and I did not get any good results. Hence, you can see both the positive and negative of the flexibility.<br /><br />Anyway, here are the two clusters (white and black) using the unnormalized Laplacian.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-dtUccbD9WeM/TzgAJH51ZAI/AAAAAAAAF6c/eUL8YFLOETE/s1600/clusters.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.ggpht.com/-dtUccbD9WeM/TzgAJH51ZAI/AAAAAAAAF6c/eUL8YFLOETE/s1600/clusters.jpeg" /></a></div><br />It looks very good and encouraging for future problems. As stated before, however, I am not sure how to determine the parameters for a generic problem.<br /><br />Overlaying the cluster on the original image, you can see the two segments of the image clearly. You can also see the loss in fidelity due to reducing the size of the image.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-FqY4mvTF2Yo/TzgKwX9ZlBI/AAAAAAAAF68/_WpfIetZVmc/s1600/overlay1b.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.ggpht.com/-FqY4mvTF2Yo/TzgKwX9ZlBI/AAAAAAAAF68/_WpfIetZVmc/s1600/overlay1b.jpeg" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-LDWLf0qEKCo/TzgAJciHcaI/AAAAAAAAF6k/c4veitNzH4A/s1600/overlay.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div>Here are a couple of other examples that worked well. With the airplane one, in particular, you can see that the clustering was able to identify an unusual shape. I was not able to get it to work well with more than two clusters, although I only tried one image that was not that easy.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-k-7m1FTg_fI/TzgKx9lj0XI/AAAAAAAAF7E/LDjpO3w1JBg/s1600/overlay3b.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.ggpht.com/-k-7m1FTg_fI/TzgKx9lj0XI/AAAAAAAAF7E/LDjpO3w1JBg/s1600/overlay3b.jpeg" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-EVSnrPb3CaA/TzgD21GoJoI/AAAAAAAAF60/y6NlonQ8Nw0/s1600/overlay3.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-36TaE1FBMGg/TzgD2VmAOFI/AAAAAAAAF6s/W0SsqyG-J_M/s1600/overlay2.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.ggpht.com/-36TaE1FBMGg/TzgD2VmAOFI/AAAAAAAAF6s/W0SsqyG-J_M/s1600/overlay2.jpeg" /></a></div>For posterity, here is the code I used.<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Import the image </span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">library(jpeg)<br /># http://www.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300/html/images/plain/normal/gray/86016.jpg<br />rawimg=readJPEG(&#8220;segment.jpeg&#8221;)<br />rawimg=t(rawimg)<br />rawimg=rawimg[,ncol(rawimg):1]<br />image(rawimg,col = grey((0:12)/12))</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Smooth the image</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">library(fields)<br />smoothimg=image.smooth(rawimg,theta=2)<br />image(smoothimg,col = grey((0:12)/12))<br /></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Reduce Size of Image</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">olddim=dim(rawimg)<br />newdim=c(round(olddim/10))<br />prod(newdim)&gt;2^31<br />img=matrix(NA,newdim[1],newdim[2])<br />for (r in 1:newdim[1]) {<br />&nbsp; centerx=(r-1)/newdim[1]*olddim[1]+1<br />&nbsp; lowerx=max(1,round(centerx-olddim[1]/newdim[1]/2,0))<br />&nbsp; upperx=min(olddim[1],round(centerx+olddim[1]/newdim[1]/2,0))<br />&nbsp; for (c in 1:newdim[2]) {<br />&nbsp;&nbsp;&nbsp; centery=(c-1)/newdim[2]*olddim[2]+1<br />&nbsp;&nbsp;&nbsp; lowery=max(1,round(centery-olddim[2]/newdim[2]/2,0))<br />&nbsp;&nbsp;&nbsp; uppery=min(olddim[2],round(centery+olddim[2]/newdim[2]/2,0))<br />&nbsp;&nbsp;&nbsp; img[r,c]=mean(smoothimg$z[lowerx:upperx,lowery:uppery])<br />&nbsp; }<br />}<br />image(img,col = grey((0:12)/12))</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Convert matrix to vector</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">imgvec=matrix(NA,prod(dim(img)),3)<br />counter=1<br />for (r in 1:nrow(img)) {<br />&nbsp; for (c in 1:ncol(img)) {<br />&nbsp;&nbsp;&nbsp; imgvec[counter,1]=r<br />&nbsp;&nbsp;&nbsp; imgvec[counter,2]=c<br />&nbsp;&nbsp;&nbsp; imgvec[counter,3]=img[r,c]<br />&nbsp;&nbsp;&nbsp; <br />&nbsp;&nbsp;&nbsp; counter=counter+1<br />&nbsp; }<br />}<br /><br /></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Similarity Matrix</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">pixdiff=2<br />sigma2=.01 #</span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">var(imgvec[,3])</span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br />simmatrix=matrix(0,nrow(imgvec),nrow(imgvec))<br />for(r in 1:nrow(imgvec)) {<br />&nbsp; cat(r,&#8221;out of&#8221;,nrow(imgvec),&#8221;\n&#8221;)<br />&nbsp; simmatrix[r,]=ifelse(abs(imgvec[r,1]-imgvec[,1])&lt;=pixdiff &amp; abs(imgvec[r,2]-imgvec[,2])&lt;=pixdiff,exp(-(imgvec[r,3]-imgvec[,3])^2/sigma2),0)<br />}<br />&nbsp;</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Weighted and Unweighted Laplacian</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">D=diag(rowSums(simmatrix))<br />Dinv=diag(1/rowSums(simmatrix))<br />L=diag(rep(1,nrow(simmatrix)))-Dinv %*% simmatrix<br />U=D-simmatrix<br /></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Eigen and k-means</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">evL=eigen(L,symmetric=TRUE)<br />evU=eigen(U,symmetric=TRUE)<br /><br />kmL=kmeans(evL$vectors[,(ncol(simmatrix)-1):(ncol(simmatrix)-0)],centers=2,nstart=5)<br />segmatL=matrix(kmL$cluster-1,newdim[1],newdim[2],byrow=T)<br />if(max(segmatL) &amp; sum(segmatL==1)&lt;sum(segmatL==0)) {segmatL=abs(segmatL-1)}<br /><br />kmU=kmeans(evU$vectors[,(ncol(simmatrix)-1):(ncol(simmatrix)-0)],centers=2,nstart=5)<br />segmatU=matrix(kmU$cluster-1,newdim[1],newdim[2],byrow=T)<br />if(max(segmatU) &amp;sum(segmatU==1)&lt;sum(segmatU==0)) {segmatU=abs(segmatU-1)}</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Plotting the clusters</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">image(segmatL, col=grey((0:15)/15))<br />image(segmatU, col=grey((0:12)/12))<br /></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># Overlaying the original and the clusters</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">############</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">image(seq(0,1,length.out=olddim[1]),seq(0,1,length.out=olddim[2]),rawimg,col = grey((0:12)/12),xlim=c(-.1,1.1),ylim=c(-.1,1.1),xlab=&#8221;&#8220;,ylab=&#8221;&#8220;)<br /><br />segmat=segmatU<br />linecol=2<br />linew=3<br />for(r in 2:newdim[1]) {<br />&nbsp; for (c in 2:newdim[2]) {<br />&nbsp;&nbsp;&nbsp; if(abs(segmat[r-1,c]-segmat[r,c])&gt;0) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xloc=(r-1)/(newdim[1])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ymin=(c-1)/(newdim[2])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ymax=(c-0)/(newdim[2])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; segments(xloc,ymin,xloc,ymax,col=linecol,lwd=linew)<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; if(abs(segmat[r,c-1]-segmat[r,c])&gt;0) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yloc=(c-1)/(newdim[2])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmin=(r-1)/(newdim[1])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xmax=(r-0)/(newdim[1])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; segments(xmin,yloc,xmax,yloc,col=linecol,lwd=linew)<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp; }<br />}</span></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/10/using-jmp-to-create-map/">Using JMP to Create a Map</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-10T00:00:00-05:00" pubdate data-updated="true">Mar 10<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I am a big fan of SAS&#8217;s JMP software. It is the first statistical program I learned and I really like how the emphasize visualization. In their most recent update, JMP 9 now has the ability to create maps. I have been itching to test this out for a little while and I came across a <a href="http://blog.cgpgrey.com/how-many-americans-have-a-passport-the-percentages-state-by-state/">map on the internet </a>that I thought would be a good test. It is the percentage of the population of each state that has a passport.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://andrewsullivan.theatlantic.com/.a/6a00d83451c45669e2014e868f74e0970d-550wi" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="353" src="http://andrewsullivan.theatlantic.com/.a/6a00d83451c45669e2014e868f74e0970d-550wi" width="400" />&nbsp;</a></div><div class="separator" style="clear: both; text-align: center;"><br /></div><br />Luckily, the website has the source data so I &#8220;jumped&#8221; right in. It was really easy.<br /><ol><li>Copy and paste the data into JMP.&nbsp;</li><li>Open the Graph Builder under the Graph menu.&nbsp;</li><li>Drag the State field into the shape area on the lower left corner.</li></ol><div class="separator" style="clear: both; text-align: center;"><a href="https://lh4.googleusercontent.com/-lfAtOpUGw0w/TXltfam1YpI/AAAAAAAAFrc/9Prld6kfodc/s1600/JMPMAP1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="404" src="https://lh4.googleusercontent.com/-lfAtOpUGw0w/TXltfam1YpI/AAAAAAAAFrc/9Prld6kfodc/s640/JMPMAP1.png" width="640" /></a></div>You can see the outline of the USA in the map. JMP recognizes that the state field is filled with US state names, so it knows to open the shapefile of the US states.<br />&nbsp;&nbsp;&nbsp; 4. Drag the Population with Passport field onto the main map. You can also drag it into the Color area.<br /><div class="separator" style="clear: both; text-align: center;"><a href="https://lh6.googleusercontent.com/-DPzzTB6dRYc/TXlvrZUn45I/AAAAAAAAFrg/8JoGc11lp5Y/s1600/JMPMAP2.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="377" src="https://lh6.googleusercontent.com/-DPzzTB6dRYc/TXlvrZUn45I/AAAAAAAAFrg/8JoGc11lp5Y/s640/JMPMAP2.png" width="640" /></a></div><br />&nbsp;&nbsp;&nbsp; 5. Right click on the color and select &#8220;Gradient&#8230;&#8221; to customize the colors as you like. I changed it to &#8220;White to Blue&#8221; and checked the &#8220;Reverse Colors&#8221; check box to match the original map.<br /><br />Below is the final result. Very quick and easy with a pretty result.<br /><div class="separator" style="clear: both; text-align: center;"><a href="https://lh3.googleusercontent.com/-uahR9PsA2D4/TXlvrybSM0I/AAAAAAAAFrk/FB-iMviw_oA/s1600/JMPMAP3.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="https://lh3.googleusercontent.com/-uahR9PsA2D4/TXlvrybSM0I/AAAAAAAAFrk/FB-iMviw_oA/s1600/JMPMAP3.png" /></a></div></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Xan Gregg</div>
+<div class='content'>
+Nice work. You might try the reverse the labels instead of the colors &#8211; I usually like the bigger numbers to be at the top of the legend list. (I also like bigger numbers to be associated with darker colors, but I realize you&#39;re trying to duplicate that feature of the original.)</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/31/empirical-bayes-estimation-of-on-base/">Empirical Bayes Estimation of on Base Percentage</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-31T00:00:00-05:00" pubdate data-updated="true">Dec 31<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I guess you could call this On Bayes Percentage. *cough*<br /><br />Fresh off learning Bayesian techniques in one of my classes last quarter, I thought it would be fun to try to apply the method. I was able to find some examples of <a href="http://en.wikipedia.org/wiki/Hierarchical_Bayes_model">Hierarchical Bayes </a>being used to analyze baseball data at <a href="http://www-stat.wharton.upenn.edu/%7Estjensen/">Wharton</a>. <br /><br /><b>Setting up the problem</b><br />On base percentage (OBP) is probably the most important basic offensive statistic in baseball. Getting a reliable estimate of a players true ability to get on base is therefore important. The basic problem is that the sample size we get from one season rarely has enough observations so that we are certain of a player&#8217;s ability. Even though there are 162 games in a season, there is a possibility that the actual OBP is the result of luck rather than skill. Bayesian analysis will &#8220;regress&#8221; the actual observed OBP to the mean, in that if a player has a small number of plate appearances (PA) it doesn&#8217;t give them very much weight and the result will be something closer to the overall (MLB) average. On the other hand, if a player has quite a few PAs then it believes that the results are not the result of luck and it gives the observations a lot of weight.<br />We are trying to estimate the &#8220;true&#8221; OBP of each batter. Bayesian analysis assumes that the true OBP is random. <a href="http://en.wikipedia.org/wiki/Empirical_Bayes_method">Empirical Bayes</a> is a method of figuring out the distribution of &#8220;true&#8221; OBP using the data. OBP is times on base divided by PA. Times on base (X) for each batter is distributed <a href="http://en.wikipedia.org/wiki/Binomial_distribution">binomial</a> with n=PA and p=true OBP. We further assume that p is distributed <a href="http://en.wikipedia.org/wiki/Beta_distribution">Beta</a> with parameters a and b. It follows from this that the marginal distribution of X is distributed according to the distribution:<br />gamma(a+b)*gamma(a+x)*gamma(n-x+b)*(n choose x)/(gamma(a)*gamma(b)*gamma(a+b+n))<br />where gamma is the <a href="http://en.wikipedia.org/wiki/Gamma_function">gamma function</a>.<br />We will estimate the parameters a and b based on the data (X), using its marginal distribution (the &#8220;empirical&#8221; part of Bayes). To do this I found that likelihood of the marginal distribution of all the batters. Then I maximized this likelihood by adjusting the parameters a and b. This is called the ML-II.<br /><br /><b>The Analysis</b><br />I used data for all non-pitchers in 2010. I assume that each player is independent. In doing that, I just have to multiply all the marginals for each player together to get the likelihood. When I do this and maximize it with respect to a and b, I get estimates that a = 83.48291 and b = 174.9038. I think this can be interpreted that prior mean (what we would assume that average OBP of a batter is before seeing him bat) is a/(a+b) = 0.323. This is pretty close to what the overall OBP of the league was (0.330). I think it makes sense that the prior is lower than the league average because batters who do well will get more opportunities and players that do poorly will get fewer. So the league average is biased high. <br />Below is a graph of the prior distribution and the updated posteriors of every batter. You can (sort of) see that the posteriors have tighter distributions than the prior does. (The posterior distribution of each batter in this case is the distribution of OBP after we have observed PA and the actual OBP.)<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/_qD9db1gpElc/TR1lbFd8yfI/AAAAAAAAFhQ/IkoRr-9FrZw/s1600/dist.jpg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_qD9db1gpElc/TR1lbFd8yfI/AAAAAAAAFhQ/IkoRr-9FrZw/s1600/dist.jpg" /></a></div><br /><br />One way to see why this Bayesian analysis is useful is to compare the posterior means with the observed OBP. If someone has only a few PAs, their OBP could be very high or very low and this may mislead you into thinking that this batter is very good or bad. However, the posterior mean takes into account the number of PAs. Below is a graph comparing the two. You can see that the range of values for posterior mean is pretty small, especially compare to actual OBP.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/_qD9db1gpElc/TR1mzX6IK2I/AAAAAAAAFhU/hlrgx0oDK38/s1600/OBPvsPostMean.jpg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/_qD9db1gpElc/TR1mzX6IK2I/AAAAAAAAFhU/hlrgx0oDK38/s1600/OBPvsPostMean.jpg" /></a></div><br />Here is a list of the highest posterior mean OBP:<br /><br /><table border="0" cellpadding="0" cellspacing="0" style="width: 252px;"><colgroup><col style="width: 87pt;" width="116"></col>  <col style="width: 54pt;" width="72"></col>  <col style="width: 48pt;" width="64"></col>  </colgroup><tbody><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="height: 15pt; width: 87pt;" width="116"><b>Batter</b></td>   <td class="xl65" style="border-left: medium none; width: 54pt;" width="72"><b>Posterior Mean</b></td>   <td class="xl65" style="border-left: medium none; width: 48pt;" width="64"><b>Actual OBP</b></td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Joey Votto</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.396</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.424</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Miguel Cabrera</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.392</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.420</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Albert Pujols</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.390</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.414</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Justin Morneau</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.388</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.437</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Josh Hamilton</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.383</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.411</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Prince Fielder</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.380</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.401</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Shin-Soo Choo</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.379</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.401</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Kevin Youkilis</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.379</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.412</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Joe Mauer</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.378</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.402</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Adrian   Gonzalez</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.374</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.393</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Daric Barton</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.374</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.393</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Jim Thome</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.373</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.412</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Paul Konerko</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.373</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.393</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Jason Heyward</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.373</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.393</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Matt Holliday</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.371</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.390</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Carlos Ruiz</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.371</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.400</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Manny Ramirez</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.371</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.409</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Billy Butler</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.370</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.388</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Jayson Werth</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.370</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.388</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl65" height="20" style="border-top: medium none; height: 15pt;">Ryan Zimmerman</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.369</td>   <td align="right" class="xl66" style="border-left: medium none; border-top: medium none;">0.388</td>  </tr></tbody></table><br />And here is a list of the lowest posterior mean OBP:<br /><br /><table border="0" cellpadding="0" cellspacing="0" style="width: 245px;"><colgroup><col style="width: 98pt;" width="131"></col>  <col style="width: 29pt;" width="39"></col>  <col style="width: 56pt;" width="75"></col>  </colgroup><tbody><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="height: 15pt; width: 98pt;" width="131"><b>Batter</b></td>   <td class="xl66" style="border-left: medium none; width: 29pt;" width="39"><b>Posterior Mean</b></td>   <td class="xl66" style="border-left: medium none; width: 56pt;" width="75"><b>Actual OBP</b></td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Brandon Wood</td>   <td align="right" class="xl65">0.252</td>   <td align="right" class="xl67" style="border-top: medium none;">0.175</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Pedro Feliz</td>   <td align="right" class="xl65">0.271</td>   <td align="right" class="xl67" style="border-top: medium none;">0.240</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Jeff Mathis</td>   <td align="right" class="xl65">0.276</td>   <td align="right" class="xl67" style="border-top: medium none;">0.219</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Garret   Anderson</td>   <td align="right" class="xl65">0.277</td>   <td align="right" class="xl67" style="border-top: medium none;">0.204</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Adam Moore</td>   <td align="right" class="xl65">0.281</td>   <td align="right" class="xl67" style="border-top: medium none;">0.230</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Josh Bell</td>   <td align="right" class="xl65">0.285</td>   <td align="right" class="xl67" style="border-top: medium none;">0.224</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Jose Lopez</td>   <td align="right" class="xl65">0.286</td>   <td align="right" class="xl67" style="border-top: medium none;">0.270</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Peter Bourjos</td>   <td align="right" class="xl65">0.287</td>   <td align="right" class="xl67" style="border-top: medium none;">0.237</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Aaron Hill</td>   <td align="right" class="xl65">0.287</td>   <td align="right" class="xl67" style="border-top: medium none;">0.271</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Tony Abreu</td>   <td align="right" class="xl65">0.288</td>   <td align="right" class="xl67" style="border-top: medium none;">0.244</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Koyie Hill</td>   <td align="right" class="xl65">0.291</td>   <td align="right" class="xl67" style="border-top: medium none;">0.254</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Gerald Laird</td>   <td align="right" class="xl65">0.291</td>   <td align="right" class="xl67" style="border-top: medium none;">0.263</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Drew Butera</td>   <td align="right" class="xl65">0.291</td>   <td align="right" class="xl67" style="border-top: medium none;">0.237</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Jeff Clement</td>   <td align="right" class="xl65">0.291</td>   <td align="right" class="xl67" style="border-top: medium none;">0.237</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Matt Carson</td>   <td align="right" class="xl65">0.291</td>   <td align="right" class="xl67" style="border-top: medium none;">0.193</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Humberto   Quintero</td>   <td align="right" class="xl65">0.292</td>   <td align="right" class="xl67" style="border-top: medium none;">0.262</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Wil Nieves</td>   <td align="right" class="xl65">0.292</td>   <td align="right" class="xl67" style="border-top: medium none;">0.244</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Matt   Tuiasosopo</td>   <td align="right" class="xl65">0.292</td>   <td align="right" class="xl67" style="border-top: medium none;">0.234</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Luis Montanez</td>   <td align="right" class="xl65">0.292</td>   <td align="right" class="xl67" style="border-top: medium none;">0.155</td>  </tr><tr height="20" style="height: 15pt;">   <td class="xl66" height="20" style="border-top: medium none; height: 15pt;">Cesar Izturis</td>   <td align="right" class="xl65">0.292</td>   <td align="right" class="xl67" style="border-top: medium none;">0.277</td>  </tr></tbody></table><br />You can see that all of the posterior means are pulled closer to the overall mean (the good players look worse and the bad players look better). The order changes a little bit but not too much. <br /><br />You can see the effect of sample size (PAs) by comparing Justin Morneau with Joey Votto. Morneau had a higher OBP, but Votto ended up with a higher posterior mean because he had more PAs (Votto had 648 while Morneau had 348). Here are their posterior distributions:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/_qD9db1gpElc/TR1tYF814sI/AAAAAAAAFhY/4-gKxwH1JgY/s1600/distcompare.jpg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/_qD9db1gpElc/TR1tYF814sI/AAAAAAAAFhY/4-gKxwH1JgY/s1600/distcompare.jpg" /></a></div><br /><br />Because of the additional PAs, you can see that the distribution of Votto is a little tighter than Morneau. We are more sure that Votto is excellent than we are sure that Morneau is excellent.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/21/week-3-nfl-survival-odds/">Week 3 NFL Survival Odds</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-21T00:00:00-04:00" pubdate data-updated="true">Sep 21<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Continuing my series of trying to figure out which team is best to pick for survival football and then ignoring it, I present my week 3 analysis. I used the same method as the <a href="http://alandgraf.blogspot.com/2010/09/nfl-survival-odds.html">past 2</a> <a href="http://alandgraf.blogspot.com/2010/09/week-2-nfl-survival-odds.html">weeks</a>, and didn&#8217;t make any updates to it since last week. <br />Here we go:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/_qD9db1gpElc/TJlSf0OSRNI/AAAAAAAAFfk/NXfI3JzlHKg/s1600/NFLsurvOddsWk3.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="http://1.bp.blogspot.com/_qD9db1gpElc/TJlSf0OSRNI/AAAAAAAAFfk/NXfI3JzlHKg/s640/NFLsurvOddsWk3.jpg" width="146" /></a></div><div class="separator" style="clear: both; text-align: center;"> </div><div class="separator" style="clear: both; text-align: center;"><br /></div>NE (53%), BAL (20%), WAS (8%), and MIN (7%) are the most common teams picked in the Yahoo! leagues. They are also the top four teams according to my metric in a different order.<br />This week has NE favored by the most that they will be favored by for the rest of the season and by quite a bit so it makes sense that they are ranked at the top. Maybe the biggest difference between this analysis and the Yahoo! distribution is that Baltimore has 20% of Yahoo! but is just fourth best here. I would have to say that my numbers make more sense because Baltimore has three more games with a spread of 10 or higher and couple more with a spread higher than 6. I am surprised that Washington is up on both lists because they are only favored by 4 and playing an away game. Although they only have one more playable game and that is a 6 point favorite.<br />I would definitely pick New England this week if perfection is your goal.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/20/week-2-nfl-survival-odds/">Week 2 NFL Survival Odds</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-20T00:00:00-04:00" pubdate data-updated="true">Sep 20<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+So this is late, but I already did the analysis and I wanted to share my results for posterity. I used the same method as <a href="http://alandgraf.blogspot.com/2010/09/nfl-survival-odds.html">last time </a>to try to evaluate who should be picked in a survival football pick &#8216;em. This method basically only tries to figure out which teams, or combinations of teams, give you the best chance of getting all of your picks correct for the entire year. Obviously you want to pick a team this week that has the best chance of winning. But you do not want to pick a team that also has a lot of future value, where they will be favored by quite a bit in their remaining games. To reiterate, the way I did this is that I randomly picked a teams for the remainder of the season. I then used the Las Vegas point spreads of all the games to give determine the probability of winning each game and the rest of the games. Finally, I compared the average probability of winning every game when picking team X next week to the average probability of winning every game when picking a random team next week. I express this as a ratio - the higher, the better.<br /><br />There are a couple of differences to how I did this last week.<br /><ul><li>I modified the sampling of teams so that it does not choose teams on a bye week. This saved a lot of wasted simulations, and helps to make the results more stable. Therefore, I only simulated 100,000 seasons worth of picks compared to 1,000,000 last week.</li><li>I omitted the team I picked last week from consideration of being picked for the rest of the season. Last week I picked Chicago, so they are not included.&nbsp;</li><li>The bar charts on the graphic start at zero. I committed a cardinal sin of graphing last week because of Excel&#8217;s defaults.</li></ul>Here is what I came up with for Week 2:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/_qD9db1gpElc/TJgAZzaW1MI/AAAAAAAAFfc/G6J06nJzRpE/s1600/NFLsurvOddsWk2.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="http://4.bp.blogspot.com/_qD9db1gpElc/TJgAZzaW1MI/AAAAAAAAFfc/G6J06nJzRpE/s640/NFLsurvOddsWk2.jpg" width="152" /></a></div>What this is saying is that you are about 48% more likely to go 16 - 0 for the rest of the year if you choose Green Bay than if you pick a random team. <br />One aspect this method does not address is that your goal is not always to have a perfect season. If the league is small enough, you just want to outlast your opponents. My league only had about 10 people to start. If you looked at Yahoo!&#8217;s dashboard, you&#8217;d see that 56% of people chose GB this week. If they go down and you didn&#8217;t pick them, your chances of winning increase dramatically. That is why I didn&#8217;t choose GB and why I lost.<br />I chose DAL, because the spread was high, the percent taking them was low, and they had less future value. It was almost entirely on the recommendation of Vegas Watch. Maybe I should have looked at my ranking and picked Oakland, Atlanta or Cleveland since there was even a lower percentage picking those teams and a higher ranking than Dallas. With hindsight, we now know that Green Bay, Oakland, and Atlanta won and Cleveland and Dallas lost. But there was a strategy to it because 4 of the 9 teams that picked took Green Bay. If they lost and my team won, I would have had a much better chance of winning.<br />I will brainstorm about a way to factor the pick distribution into the rankings, but I do not think it is possible the way it is currently set up.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/27/when-did-cd1025-book-summerfest-artists/">When Did CD102.5 Book the Summerfest Artists?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025&#8217;s Playlist</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Andrew Landgraf -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'andland';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
