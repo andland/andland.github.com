@@ -7,6 +7,10 @@ require 'uri'
 # from http://jekyllrb.com/docs/migrations/ by @juniorz
 # usage: ruby import.rb my-blog.xml
 # my-blog.xml is a file from Settings -> Basic -> Export in blogger.
+# 
+# Andrew: Need to update easily-access-academic-journals-off.html because there are illegal chars
+# In line 129, I changed comments to true. If error, change to false.
+# -This enables disqus comments on old posts.
 
 data = File.read ARGV[0]
 doc = Nokogiri::XML(data)
@@ -122,7 +126,7 @@ class Post
       %{layout: post},
       %{title: "#{title}"},
       %{date: #{creation_datetime}},
-      %{comments: false},
+      %{comments: true},
       categories,
       '---'
     ].compact.join("\n")
