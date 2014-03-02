@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="That title is quite a mouthful. This quarter, I have been reading papers on Spectral Clustering for a reading group. The basic goal of clustering is &hellip;">
+  <meta name="description" content="Correlation matrices are a common way to look at the dependence of a set of variables. When the variables have spatial relationships, the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/17/visualizing-correlations-of-matrix/">Visualizing the Correlations of a Matrix</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-17T00:00:00-05:00" pubdate data-updated="true">Feb 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/02/17/visualizing-correlations-of-matrix/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Correlation matrices are a common way to look at the dependence of a set of variables. When the variables have spatial relationships, the correlation matrix loses some information.<br /><br />Lets say you have repeated observations, each one being a matrix. For example, you could have yearly observations of health statistics for a spatial grid. Lets say the grid is n by p (n*p variables) and there are m observations of the grid. If we want to get the correlations of each element of the grid, the typical way to do that would be to convert the matrix of variables into a vector of length n*p, and then calculate the correlation matrix of the vector. When you do that, however, it will no longer be obvious which of the variables are on the same row/column or are close to each other. So the typical correlation matrix is not satisfactory.<br /><br />What I propose is a set of <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples </a>of correlation matrices. Instead of having an n*p by n*p correlation matrix, we will have an n by p grid of correlation matrices, each correlation matrix representing the correlation with the variable in that position of the matrix. Below is an example.<br /><br /><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-uKlTWBzaYhQ/Tz7SB8nALQI/AAAAAAAAF7c/ioCipoIuVgg/s1600/matrix+cor+plot.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-uKlTWBzaYhQ/Tz7SB8nALQI/AAAAAAAAF7c/ioCipoIuVgg/s1600/matrix+cor+plot.png" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-lv9XCCr-k0E/Tz7PVojdkfI/AAAAAAAAF7U/tFH2H8im_3Q/s1600/matrix+cor+plot.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div>The above example is just random data, so all correlations are spurious. Blue is positive, red is negative, and white is no correlation. You can see in the row 1, column 1 matrix that the 1st row and 1st column is dark blue. This is because this is the correlation with itself. Similarly in all other rows and columns.<br /><br />Using a real example might display the usefulness more clearly. I am on a project estimating elements of a matrix with only the row totals and column totals. I simulated data many times and kept track of the errors. I was interested in how the errors in the different cells are correlated with each other. Below, you can see that the errors in the same row or column are positively correlated with each other, while the errors in other rows and columns are negatively correlated. This pops out at you with the below plot, but would have been difficult to figure out with a typical correlation matrix.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-wSVkWLxaxH8/Tz7NN6lNobI/AAAAAAAAF7M/wQ7T-B-3Kx0/s1600/Correlation+of+Errors+Matrix1.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="400" src="http://1.bp.blogspot.com/-wSVkWLxaxH8/Tz7NN6lNobI/AAAAAAAAF7M/wQ7T-B-3Kx0/s400/Correlation+of+Errors+Matrix1.jpg" width="400" /></a></div><br />Code:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;"># Generate random data for the example</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;">reps=10<br />mat.data=array(0,c(4,5,reps))<br />for (i in 1:reps) {<br />&nbsp; mat.data[,,i]=matrix(rmultinom(1,20,rep(1,4*5)/(4*5)),4,5)<br />}</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;">matrix.cor.plot(mat.data)</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;"><br /># the function<br />matrix.cor.plot &lt;- function(mat.data) {<br />&nbsp; #mat.data should be a nrow by ncol by nrep array<br />&nbsp; <br />&nbsp; nrow=dim(mat.data)[1]<br />&nbsp; ncol=dim(mat.data)[2]<br />#&nbsp;&nbsp; nrep=dim(mat.data)[3]<br />&nbsp; <br />&nbsp; par(mfrow=c(nrow,ncol),cex=.75,bty=&#8221;o&#8221;,mar=c(1, 1, 1, 1) + 0.1)<br />&nbsp; <br />&nbsp; # red is -1, white is 0, blue is +1<br />&nbsp; rgb.palette &lt;- colorRampPalette(c(&#8220;red&#8221;,&#8221;white&#8221;,&#8221;blue&#8221;), space = &#8220;rgb&#8221;)<br />&nbsp; <br />&nbsp; for (r in 1:nrow) {<br />&nbsp;&nbsp;&nbsp; for (c in 1:ncol) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=matrix(0,nrow,ncol)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (r2 in 1:nrow) { for (c2 in 1:ncol) {cor.mat[r2,c2]=cor(mat.data[r,c,],mat.data[r2,c2,]) } }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=t(cor.mat)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=cor.mat[,ncol(cor.mat):1]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image(cor.mat,zlim=c(-1,1),col=rgb.palette(120),axes = FALSE,main=paste(&#8220;Row:&#8221;,r,&#8221;Col:&#8221;,c))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box()<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp; }<br />}</span></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -243,45 +282,6 @@ Continuing my series of trying to figure out which team is best to pick for surv
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/09/20/week-2-nfl-survival-odds/">Week 2 NFL Survival Odds</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-20T00:00:00-04:00" pubdate data-updated="true">Sep 20<span>th</span>, 2010</time>
-        
-         | <a href="/blog/2010/09/20/week-2-nfl-survival-odds/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-So this is late, but I already did the analysis and I wanted to share my results for posterity. I used the same method as <a href="http://alandgraf.blogspot.com/2010/09/nfl-survival-odds.html">last time </a>to try to evaluate who should be picked in a survival football pick &#8216;em. This method basically only tries to figure out which teams, or combinations of teams, give you the best chance of getting all of your picks correct for the entire year. Obviously you want to pick a team this week that has the best chance of winning. But you do not want to pick a team that also has a lot of future value, where they will be favored by quite a bit in their remaining games. To reiterate, the way I did this is that I randomly picked a teams for the remainder of the season. I then used the Las Vegas point spreads of all the games to give determine the probability of winning each game and the rest of the games. Finally, I compared the average probability of winning every game when picking team X next week to the average probability of winning every game when picking a random team next week. I express this as a ratio - the higher, the better.<br /><br />There are a couple of differences to how I did this last week.<br /><ul><li>I modified the sampling of teams so that it does not choose teams on a bye week. This saved a lot of wasted simulations, and helps to make the results more stable. Therefore, I only simulated 100,000 seasons worth of picks compared to 1,000,000 last week.</li><li>I omitted the team I picked last week from consideration of being picked for the rest of the season. Last week I picked Chicago, so they are not included.&nbsp;</li><li>The bar charts on the graphic start at zero. I committed a cardinal sin of graphing last week because of Excel&#8217;s defaults.</li></ul>Here is what I came up with for Week 2:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/_qD9db1gpElc/TJgAZzaW1MI/AAAAAAAAFfc/G6J06nJzRpE/s1600/NFLsurvOddsWk2.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="http://4.bp.blogspot.com/_qD9db1gpElc/TJgAZzaW1MI/AAAAAAAAFfc/G6J06nJzRpE/s640/NFLsurvOddsWk2.jpg" width="152" /></a></div>What this is saying is that you are about 48% more likely to go 16 - 0 for the rest of the year if you choose Green Bay than if you pick a random team. <br />One aspect this method does not address is that your goal is not always to have a perfect season. If the league is small enough, you just want to outlast your opponents. My league only had about 10 people to start. If you looked at Yahoo!&#8217;s dashboard, you&#8217;d see that 56% of people chose GB this week. If they go down and you didn&#8217;t pick them, your chances of winning increase dramatically. That is why I didn&#8217;t choose GB and why I lost.<br />I chose DAL, because the spread was high, the percent taking them was low, and they had less future value. It was almost entirely on the recommendation of Vegas Watch. Maybe I should have looked at my ranking and picked Oakland, Atlanta or Cleveland since there was even a lower percentage picking those teams and a higher ranking than Dallas. With hindsight, we now know that Green Bay, Oakland, and Atlanta won and Cleveland and Dallas lost. But there was a strategy to it because 4 of the 9 teams that picked took Green Bay. If they lost and my team won, I would have had a much better chance of winning.<br />I will brainstorm about a way to factor the pick distribution into the rankings, but I do not think it is possible the way it is currently set up.</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -299,6 +299,10 @@ So this is late, but I already did the analysis and I wanted to share my results
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/">Hastie and Tibshirani Interview Jerome Friedman</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
       </li>
     
@@ -312,10 +316,6 @@ So this is late, but I already did the analysis and I wanted to share my results
     
       <li class="post">
         <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
       </li>
     
   </ul>

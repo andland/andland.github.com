@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="I was having some fun with PITCHf/x data and generalize additive models. PITCHf/x keeps track of the trajectory, path, location of every pitch in &hellip;">
+  <meta name="description" content="Forgive me if you are already aware of this, but I found it quite alarming. I know that most code is interpreted by the computer in binary and we &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,93 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/15/rounding-in-r/">Rounding in R</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-15T00:00:00-04:00" pubdate data-updated="true">Jun 15<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/15/rounding-in-r/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Forgive me if you are already aware of this, but I found it quite alarming. I know that most code is interpreted by the computer in binary and we input in decimal, so problems can arise in conversion and with <a href="http://en.wikipedia.org/wiki/Floating_point">floating point</a>. But the example I have below is so simple that it really surprised me.<br /><br />I was converting a function from R into MATLAB so that a colleague could use it. I tested it out on the same data and got slightly different results. Digging into the problem, the difference was due to the fact that R was rounding 4.5 to 4 and MATLAB was rounding it to 5. I thought the &#8220;4.5&#8221; must have really been &#8220;4.49999&#8230;&#8221;. But that was not so.<br /><br />For example, this is the result of the <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html">round</a> function for a few numbers.<br /><pre class="brush: r">&gt; round(0.5,0)<br />[1] 0<br />&gt; round(1.5,0)<br />[1] 2<br />&gt; round(2.5,0)<br />[1] 2<br />&gt; round(3.5,0)<br />[1] 4<br />&gt; round(4.5,0)<br />[1] 4<br />&gt; round(5.5,0)<br />[1] 6<br />&gt; round(6.5,0)<br />[1] 6<br /></pre><br />Do you see a pattern?<br /><br />I tried this on versions 2.13.1 and 2.14.0. I ran the same with MATLAB and it gave the expected results. I am not any kind of expert on computer sciences, so I was not sure why this is happening. <a href="http://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html">Converting </a>any decimal number that ends in .5 into binary results in a finite length binary number. For example, 4.5 is 100.1 in binary. Because of this, I wouldn&#8217;t think the error would be due to floating points, but I really don&#8217;t know.<br /><br />Looking at the <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html">documentation</a> for round, I found the reason. It states in the notes, &#8220;Note that for rounding off a 5, the <a href="http://en.wikipedia.org/wiki/IEEE_754-2008#Rounding_rules">IEC 60559 standard</a> is expected to be used, ‘<em>go to the even digit</em>’.&#8221; It is a little comforting knowing that there is a logic behind it and that R is abiding to some standard. But why isn&#8217;t MATLAB abiding by the same standard? Also, I think most people expect numbers ending in .5 to round up, not the nearest even digit.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Analytic Bastard</div>
+<div class='content'>
+kudos Blaise</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Andrew wrote &quot;Also, I think most people expect numbers ending in .5 to round up (not the nearest even digit)&quot;. This kind of rounding is in German called &quot;kaufmännische Rundung&quot; (rounding in commerce). For this purpose I use the following function:<br /><br />#Definition of a function for &quot;rounding in commerce&quot;<br />cround = function(x,n){<br />vorz = sign(x)<br />z = abs(x)*10^n<br />z = z + 0.5<br />z = trunc(z)<br />z = z/10^n<br />z*vorz<br />}<br /><br /># Example<br />&gt; round(seq(0.5,6.5,1),0)<br />[1] 0 2 2 4 4 6 6<br />&gt; cround(seq(0.5,6.5,1),0)<br />[1] 1 2 3 4 5 6 7</div>
+</div>
+<div class='comment'>
+<div class='author'>cellocgw</div>
+<div class='content'>
+This &quot;round to even&quot; approach has been accepted by just about everyone (except matlab, and no surprise, except Msoft Excel).  <br />Sadly, the flame wars over &quot;round to even&quot; vs. &quot;round up&quot; continue, rather the way people argue about &quot;0.999&#8230; != 1&quot;<br /><br />PS: @a Tom:  I&#39;m highly skeptical of your <br />claim about 2.46&#8211;&gt;3.  Do you have a citation?</div>
+</div>
+<div class='comment'>
+<div class='author'>a Tom</div>
+<div class='content'>
+I&#39;m ever amazed that something so seemingly basic can have so many different approaches.<br /><br />I understand that in many middle east countries they start with the far right digit and round up or down, so 2.46 is rounded to 3!</div>
+</div>
+<div class='comment'>
+<div class='author'>Blaise</div>
+<div class='content'>
+This is discussed in Don Knuth&#39;s 1973 classic Seminumerical Algorithms. He gives the following example of what can happen when 5s are always rounded upwards. Suppose u = 10000000 and v = 0.5555556. Then u + v = 1.5555556. If we subtract v from this  result we get u&#39; = 1.0000001. Adding and then subtracting v from u&#39; and we get 1.0000002 and if we do it again we get 1.0000003 and so on. He says &quot;This phenomenon, called drift, will not occur when we use a stable rounding rule based on the parity of the least significant digit.&quot;</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+I was the #2 anonymous poster. Echoing Ben, I think that for ease of teaching, the &quot;round 5 up&quot; method is taught to children (and adults?) below the university level, and only if you go on for advance work is the more complicated method taught.<br /><br />Can you imagine trying to teach a 10 or 12 year old the IEC 60559 standard? Unfortunately, this is the method most adults are used to&#8230;<br /><br />I agree, it is a little troubling that Matlab doesn&#39;t abide by the standard. Yet another reason to stick with R!</div>
+</div>
+<div class='comment'>
+<div class='author'>Ben Bolker</div>
+<div class='content'>
+Wikipedia ( http://en.wikipedia.org/wiki/Rounding#Round_half_to_even ) says of round-to-even:<br /><br />This method also treats positive and negative values symmetrically, and therefore is free of overall bias if the original numbers are positive or negative with equal probability. In addition, for most reasonable distributions of y values, the expected (average) value of the rounded numbers is essentially the same as that of the original numbers, even if the latter are all positive (or all negative). However, this rule will still introduce a positive bias for even numbers (including zero), and a negative bias for the odd ones.<br /><br />So round-to-even seems to have *slightly* better numerical properties than &quot;round ties away from zero&quot;, which is what is (I think) most often taught, because it&#39;s easier to understand. http://www.mathworks.com/matlabcentral/fileexchange/6752 gives a MATLAB function for &quot;round to even&quot;.<br /><br />If I had to guess I would predict that in borderline cases (which this certainly is) MATLAB would favor &quot;do what will lead to happier users&quot; and R would favor &quot;do what is thought to be the best numerical practice&quot;.</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Hi,<br />I&#39;m not sure I understand what you mean by &quot;expected results&quot;?<br /><br />Regarding rounding, I was taught to round numbers ending in &quot;1, 2, 3, and 4&quot; *down*, and numbers that ended in &quot;6, 7, 8, 9&quot; *up*. Then, specifically regarding &quot;5&quot;, if the preceding digit is odd, round up and if the preceding digit is even, to round down. <br /><br />As you can see, this will then result in 50% of the numbers being rounded up, and 50% rounded down. If you round *down* on &quot;1, 2, 3, 4&quot; and round up on &quot;5, 6, 7, 8, 9&quot; you are rounding up 5/9th&#39;s of the time, and so introducing a bias.<br /><br />It sounds like R is handling it the way I would. Is that what you were wondering about?</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+To learn something about how computers handle numbers, especially as it relates to statistics and econometrics:<br /><br />B. D. McCullough and H. D. Vinod<br />&quot;The Numerical Reliability of Econometric Software,&quot;<br />Journal of Economic Literature 37(2), 633-665, 1999 <br /><br />A temporary link is available here:<br />http://www.pages.drexel.edu/~bdm25/jel.pdf</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -243,45 +330,6 @@ Just a follow up: From May 6 to the end of the season he had a .305/.365/.569 sp
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/17/visualizing-correlations-of-matrix/">Visualizing the Correlations of a Matrix</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-17T00:00:00-05:00" pubdate data-updated="true">Feb 17<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/02/17/visualizing-correlations-of-matrix/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Correlation matrices are a common way to look at the dependence of a set of variables. When the variables have spatial relationships, the correlation matrix loses some information.<br /><br />Lets say you have repeated observations, each one being a matrix. For example, you could have yearly observations of health statistics for a spatial grid. Lets say the grid is n by p (n*p variables) and there are m observations of the grid. If we want to get the correlations of each element of the grid, the typical way to do that would be to convert the matrix of variables into a vector of length n*p, and then calculate the correlation matrix of the vector. When you do that, however, it will no longer be obvious which of the variables are on the same row/column or are close to each other. So the typical correlation matrix is not satisfactory.<br /><br />What I propose is a set of <a href="http://en.wikipedia.org/wiki/Small_multiple">small multiples </a>of correlation matrices. Instead of having an n*p by n*p correlation matrix, we will have an n by p grid of correlation matrices, each correlation matrix representing the correlation with the variable in that position of the matrix. Below is an example.<br /><br /><div class="separator" style="clear: both; text-align: center;"></div><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-uKlTWBzaYhQ/Tz7SB8nALQI/AAAAAAAAF7c/ioCipoIuVgg/s1600/matrix+cor+plot.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-uKlTWBzaYhQ/Tz7SB8nALQI/AAAAAAAAF7c/ioCipoIuVgg/s1600/matrix+cor+plot.png" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-lv9XCCr-k0E/Tz7PVojdkfI/AAAAAAAAF7U/tFH2H8im_3Q/s1600/matrix+cor+plot.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div>The above example is just random data, so all correlations are spurious. Blue is positive, red is negative, and white is no correlation. You can see in the row 1, column 1 matrix that the 1st row and 1st column is dark blue. This is because this is the correlation with itself. Similarly in all other rows and columns.<br /><br />Using a real example might display the usefulness more clearly. I am on a project estimating elements of a matrix with only the row totals and column totals. I simulated data many times and kept track of the errors. I was interested in how the errors in the different cells are correlated with each other. Below, you can see that the errors in the same row or column are positively correlated with each other, while the errors in other rows and columns are negatively correlated. This pops out at you with the below plot, but would have been difficult to figure out with a typical correlation matrix.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-wSVkWLxaxH8/Tz7NN6lNobI/AAAAAAAAF7M/wQ7T-B-3Kx0/s1600/Correlation+of+Errors+Matrix1.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="400" src="http://1.bp.blogspot.com/-wSVkWLxaxH8/Tz7NN6lNobI/AAAAAAAAF7M/wQ7T-B-3Kx0/s400/Correlation+of+Errors+Matrix1.jpg" width="400" /></a></div><br />Code:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;"># Generate random data for the example</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;">reps=10<br />mat.data=array(0,c(4,5,reps))<br />for (i in 1:reps) {<br />&nbsp; mat.data[,,i]=matrix(rmultinom(1,20,rep(1,4*5)/(4*5)),4,5)<br />}</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;">matrix.cor.plot(mat.data)</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace; font-size: small;"><br /># the function<br />matrix.cor.plot &lt;- function(mat.data) {<br />&nbsp; #mat.data should be a nrow by ncol by nrep array<br />&nbsp; <br />&nbsp; nrow=dim(mat.data)[1]<br />&nbsp; ncol=dim(mat.data)[2]<br />#&nbsp;&nbsp; nrep=dim(mat.data)[3]<br />&nbsp; <br />&nbsp; par(mfrow=c(nrow,ncol),cex=.75,bty=&#8221;o&#8221;,mar=c(1, 1, 1, 1) + 0.1)<br />&nbsp; <br />&nbsp; # red is -1, white is 0, blue is +1<br />&nbsp; rgb.palette &lt;- colorRampPalette(c(&#8220;red&#8221;,&#8221;white&#8221;,&#8221;blue&#8221;), space = &#8220;rgb&#8221;)<br />&nbsp; <br />&nbsp; for (r in 1:nrow) {<br />&nbsp;&nbsp;&nbsp; for (c in 1:ncol) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=matrix(0,nrow,ncol)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (r2 in 1:nrow) { for (c2 in 1:ncol) {cor.mat[r2,c2]=cor(mat.data[r,c,],mat.data[r2,c2,]) } }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=t(cor.mat)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cor.mat=cor.mat[,ncol(cor.mat):1]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; image(cor.mat,zlim=c(-1,1),col=rgb.palette(120),axes = FALSE,main=paste(&#8220;Row:&#8221;,r,&#8221;Col:&#8221;,c))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box()<br />&nbsp;&nbsp;&nbsp; }<br />&nbsp; }<br />}</span></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -299,6 +347,10 @@ Correlation matrices are a common way to look at the dependence of a set of vari
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/">Hastie and Tibshirani Interview Jerome Friedman</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
       </li>
     
@@ -312,10 +364,6 @@ Correlation matrices are a common way to look at the dependence of a set of vari
     
       <li class="post">
         <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
       </li>
     
   </ul>

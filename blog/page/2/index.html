@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="A lot of times we are given a data set in Excel format and we want to run a quick analysis using R&#8217;s functionality to look at advanced &hellip;">
+  <meta name="description" content="As a grad student, I do lots of searches for research related to my own. When I am off campus, a lot of the relevant results are not open access. In &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-18T00:00:00-04:00" pubdate data-updated="true">Apr 18<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/18/easily-access-academic-journals-off/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+As a grad student, I do lots of searches for research related to my own. When I am off campus, a lot of the relevant results are not open access. In that case, I have to log onto my school&#8217;s library website and search for the journal or article there. It is quite a hassle. Luckily, I recently noticed that the website is predictably modified after I log into the library. I go to Ohio State University, and before and after logging in the websites will be <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">http://www.jstor.org/&#8230;</span> and <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">http://www.jstor.org.proxy.lib.ohio-state.edu/&#8230;</span>, for example. It doesn&#8217;t matter which journal or website I am looking at. If OSU has access, it will show up with <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">.proxy.lib.ohio-state.edu</span> after the .com/.org/etc. <br /><br />So I was able to save myself a few steps by typing that in instead of going through the library&#8217;s website. I should also be sure to note that typing this in brings you to an OSU log in screen. Only those with valid access can use this shortcut, but I assume other schools have the same setup.<br /><br />This is still more busy work than I would like, so I searched for ways to automatically do this. <a href="http://lifehacker.com/5731656/how-to-perform-nearly-any-task-from-your-browsers-address-bar">Lifehacker</a> has some address bar shortcuts, but nothing that quite works. I came across a&nbsp; Firefox add-on called <a href="https://addons.mozilla.org/en-us/firefox/addon/url-swap/">URL Swap</a> that seems like it could do the trick. However, when setting it up, I happened to find <a href="http://stackoverflow.com/questions/13212976/automatically-modify-url-in-firefox">this post</a> on Stack Overflow. The second answer has exactly what I am looking for, changing <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">.ExtraPart</span> to <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">.proxy.lib.ohio-state.edu</span>. <br /><br />I created a bookmark on my bookmarks toolbar with the javascript:<br /><blockquote class="tr_bq"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">javascript:(function(){ var curloc = window.location.toString(); var newloc = curloc.substring(0, curloc.indexOf(&#34;/&#34;, 8)) + &#34;.proxy.lib.ohio-state.edu&#34; + curloc.substring(curloc.indexOf(&#34;/&#34;, 8)); location.href=newloc; })()</span></blockquote><br />and it works perfectly. This trick is so useful I wanted to share it to save others some time.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -369,68 +408,6 @@ Do you have a sample of training data?</div>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/05/quick-post-about-getting-and-plotting/">Quick Post About Getting and Plotting Polls in R</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-05T00:00:00-05:00" pubdate data-updated="true">Nov 5<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/11/05/quick-post-about-getting-and-plotting/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-With the election nearly upon us, I wanted to share an easy way I just found to download polling data and graph a few with ggplot2. <a href="https://github.com/dlinzer/pollstR/">dlinzer </a>at github created a function to download poll data from the <a href="http://elections.huffingtonpost.com/pollster/api">Huffington Post&#8217;s Pollster API</a>.<br /><br />The default is to download national tracking polls from the presidential election. After sourcing the function, I load the required packages, download the data, and make the plot.<br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/packages/cran/XML">XML</a><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/stats/reshape"><span style="color: #003399; font-weight: bold;">reshape</span></a><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/packages/cran/ggplot2">ggplot2</a><span style="color: #009900;">)</span><span style="color: #339933;">;</span> theme_set<span style="color: #009900;">(</span>theme_bw<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />&nbsp;<br />dat &lt;- pollstR<span style="color: #009900;">(</span>pages=<span style="color: #cc66cc;">20</span><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>aes<span style="color: #009900;">(</span>end.date<span style="color: #339933;">,</span>Obama/<span style="color: #009900;">(</span>Obama+Romney<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_point<span style="color: #009900;">(</span>alpha=<span style="color: #cc66cc;">.5</span><span style="color: #009900;">)</span>+geom_smooth<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>weight=<a href="http://inside-r.org/r-doc/base/sqrt"><span style="color: #003399; font-weight: bold;">sqrt</span></a><span style="color: #009900;">(</span>N<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_hline<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>yintercept=<span style="color: #cc66cc;">0.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>lty=<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span>+<br />  labs<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/graphics/title"><span style="color: #003399; font-weight: bold;">title</span></a>=<span style="color: blue;">"Proportion of Vote for Obama"</span><span style="color: #339933;">,</span>x=<span style="color: blue;">"Last Date of Poll"</span><span style="color: #339933;">,</span>y=<span style="color: black; font-weight: bold;">NULL</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="512" src="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" style="cursor: move;" width="640" /></a></div>I have used transparency so that you can see when there are many polls on top of each other. You can see that Obama&#8217;s lead decreased substantially after the first debate but has crawled back up since then. Of course, I am treating all polls as equal (although I am weighting by sample size) when the truth is that some polls are better than others and some are biased.<br /><br />To have some more fun, I will show what some of the data from swing states look like. The code below loops through the swing states and downloads the polls. Then it plots the polls for each state in different facets.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a>swing.states=<a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span><span style="color: blue;">"ohio"</span><span style="color: #339933;">,</span><span style="color: blue;">"florida"</span><span style="color: #339933;">,</span><span style="color: blue;">"virginia"</span><span style="color: #339933;">,</span><span style="color: blue;">"colorado"</span><span style="color: #339933;">,</span><span style="color: blue;">"nevada"</span><span style="color: #339933;">,</span><span style="color: blue;">"north-carolina"</span><span style="color: #009900;">)</span><br /><span style="color: black; font-weight: bold;">for</span> <span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a> <span style="color: black; font-weight: bold;">in</span> swing.states<span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />  <a href="http://inside-r.org/r-doc/base/print"><span style="color: #003399; font-weight: bold;">print</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a><span style="color: #009900;">)</span><br />  dat.state &lt;- pollstR<span style="color: #009900;">(</span>chart=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span><span style="color: blue;">"2012-"</span><span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a><span style="color: #339933;">,</span><span style="color: blue;">"-president-romney-vs-obama"</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">""</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>pages=<span style="color: blue;">"all"</span><span style="color: #009900;">)</span><br />  dat.state=<a href="http://inside-r.org/r-doc/base/subset"><span style="color: #003399; font-weight: bold;">subset</span></a><span style="color: #009900;">(</span>dat.state<span style="color: #339933;">,</span>select=<a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span><span style="color: blue;">"id"</span><span style="color: #339933;">,</span><span style="color: blue;">"pollster"</span><span style="color: #339933;">,</span><span style="color: blue;">"start.date"</span><span style="color: #339933;">,</span><span style="color: blue;">"end.date"</span><span style="color: #339933;">,</span><span style="color: blue;">"method"</span><span style="color: #339933;">,</span><span style="color: blue;">"N"</span><span style="color: #339933;">,</span><span style="color: blue;">"Obama"</span><span style="color: #339933;">,</span><span style="color: blue;">"Romney"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />  dat.state$State=<a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a><br />&nbsp;<br />  <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a>==<span style="color: blue;">"ohio"</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />    dat=dat.state<br />  <span style="color: #009900;">}</span> <span style="color: black; font-weight: bold;">else</span> <span style="color: #009900;">{</span><br />    dat=<a href="http://inside-r.org/r-doc/base/rbind"><span style="color: #003399; font-weight: bold;">rbind</span></a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>dat.state<span style="color: #009900;">)</span><br />  <span style="color: #009900;">}</span><br /><span style="color: #009900;">}</span><br />&nbsp;<br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span>lubridate<span style="color: #009900;">)</span><br />dat$end.date=ymd<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/as.character"><span style="color: #003399; font-weight: bold;">as.character</span></a><span style="color: #009900;">(</span>dat$end.date<span style="color: #009900;">)</span><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>aes<span style="color: #009900;">(</span>end.date<span style="color: #339933;">,</span>Obama/<span style="color: #009900;">(</span>Obama+Romney<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_point<span style="color: #009900;">(</span>alpha=<span style="color: #cc66cc;">.5</span><span style="color: #009900;">)</span>+geom_smooth<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>weight=<a href="http://inside-r.org/r-doc/base/sqrt"><span style="color: #003399; font-weight: bold;">sqrt</span></a><span style="color: #009900;">(</span>N<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_hline<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>yintercept=<span style="color: #cc66cc;">0.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>lty=<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span>+<br />  labs<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/graphics/title"><span style="color: #003399; font-weight: bold;">title</span></a>=<span style="color: blue;">"Proportion of Vote for Obama"</span><span style="color: #339933;">,</span>x=<span style="color: blue;">"Last Date of Poll"</span><span style="color: #339933;">,</span>y=<span style="color: black; font-weight: bold;">NULL</span><span style="color: #009900;">)</span>+facet_wrap<span style="color: #009900;">(</span>~State<span style="color: #009900;">)</span>+xlim<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"8/1/2012"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"11/6/2012"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-FwY5UtHzB-4/UJhkl-qrDgI/AAAAAAAAHXM/LzcRBLshLRM/s1600/PollsPlot2.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="512" src="http://2.bp.blogspot.com/-FwY5UtHzB-4/UJhkl-qrDgI/AAAAAAAAHXM/LzcRBLshLRM/s1600/PollsPlot2.jpeg" width="640" /></a></div>Unfortunately the x-axis didn&#8217;t show up very well, but it starts at August 1. There have been quite a few polls in Ohio and Florida, haven&#8217;t there? The state polls did not have nearly the same shift that the national poll did in reaction to the first debate. The state with the largest bump is Colorado, where the debate was held.<br /><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a><br />By just looking at the tracking polls, I think you would make the same conclusions that <a href="http://fivethirtyeight.blogs.nytimes.com/">Nate Silver</a> has with his fancy model. Ohio, Virginia, Nevada, and Colorado favor Obama. North Carolina favors Romney and Florida just barely tips toward Romney as well.<br /><br />Finally, here are just the smoothed running means, all on one plot. You can see that There was also a first debate effect in Ohio.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>aes<span style="color: #009900;">(</span>end.date<span style="color: #339933;">,</span>Obama/<span style="color: #009900;">(</span>Obama+Romney<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_smooth<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>colour=State<span style="color: #339933;">,</span>weight=<a href="http://inside-r.org/r-doc/base/sqrt"><span style="color: #003399; font-weight: bold;">sqrt</span></a><span style="color: #009900;">(</span>N<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>se=<span style="color: black; font-weight: bold;">FALSE</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">2</span><span style="color: #009900;">)</span>+geom_hline<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>yintercept=<span style="color: #cc66cc;">0.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>lty=<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span>+<br />  labs<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/graphics/title"><span style="color: #003399; font-weight: bold;">title</span></a>=<span style="color: blue;">"Proportion of Vote for Obama"</span><span style="color: #339933;">,</span>x=<span style="color: blue;">"Last Date of Poll"</span><span style="color: #339933;">,</span>y=<span style="color: black; font-weight: bold;">NULL</span><span style="color: #009900;">)</span>+xlim<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"8/1/2012"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"11/6/2012"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-nN9GHK_W6Zs/UJhpDsnKArI/AAAAAAAAHXc/RBVNGzoM7tQ/s1600/PollsPlot3.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-nN9GHK_W6Zs/UJhpDsnKArI/AAAAAAAAHXc/RBVNGzoM7tQ/s1600/PollsPlot3.jpeg" height="347" width="640" /></a></div></div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Andrew Clark</div>
-<div class='content'>
-Interesting work. Thanks for the tip on the API/github. I have had a look at the GOP campaign - surely one of the strangest in history<br />http://wp.me/p17axt-jK</div>
-</div>
-<div class='comment'>
-<div class='author'>Andrew</div>
-<div class='content'>
-Thanks for the tip. To add more information to the national tracker plot, you can make the of the points relative to the number polled. Also facet it by the type of poll. Like this:<br /><br />ggplot(dat,aes(end.date,Obama/(Obama+Romney)))+<br />  geom_point(aes(size=sqrt(N)),alpha=.5)+<br />  geom_smooth(aes(weight=sqrt(N)))+<br />  geom_hline(aes(yintercept=0.5),lty=2,size=1)+<br />  labs(title=&quot;Proportion of Vote for Obama&quot;,x=&quot;Last Date of Poll&quot;,y=NULL)+<br />  facet_wrap(~method)+<br />  theme(axis.text.x=element_text(angle=-90))</div>
-</div>
-<div class='comment'>
-<div class='author'>Tony Hirst</div>
-<div class='content'>
-You can tidy up the x-axis labels by rotating them, eg using something like:<br />+theme(axis.text.x=element_text(angle=-90))</div>
-</div>
-<div class='comment'>
-<div class='author'>Tony Hirst</div>
-<div class='content'>
-This comment has been removed by the author.</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -448,6 +425,10 @@ This comment has been removed by the author.</div>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/">Hastie and Tibshirani Interview Jerome Friedman</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
       </li>
     
@@ -461,10 +442,6 @@ This comment has been removed by the author.</div>
     
       <li class="post">
         <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
       </li>
     
   </ul>

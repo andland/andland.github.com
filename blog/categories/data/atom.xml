@@ -4,7 +4,7 @@
   <title><![CDATA[Category: data | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/data/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-02-05T15:04:47-05:00</updated>
+  <updated>2014-03-02T17:56:20-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Hastie and Tibshirani Interview Jerome Friedman]]></title>
+    <link href="http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/"/>
+    <updated>2014-03-02T17:10:00-05:00</updated>
+    <id>http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman</id>
+    <content type="html"><![CDATA[<p><a href="http://www.stanford.edu/~hastie/">Trevor Hastie</a> and <a href="http://statweb.stanford.edu/~tibs/">Rob Tibshirani</a> are currently teaching a <a href="http://en.wikipedia.org/wiki/Massive_open_online_course">MOOC</a> covering an <a href="https://class.stanford.edu/courses/HumanitiesScience/StatLearning/Winter2014/about">introduction to statistical learning</a>. I am very familiar with most of the material in the course, having read <em>Elements of Statistical Learning</em> many times over.</p>
+
+<p>One great thing about the class, however, is that they are truely experts and have collaborated with many of the influencial researchers in their field. Because of this, when covering certain topics, they have included interviews with statisticians who made important developments to the field. When introducing the class to R, they interviewed <a href="https://www.youtube.com/watch?v=jk9S3RTAl38">John Chambers</a>, who was able to give a personal account of the history of S and R because he was one of the developers. Further, when covering resampling methods, they spoke with <a href="https://www.youtube.com/watch?v=6l9V1sINzhE">Brad Efron</a>, who talked about the history of the <a href="http://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29">bootstrap</a> and how he struggled to get it published.</p>
+
+<p>Today, they released <a href="https://www.youtube.com/watch?v=79tR7BvYE6w">a video interview</a> with Jerome Friedman. Friedman revealed many interesting facts about the history of <a href="http://en.wikipedia.org/wiki/Decision_tree_learning">tree-based methods</a>, including the fact that there weren&rsquo;t really any journal articles written about CART when they wrote <a href="http://www.amazon.com/Classification-Regression-Trees-Leo-Breiman/dp/0412048418">their book</a>. There was one quote that I particularly enjoyed.</p>
+
+<blockquote><p>And of course, I&rsquo;m very gratified that something that I was
+intellectually interested in for all this time has now
+become very popular and very important.
+I mean, data has risen to the top.
+My only regret is two of my mentors who also pushed it,
+probably harder and more effectively than I did &mdash;
+namely, John Tukey and Leo Breiman &mdash; are not around to
+actually see how data has triumphed over,
+say, theorem proving.</p></blockquote>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/79tR7BvYE6w "></iframe></div></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Top Songs by Artist on CD102.5 in 2013]]></title>

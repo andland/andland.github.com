@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="Finding the best subset of variables for a regression is a very common task in statistics and machine learning. There are statistical methods based &hellip;">
+  <meta name="description" content="With the election nearly upon us, I wanted to share an easy way I just found to download polling data and graph a few with ggplot2. dlinzer at &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/05/quick-post-about-getting-and-plotting/">Quick Post About Getting and Plotting Polls in R</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-05T00:00:00-05:00" pubdate data-updated="true">Nov 5<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/05/quick-post-about-getting-and-plotting/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+With the election nearly upon us, I wanted to share an easy way I just found to download polling data and graph a few with ggplot2. <a href="https://github.com/dlinzer/pollstR/">dlinzer </a>at github created a function to download poll data from the <a href="http://elections.huffingtonpost.com/pollster/api">Huffington Post&#8217;s Pollster API</a>.<br /><br />The default is to download national tracking polls from the presidential election. After sourcing the function, I load the required packages, download the data, and make the plot.<br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/packages/cran/XML">XML</a><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/stats/reshape"><span style="color: #003399; font-weight: bold;">reshape</span></a><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/packages/cran/ggplot2">ggplot2</a><span style="color: #009900;">)</span><span style="color: #339933;">;</span> theme_set<span style="color: #009900;">(</span>theme_bw<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />&nbsp;<br />dat &lt;- pollstR<span style="color: #009900;">(</span>pages=<span style="color: #cc66cc;">20</span><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>aes<span style="color: #009900;">(</span>end.date<span style="color: #339933;">,</span>Obama/<span style="color: #009900;">(</span>Obama+Romney<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_point<span style="color: #009900;">(</span>alpha=<span style="color: #cc66cc;">.5</span><span style="color: #009900;">)</span>+geom_smooth<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>weight=<a href="http://inside-r.org/r-doc/base/sqrt"><span style="color: #003399; font-weight: bold;">sqrt</span></a><span style="color: #009900;">(</span>N<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_hline<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>yintercept=<span style="color: #cc66cc;">0.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>lty=<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span>+<br />  labs<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/graphics/title"><span style="color: #003399; font-weight: bold;">title</span></a>=<span style="color: blue;">"Proportion of Vote for Obama"</span><span style="color: #339933;">,</span>x=<span style="color: blue;">"Last Date of Poll"</span><span style="color: #339933;">,</span>y=<span style="color: black; font-weight: bold;">NULL</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="512" src="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" style="cursor: move;" width="640" /></a></div>I have used transparency so that you can see when there are many polls on top of each other. You can see that Obama&#8217;s lead decreased substantially after the first debate but has crawled back up since then. Of course, I am treating all polls as equal (although I am weighting by sample size) when the truth is that some polls are better than others and some are biased.<br /><br />To have some more fun, I will show what some of the data from swing states look like. The code below loops through the swing states and downloads the polls. Then it plots the polls for each state in different facets.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a>swing.states=<a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span><span style="color: blue;">"ohio"</span><span style="color: #339933;">,</span><span style="color: blue;">"florida"</span><span style="color: #339933;">,</span><span style="color: blue;">"virginia"</span><span style="color: #339933;">,</span><span style="color: blue;">"colorado"</span><span style="color: #339933;">,</span><span style="color: blue;">"nevada"</span><span style="color: #339933;">,</span><span style="color: blue;">"north-carolina"</span><span style="color: #009900;">)</span><br /><span style="color: black; font-weight: bold;">for</span> <span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a> <span style="color: black; font-weight: bold;">in</span> swing.states<span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />  <a href="http://inside-r.org/r-doc/base/print"><span style="color: #003399; font-weight: bold;">print</span></a><span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a><span style="color: #009900;">)</span><br />  dat.state &lt;- pollstR<span style="color: #009900;">(</span>chart=<a href="http://inside-r.org/r-doc/base/paste"><span style="color: #003399; font-weight: bold;">paste</span></a><span style="color: #009900;">(</span><span style="color: blue;">"2012-"</span><span style="color: #339933;">,</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a><span style="color: #339933;">,</span><span style="color: blue;">"-president-romney-vs-obama"</span><span style="color: #339933;">,</span>sep=<span style="color: blue;">""</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>pages=<span style="color: blue;">"all"</span><span style="color: #009900;">)</span><br />  dat.state=<a href="http://inside-r.org/r-doc/base/subset"><span style="color: #003399; font-weight: bold;">subset</span></a><span style="color: #009900;">(</span>dat.state<span style="color: #339933;">,</span>select=<a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span><span style="color: blue;">"id"</span><span style="color: #339933;">,</span><span style="color: blue;">"pollster"</span><span style="color: #339933;">,</span><span style="color: blue;">"start.date"</span><span style="color: #339933;">,</span><span style="color: blue;">"end.date"</span><span style="color: #339933;">,</span><span style="color: blue;">"method"</span><span style="color: #339933;">,</span><span style="color: blue;">"N"</span><span style="color: #339933;">,</span><span style="color: blue;">"Obama"</span><span style="color: #339933;">,</span><span style="color: blue;">"Romney"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><br />  dat.state$State=<a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a><br />&nbsp;<br />  <span style="color: black; font-weight: bold;">if</span> <span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/mgcv/s"><span style="color: #003399; font-weight: bold;">s</span></a>==<span style="color: blue;">"ohio"</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span><br />    dat=dat.state<br />  <span style="color: #009900;">}</span> <span style="color: black; font-weight: bold;">else</span> <span style="color: #009900;">{</span><br />    dat=<a href="http://inside-r.org/r-doc/base/rbind"><span style="color: #003399; font-weight: bold;">rbind</span></a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>dat.state<span style="color: #009900;">)</span><br />  <span style="color: #009900;">}</span><br /><span style="color: #009900;">}</span><br />&nbsp;<br /><a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">(</span>lubridate<span style="color: #009900;">)</span><br />dat$end.date=ymd<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/as.character"><span style="color: #003399; font-weight: bold;">as.character</span></a><span style="color: #009900;">(</span>dat$end.date<span style="color: #009900;">)</span><span style="color: #009900;">)</span><br /><a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>aes<span style="color: #009900;">(</span>end.date<span style="color: #339933;">,</span>Obama/<span style="color: #009900;">(</span>Obama+Romney<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_point<span style="color: #009900;">(</span>alpha=<span style="color: #cc66cc;">.5</span><span style="color: #009900;">)</span>+geom_smooth<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>weight=<a href="http://inside-r.org/r-doc/base/sqrt"><span style="color: #003399; font-weight: bold;">sqrt</span></a><span style="color: #009900;">(</span>N<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_hline<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>yintercept=<span style="color: #cc66cc;">0.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>lty=<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span>+<br />  labs<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/graphics/title"><span style="color: #003399; font-weight: bold;">title</span></a>=<span style="color: blue;">"Proportion of Vote for Obama"</span><span style="color: #339933;">,</span>x=<span style="color: blue;">"Last Date of Poll"</span><span style="color: #339933;">,</span>y=<span style="color: black; font-weight: bold;">NULL</span><span style="color: #009900;">)</span>+facet_wrap<span style="color: #009900;">(</span>~State<span style="color: #009900;">)</span>+xlim<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"8/1/2012"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"11/6/2012"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-FwY5UtHzB-4/UJhkl-qrDgI/AAAAAAAAHXM/LzcRBLshLRM/s1600/PollsPlot2.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="512" src="http://2.bp.blogspot.com/-FwY5UtHzB-4/UJhkl-qrDgI/AAAAAAAAHXM/LzcRBLshLRM/s1600/PollsPlot2.jpeg" width="640" /></a></div>Unfortunately the x-axis didn&#8217;t show up very well, but it starts at August 1. There have been quite a few polls in Ohio and Florida, haven&#8217;t there? The state polls did not have nearly the same shift that the national poll did in reaction to the first debate. The state with the largest bump is Colorado, where the debate was held.<br /><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a><a href="http://4.bp.blogspot.com/-KXjQJ7sJ0eI/UJhfahhVZCI/AAAAAAAAHW8/nRxJVgXK5Fs/s1600/PollsPlot1.jpeg" imageanchor="1" style="clear: left; float: left; margin-bottom: 1em; margin-right: 1em;"></a><br />By just looking at the tracking polls, I think you would make the same conclusions that <a href="http://fivethirtyeight.blogs.nytimes.com/">Nate Silver</a> has with his fancy model. Ohio, Virginia, Nevada, and Colorado favor Obama. North Carolina favors Romney and Florida just barely tips toward Romney as well.<br /><br />Finally, here are just the smoothed running means, all on one plot. You can see that There was also a first debate effect in Ohio.<br /><br /><div style="overflow: auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family: monospace;"><a href="http://inside-r.org/packages/cran/ggplot">ggplot</a><span style="color: #009900;">(</span>dat<span style="color: #339933;">,</span>aes<span style="color: #009900;">(</span>end.date<span style="color: #339933;">,</span>Obama/<span style="color: #009900;">(</span>Obama+Romney<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span>+geom_smooth<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>colour=State<span style="color: #339933;">,</span>weight=<a href="http://inside-r.org/r-doc/base/sqrt"><span style="color: #003399; font-weight: bold;">sqrt</span></a><span style="color: #009900;">(</span>N<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>se=<span style="color: black; font-weight: bold;">FALSE</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">2</span><span style="color: #009900;">)</span>+geom_hline<span style="color: #009900;">(</span>aes<span style="color: #009900;">(</span>yintercept=<span style="color: #cc66cc;">0.5</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>lty=<span style="color: #cc66cc;">2</span><span style="color: #339933;">,</span>size=<span style="color: #cc66cc;">1</span><span style="color: #009900;">)</span>+<br />  labs<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/graphics/title"><span style="color: #003399; font-weight: bold;">title</span></a>=<span style="color: blue;">"Proportion of Vote for Obama"</span><span style="color: #339933;">,</span>x=<span style="color: blue;">"Last Date of Poll"</span><span style="color: #339933;">,</span>y=<span style="color: black; font-weight: bold;">NULL</span><span style="color: #009900;">)</span>+xlim<span style="color: #009900;">(</span><a href="http://inside-r.org/r-doc/base/c"><span style="color: #003399; font-weight: bold;">c</span></a><span style="color: #009900;">(</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"8/1/2012"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span>mdy<span style="color: #009900;">(</span><span style="color: blue;">"11/6/2012"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span></pre></div></div><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-nN9GHK_W6Zs/UJhpDsnKArI/AAAAAAAAHXc/RBVNGzoM7tQ/s1600/PollsPlot3.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-nN9GHK_W6Zs/UJhpDsnKArI/AAAAAAAAHXc/RBVNGzoM7tQ/s1600/PollsPlot3.jpeg" height="347" width="640" /></a></div></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Andrew Clark</div>
+<div class='content'>
+Interesting work. Thanks for the tip on the API/github. I have had a look at the GOP campaign - surely one of the strangest in history<br />http://wp.me/p17axt-jK</div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew</div>
+<div class='content'>
+Thanks for the tip. To add more information to the national tracker plot, you can make the of the points relative to the number polled. Also facet it by the type of poll. Like this:<br /><br />ggplot(dat,aes(end.date,Obama/(Obama+Romney)))+<br />  geom_point(aes(size=sqrt(N)),alpha=.5)+<br />  geom_smooth(aes(weight=sqrt(N)))+<br />  geom_hline(aes(yintercept=0.5),lty=2,size=1)+<br />  labs(title=&quot;Proportion of Vote for Obama&quot;,x=&quot;Last Date of Poll&quot;,y=NULL)+<br />  facet_wrap(~method)+<br />  theme(axis.text.x=element_text(angle=-90))</div>
+</div>
+<div class='comment'>
+<div class='author'>Tony Hirst</div>
+<div class='content'>
+You can tidy up the x-axis labels by rotating them, eg using something like:<br />+theme(axis.text.x=element_text(angle=-90))</div>
+</div>
+<div class='comment'>
+<div class='author'>Tony Hirst</div>
+<div class='content'>
+This comment has been removed by the author.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -316,93 +378,6 @@ Great post!  Thank you.</div>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/15/rounding-in-r/">Rounding in R</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-15T00:00:00-04:00" pubdate data-updated="true">Jun 15<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/15/rounding-in-r/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Forgive me if you are already aware of this, but I found it quite alarming. I know that most code is interpreted by the computer in binary and we input in decimal, so problems can arise in conversion and with <a href="http://en.wikipedia.org/wiki/Floating_point">floating point</a>. But the example I have below is so simple that it really surprised me.<br /><br />I was converting a function from R into MATLAB so that a colleague could use it. I tested it out on the same data and got slightly different results. Digging into the problem, the difference was due to the fact that R was rounding 4.5 to 4 and MATLAB was rounding it to 5. I thought the &#8220;4.5&#8221; must have really been &#8220;4.49999&#8230;&#8221;. But that was not so.<br /><br />For example, this is the result of the <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html">round</a> function for a few numbers.<br /><pre class="brush: r">&gt; round(0.5,0)<br />[1] 0<br />&gt; round(1.5,0)<br />[1] 2<br />&gt; round(2.5,0)<br />[1] 2<br />&gt; round(3.5,0)<br />[1] 4<br />&gt; round(4.5,0)<br />[1] 4<br />&gt; round(5.5,0)<br />[1] 6<br />&gt; round(6.5,0)<br />[1] 6<br /></pre><br />Do you see a pattern?<br /><br />I tried this on versions 2.13.1 and 2.14.0. I ran the same with MATLAB and it gave the expected results. I am not any kind of expert on computer sciences, so I was not sure why this is happening. <a href="http://www.mathsisfun.com/binary-decimal-hexadecimal-converter.html">Converting </a>any decimal number that ends in .5 into binary results in a finite length binary number. For example, 4.5 is 100.1 in binary. Because of this, I wouldn&#8217;t think the error would be due to floating points, but I really don&#8217;t know.<br /><br />Looking at the <a href="http://stat.ethz.ch/R-manual/R-devel/library/base/html/Round.html">documentation</a> for round, I found the reason. It states in the notes, &#8220;Note that for rounding off a 5, the <a href="http://en.wikipedia.org/wiki/IEEE_754-2008#Rounding_rules">IEC 60559 standard</a> is expected to be used, ‘<em>go to the even digit</em>’.&#8221; It is a little comforting knowing that there is a logic behind it and that R is abiding to some standard. But why isn&#8217;t MATLAB abiding by the same standard? Also, I think most people expect numbers ending in .5 to round up, not the nearest even digit.</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Analytic Bastard</div>
-<div class='content'>
-kudos Blaise</div>
-</div>
-<div class='comment'>
-<div class='author'>Anonymous</div>
-<div class='content'>
-Andrew wrote &quot;Also, I think most people expect numbers ending in .5 to round up (not the nearest even digit)&quot;. This kind of rounding is in German called &quot;kaufmännische Rundung&quot; (rounding in commerce). For this purpose I use the following function:<br /><br />#Definition of a function for &quot;rounding in commerce&quot;<br />cround = function(x,n){<br />vorz = sign(x)<br />z = abs(x)*10^n<br />z = z + 0.5<br />z = trunc(z)<br />z = z/10^n<br />z*vorz<br />}<br /><br /># Example<br />&gt; round(seq(0.5,6.5,1),0)<br />[1] 0 2 2 4 4 6 6<br />&gt; cround(seq(0.5,6.5,1),0)<br />[1] 1 2 3 4 5 6 7</div>
-</div>
-<div class='comment'>
-<div class='author'>cellocgw</div>
-<div class='content'>
-This &quot;round to even&quot; approach has been accepted by just about everyone (except matlab, and no surprise, except Msoft Excel).  <br />Sadly, the flame wars over &quot;round to even&quot; vs. &quot;round up&quot; continue, rather the way people argue about &quot;0.999&#8230; != 1&quot;<br /><br />PS: @a Tom:  I&#39;m highly skeptical of your <br />claim about 2.46&#8211;&gt;3.  Do you have a citation?</div>
-</div>
-<div class='comment'>
-<div class='author'>a Tom</div>
-<div class='content'>
-I&#39;m ever amazed that something so seemingly basic can have so many different approaches.<br /><br />I understand that in many middle east countries they start with the far right digit and round up or down, so 2.46 is rounded to 3!</div>
-</div>
-<div class='comment'>
-<div class='author'>Blaise</div>
-<div class='content'>
-This is discussed in Don Knuth&#39;s 1973 classic Seminumerical Algorithms. He gives the following example of what can happen when 5s are always rounded upwards. Suppose u = 10000000 and v = 0.5555556. Then u + v = 1.5555556. If we subtract v from this  result we get u&#39; = 1.0000001. Adding and then subtracting v from u&#39; and we get 1.0000002 and if we do it again we get 1.0000003 and so on. He says &quot;This phenomenon, called drift, will not occur when we use a stable rounding rule based on the parity of the least significant digit.&quot;</div>
-</div>
-<div class='comment'>
-<div class='author'>Anonymous</div>
-<div class='content'>
-I was the #2 anonymous poster. Echoing Ben, I think that for ease of teaching, the &quot;round 5 up&quot; method is taught to children (and adults?) below the university level, and only if you go on for advance work is the more complicated method taught.<br /><br />Can you imagine trying to teach a 10 or 12 year old the IEC 60559 standard? Unfortunately, this is the method most adults are used to&#8230;<br /><br />I agree, it is a little troubling that Matlab doesn&#39;t abide by the standard. Yet another reason to stick with R!</div>
-</div>
-<div class='comment'>
-<div class='author'>Ben Bolker</div>
-<div class='content'>
-Wikipedia ( http://en.wikipedia.org/wiki/Rounding#Round_half_to_even ) says of round-to-even:<br /><br />This method also treats positive and negative values symmetrically, and therefore is free of overall bias if the original numbers are positive or negative with equal probability. In addition, for most reasonable distributions of y values, the expected (average) value of the rounded numbers is essentially the same as that of the original numbers, even if the latter are all positive (or all negative). However, this rule will still introduce a positive bias for even numbers (including zero), and a negative bias for the odd ones.<br /><br />So round-to-even seems to have *slightly* better numerical properties than &quot;round ties away from zero&quot;, which is what is (I think) most often taught, because it&#39;s easier to understand. http://www.mathworks.com/matlabcentral/fileexchange/6752 gives a MATLAB function for &quot;round to even&quot;.<br /><br />If I had to guess I would predict that in borderline cases (which this certainly is) MATLAB would favor &quot;do what will lead to happier users&quot; and R would favor &quot;do what is thought to be the best numerical practice&quot;.</div>
-</div>
-<div class='comment'>
-<div class='author'>Anonymous</div>
-<div class='content'>
-Hi,<br />I&#39;m not sure I understand what you mean by &quot;expected results&quot;?<br /><br />Regarding rounding, I was taught to round numbers ending in &quot;1, 2, 3, and 4&quot; *down*, and numbers that ended in &quot;6, 7, 8, 9&quot; *up*. Then, specifically regarding &quot;5&quot;, if the preceding digit is odd, round up and if the preceding digit is even, to round down. <br /><br />As you can see, this will then result in 50% of the numbers being rounded up, and 50% rounded down. If you round *down* on &quot;1, 2, 3, 4&quot; and round up on &quot;5, 6, 7, 8, 9&quot; you are rounding up 5/9th&#39;s of the time, and so introducing a bias.<br /><br />It sounds like R is handling it the way I would. Is that what you were wondering about?</div>
-</div>
-<div class='comment'>
-<div class='author'>Anonymous</div>
-<div class='content'>
-To learn something about how computers handle numbers, especially as it relates to statistics and econometrics:<br /><br />B. D. McCullough and H. D. Vinod<br />&quot;The Numerical Reliability of Econometric Software,&quot;<br />Journal of Economic Literature 37(2), 633-665, 1999 <br /><br />A temporary link is available here:<br />http://www.pages.drexel.edu/~bdm25/jel.pdf</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -420,6 +395,10 @@ To learn something about how computers handle numbers, especially as it relates 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/">Hastie and Tibshirani Interview Jerome Friedman</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/27/top-songs-by-artist-on-cd1025-in-2013/">Top Songs by Artist on CD102.5 in 2013</a>
       </li>
     
@@ -433,10 +412,6 @@ To learn something about how computers handle numbers, especially as it relates 
     
       <li class="post">
         <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus With a Firefox Bookmark</a>
       </li>
     
   </ul>
