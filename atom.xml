@@ -4,7 +4,7 @@
   <title><![CDATA[Statistically Significant]]></title>
   <link href="http://andland.github.io/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-03-02T18:00:23-05:00</updated>
+  <updated>2014-04-22T21:37:30-04:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -14,28 +14,90 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Yet Another Baseball Defense Statistic]]></title>
+    <link href="http://andland.github.io/blog/2014/04/22/yet-another-baseball-defensive-statistic/"/>
+    <updated>2014-04-22T22:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2014/04/22/yet-another-baseball-defensive-statistic</id>
+    <content type="html"><![CDATA[<p><a href="http://www.fangraphs.com">Fangraphs</a> recently published an interesting dataset that measures defensive efficiency of fielders. For each player, the <a href="http://www.fangraphs.com/blogs/inside-edge-fielding-data/">Inside Edge</a> dataset breaks their opportunities to make plays into five categories, ranging from almost impossible to routine. It also records the proportion of times that the player successfully made the play. With this data, we can see how successful each player is for each type of play. I wanted to think of a way to combine these five proportions into one fielding metric. From here on, I will assume that there is no error in categorizing a play as easy or hard and that there is no bias in the categorizations.</p>
+
+<h3 id="model">Model</h3>
+
+<p>The model I will build is motivated by <a href="http://en.wikipedia.org/wiki/Ordered_logit">ordinal regression</a>. If we only were concerned with the success rate in one of the categories, we could use standard logistic regression, and the probability that player $i$ successfully made a play would be assumed to be $\sigma(\theta_i)$, where $\sigma()$ is the <a href="https://en.wikipedia.org/wiki/Logistic_function">logistic function</a>. Using our prior knowledge that plays categorized as easy should have a higher success rate than plays categorized as difficult, I would like to generalize this. </p>
+
+<p>Say there are only two categories: easy and hard. We could model the probability that player $i$ successfully made an hard play as $\sigma(\theta_i)$ and the probability that he made an easy play as $\sigma(\theta_i+\gamma)$. Here, we would assume that $\gamma$ is the same for all players. This assumption implies that if player $i$ is better than player $j$ at easy plays, he will also be better at hard plays. This is a reasonable assumption, but maybe not true in all cases.</p>
+
+<p>Since we have five different categories of difficulty, we can generalize this by having $\gamma_k, k=1,\ldots,4$. Again, these $\gamma_k$&rsquo;s would be the same for everyone. A picture of what this looks like for shortstops is below. In this model, every player will effectively be shifting the curve either left or right. A positive $\theta_i$ means the player is better than average and cause the curve to shift left and vice versa for negative $\theta_i$.</p>
+
+<p><img src="http://andland.github.io/images/InsideEdge/LogitOrdered.png" title="Logit Ordered" /></p>
+
+<p>I modeled this as a multi-level mixed effects model, with the players being random effects and the $\gamma_k$&rsquo;s being fixed. Technically, I should optimize subject to the condition that the $\gamma_k$&rsquo;s are increasing, but the unconstrained optimization always yields increasing $\gamma_k$&rsquo;s because there is a big difference between success rate in the categories. I used combined data from 2012 and 2013 seasons and included all players with at least one success and one failure. I modeled each position separately. Modeling player effects as random, there is a fair amount of regression to the mean built in. In this sense, I am more trying to estimate the true ability of the player, rather than measuring what he did during the two years. This is an important distinction, which may differ from other defensive statistics.</p>
+
+<h3 id="model-fit">Model fit</h3>
+
+<p>Below is a summary of the results of the model for shortstops. I am only plotting the players with the at least 800 innings, for readability. A bonus of modeling the data like this is that we get standard error estimates as a result. I plotted the estimated effect of each player along with +/- 2 standard errors. We can be fairly certain that the effects for the top few shortstops is greater than 0 since their confidence intervals do not include 0. The same is true for the bottom few. Images for the other positions can be found <a href="https://github.com/andland/andland.github.com/tree/master/images/InsideEdge">here</a>.</p>
+
+<p><img src="http://andland.github.io/images/InsideEdge/SSList.png" title="Results for shortstops" /></p>
+
+<p>The results seem to make sense for the most part. Simmons and Tulowitzki have reputations as being strong defenders and Derek Jeter has a reputation as a poor defender.</p>
+
+<p>Further, I can validate this data by comparing it to other defensive metrics. One that is readily available on Fangraphs is UZR per 150 games. For each position, I took the correlation of my estimated effect with UZR per 150 games, weighted by the number of innings played. Pitchers and catchers do not have UZR&rsquo;s so I cannot compare them. The correlations, which are in the plot below, range from about 0.2 to 0.65.</p>
+
+<p><img src="http://andland.github.io/images/InsideEdge/CorrelationWithUZR.png" title="Correlation with UZR" /></p>
+
+<h3 id="interpreting-parameters">Interpreting parameters</h3>
+
+<p>In order to make this fielding metric more useful, I would like to convert the parameters to something more interpretable. One option which makes a lot of sense is &ldquo;plays made above/below average&rdquo;. Given an estimated $\theta_i$ for a player, we can calculate the probability that he would make a play in each of the five categories. We can then compare those probabilities to the probability an average player would make a play in each of the categories, which would be fit with $\theta=0$. Finally, we can weight these differences in probabilities by the relative rate that plays of various difficulties occur. </p>
+
+<p>For example, assuming there are only two categories again, suppose a player has a 0.10 and 0.05 higher probability than average of making hard and easy plays, respectively. Further assume that 75% of all plays are hard and 25% are easy. On a random play, the improvement in probability over an average player of making a play is $.10(.75)+.05(.25)=0.0875$. If a player has an opportunity for 300 plays in an average season, this player would be $300 \times 0.0875=26.25$ plays better than average over a typical season.</p>
+
+<p>I will assume that the number of opportunities to make plays is directly related to the number of innings played. To convert innings to opportunities, I took the median number of opportunities per inning for each position. For example, shortstops had the highest opportunities per inning at 0.40 and catchers had the lowest at 0.08. The plot below shows the distribution of opportunities per inning for each position.</p>
+
+<p><img src="http://andland.github.io/images/InsideEdge/PlaysPerInning.png" title="Plays Per Inning by Position" /></p>
+
+<p>We can extend this to the impact on saving runs from being scored as well by assuming each successful play saves $x$ runs. I will not do this for this analysis.</p>
+
+<h3 id="results">Results</h3>
+
+<p><a href="http://spark.rstudio.com/andland/InsideEdgeBaseballFielding/"><img src="http://andland.github.io/images/InsideEdge/shiny.png" title="Shiny app" /></a></p>
+
+<p>Finally, I put together a <a href="http://www.rstudio.com/shiny/">Shiny</a> app to display <a href="http://spark.rstudio.com/andland/InsideEdgeBaseballFielding/">the results</a>. You can search by team, position, and innings played. A team of &lsquo;- - -&lsquo; means the player played for multiple teams over this period. You can also choose to display the results as a rate statistic (extra plays made per season) or a count statistic (extra plays made over the two seasons). To get a seasonal number, I assume position players played 150 games with 8.5 innings in each game. For pitchers, I assumed that they pitched 30 games, 6 innings each. </p>
+
+<h3 id="conclusions-and-future-work">Conclusions and future work</h3>
+
+<p>I don&rsquo;t know if I will do anything more with this data, but if I could do it again, I may have modeled each year separately instead of combining the two years together. With that, it would have been interesting to model the effect of age by observing how a player&rsquo;s ability to make a play changes from one year to the next. I also think it would be interesting to see how changing positions affects a players efficiency. For example, we could have a $9 \times 9$ matrix of fixed effects that represent the improvement or degradation in ability as a player switches from their main position to another one. Further assumptions would be needed to make sure the $\theta$&rsquo;s are on the same scale for every position.</p>
+
+<p>At the very least, this model and its results can be considered another data point in the analysis of a player&rsquo;s fielding ability. One thing we need to be concerned about is the classification of each play into the difficultness categories. The human eye can be fooled into thinking a routine play is hard just because a fielder dove to make the play, when a superior fielder could have made it look easier.</p>
+
+<h3 id="code">Code</h3>
+
+<p>I have put the R code together to do this analysis in <a href="https://gist.github.com/andland/c6adb69ea365c2580859">a gist</a>. If there is interest, I will put together a repo with all the data as well.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Hastie and Tibshirani Interview Jerome Friedman]]></title>
-    <link href="http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/"/>
+    <link href="http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman+-+Copy/"/>
     <updated>2014-03-02T17:10:00-05:00</updated>
-    <id>http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman</id>
+    <id>http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman - Copy</id>
     <content type="html"><![CDATA[<p><a href="http://www.stanford.edu/~hastie/">Trevor Hastie</a> and <a href="http://statweb.stanford.edu/~tibs/">Rob Tibshirani</a> are currently teaching a <a href="http://en.wikipedia.org/wiki/Massive_open_online_course">MOOC</a> covering an <a href="https://class.stanford.edu/courses/HumanitiesScience/StatLearning/Winter2014/about">introduction to statistical learning</a>. I am very familiar with most of the material in the course, having read <em>Elements of Statistical Learning</em> many times over.</p>
 
 <p>One great thing about the class, however, is that they are truely experts and have collaborated with many of the influencial researchers in their field. Because of this, when covering certain topics, they have included interviews with statisticians who made important developments to the field. When introducing the class to R, they interviewed <a href="https://www.youtube.com/watch?v=jk9S3RTAl38">John Chambers</a>, who was able to give a personal account of the history of S and R because he was one of the developers. Further, when covering resampling methods, they spoke with <a href="https://www.youtube.com/watch?v=6l9V1sINzhE">Brad Efron</a>, who talked about the history of the <a href="http://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29">bootstrap</a> and how he struggled to get it published.</p>
 
 <p>Today, they released <a href="https://www.youtube.com/watch?v=79tR7BvYE6w">a video interview</a> with Jerome Friedman. Friedman revealed many interesting facts about the history of <a href="http://en.wikipedia.org/wiki/Decision_tree_learning">tree-based methods</a>, including the fact that there weren&rsquo;t really any journal articles written about CART when they wrote <a href="http://www.amazon.com/Classification-Regression-Trees-Leo-Breiman/dp/0412048418">their book</a>. There was one quote that I particularly enjoyed.</p>
 
-<blockquote><p>And of course, I&rsquo;m very gratified that something that I was
+<blockquote>
+  <p>And of course, I&rsquo;m very gratified that something that I was
 intellectually interested in for all this time has now
 become very popular and very important.
 I mean, data has risen to the top.
 My only regret is two of my mentors who also pushed it,
-probably harder and more effectively than I did &mdash;
-namely, John Tukey and Leo Breiman &mdash; are not around to
+probably harder and more effectively than I did &ndash;
+namely, John Tukey and Leo Breiman &ndash; are not around to
 actually see how data has triumphed over,
-say, theorem proving.</p></blockquote>
+say, theorem proving.</p>
+</blockquote>
 
-<div class="embed-video-container"><iframe width="640" height="480" src="http://www.youtube.com/embed/79tR7BvYE6w" frameborder="0" allowfullscreen></iframe></div>
-
+<div class="embed-video-container"><iframe width="640" height="480" src="http://www.youtube.com/embed/79tR7BvYE6w" frameborder="0" allowfullscreen=""></iframe></div>
 ]]></content>
   </entry>
   
@@ -502,24 +564,6 @@ Don&#8217;t you hate it when you are running a long piece of code and you keep c
     <id>http://andland.github.io/blog/2012/05/20/cleveland-indians</id>
     <content type="html"><![CDATA[<div class='post'>
 Recently, Chris Perez, the closer for the Indians, displayed <a href="http://throwinheat.mlblogs.com/2012/05/20/chris-perez-expands-on-his-comments-mark-shapiro-responds/">some frustration </a>with the fans for not supporting the team. Currently, they have the <a href="http://www.baseball-reference.com/leagues/current_attendance.shtml">lowest attendance </a>in the majors &#8211; by a decent margin. The Indians are averaging about 15,000 fans per home game, while the next closest team, the Oakland A&#8217;s, is averaging 19,000. It seemed like an odd time for Perez to bring this up because they <a href="http://www.baseball-reference.com/teams/CLE/2012-schedule-scores.shtml">have had </a>attendance in the 29,000s each of the last two home games. So that intrigued me to look into the numbers of what causes attendance to vary.<br /><br />I looked at <a href="http://www.baseball-reference.com/teams/CLE/2011-schedule-scores.shtml">2011 attendance data </a>for the Cleveland Indians only. I had a strong suspicion that a popular opponent would definitely and weekend games cause attendance to increase. Also, there is usually some press at the beginning of the season that claims no one wants to go to the games because it is too cold for baseball. (There is also more competing entertainment at the beginning of the season.)<br /><br />What I found to be significant (based on an exploratory approach) are summarized in the graph below. This plot explores the relationship of attendance with 5 other variables. I plotted attendance on the y-axis and the date on the x-axis. I don&#8217;t expect date to have any effect, but it organizes other aspects well (and you can see opening day had the highest attendance of the year). Instead of plotting points, I plotted the name of the opponent. You can see there are some larger attendances when they are playing the New York Yankees and the Cincinnati Reds, for example. The color of the team name indicates whether they are playing on the weekend or not and the size indicates the <a href="http://academic.udayton.edu/kissock/http/Weather/citylistUS.htm">temperature</a>. Probably the biggest effect, weekend games outdraw weekday games consistently. The colder temperatures are only in the beginning of the season, and seem to have a noticeable effect (at least for the coldest days).<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s1600/IndainsAttendance2011.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="633" src="https://lh3.ggpht.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s640/IndainsAttendance2011.jpeg" width="640" /></a></div><br /><br />I also looked into how many games above .500 the team was and how close they were in the division race. Neither of these showed any correlation, at least at the marginal level. This is interesting because the main reason Chris Perez is frustrated is that the team is winning, so the fans should be supporting them. This shows that wining did not make much of a difference within a single year. This should be more prevalent over multiple years.<br /><br />Some other information that might be useful is the quality of the opponent or whether the ace of the opposing pitching staff is starting. I only included temperature and not precipitation or any other weather information.<br /><br />Here is the basic R code I used: <br /><pre class="brush: r">library(ggplot2)<br />ggplot(data=home.attend,aes(x=Date,y=Attendance,colour=Weekend,label=Opp,size=Temp))+<br />  geom_text()+scale_size(to = c(2, 5))+theme_bw()&nbsp;</pre><pre class="brush: r">&nbsp;</pre><i><b>Update (9/21/2013)</b></i>:<br />Since attendance is still a hot topic, I created the same plot for the 2013 season so far.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="426" src="https://lh3.ggpht.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-mT8HBGEKwak/Uj5EauQomGI/AAAAAAAAH84/qB4e0VE6n94/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div><br /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[What's Up with Albert Pujols?]]></title>
-    <link href="http://andland.github.io/blog/2012/05/05/whats-up-with-alber-pujols/"/>
-    <updated>2012-05-05T00:00:00-04:00</updated>
-    <id>http://andland.github.io/blog/2012/05/05/whats-up-with-alber-pujols</id>
-    <content type="html"><![CDATA[<div class='post'>
-After signing a huge deal with the Angels, Pujols has been having a really bad year. He hasn&#8217;t hit a home run this year, breaking a career long streak. So I thought it would be a good idea to use some statistics to tell how good or bad we think Pujols will actually be this year.<br /><br />Coming into the year, he had a career .328/.420/.617 career AVG/OBP/SLG. Through one month, he has a .194/.237/.269. So what do we expect out of Pujols for the rest of the year?<br /><br />In Bayesian statistical terms, we can quantify our prior beliefs about Pujols from his history before this year. Below are histograms and fitted distributions of Pujols&#8217; yearly batting lines from 2001 to 2011. His numbers are well above normal and he has been the best player in baseball for a while.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-eBkY_jm8kn0/T6WDvtfUlZI/AAAAAAAAGss/dNE4TkjFC6I/s1600/pujols.bmp" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-eBkY_jm8kn0/T6WDvtfUlZI/AAAAAAAAGss/dNE4TkjFC6I/s1600/pujols.bmp" /></a></div>So coming into this year, we would expect him to have a batting average between .290 and .370, with .330 being the most likely, for example.<br /><br />Combining our prior expectations with the data we have observed from this year, we can get our posterior beliefs. When we do that, we get a posterior expectation that Pujols is a true .312/.379/.451 hitter. The league averages from 2001 to 2011 are .263/.331/.418, so he is still expected to be well above the average player, even with the poor start. If we use data from just this year, we do not have enough data to give us an accurate reflection of how good he is. If we combine the data with our prior beliefs, we get a better indication of what to expect. Below is a table that compares these numbers.<br /><br /><style type="text/css">.nobrtable br { display: none } </style><br /><div class="nobrtable"><table border="2" bordercolor="#3366cc" cellpadding="3" cellspacing="3" style="background-color: white;"><tbody><tr style="background-color: #3366cc; color: white; padding-bottom: 4px; padding-top: 5px;"> <th><br /></th><th>AVG</th><th>OBP</th><th>SLG</th></tr><tr><td>League</td><td>.263</td><td>.331</td><td>.418</td></tr><tr><td>Prior</td><td>.328</td><td>.420</td><td>.617</td></tr><tr><td>This Year</td><td>.194</td><td>.237</td><td>.269</td></tr><tr><td>Posterior</td><td>.312</td><td>.379</td><td>.451</td></tr></tbody></table></div><br />Finally, we can also get the whole posterior distribution (not just the expectation). I have plotted the prior and posterior distributions on the same graph. You can see that Pujols&#8217; bad month has caused our beliefs about him to decrease quite a bit. Most notable is the slugging percentage, which is likely because of his career-long homerless streak.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-ZmO18a8vj0w/T6WLW6LnjsI/AAAAAAAAGs4/ll2ab7sGJAg/s1600/pujols-prior+and+posterior.bmp" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-ZmO18a8vj0w/T6WLW6LnjsI/AAAAAAAAGs4/ll2ab7sGJAg/s1600/pujols-prior+and+posterior.bmp" /></a></div><br />What Bayesian analysis does is shrinks (or regresses) the data from this year to the prior average. This is&nbsp; the same idea of regressing to the overall mean that is talked about frequently in sabermetric blogs. The difference is that regressing to the mean usually regresses to the average player in the league. With Bayesian analysis, we can regress to our prior expectation about the specific player (Albert Pujols). I believe this approach will give us better results in most cases.<br /><br />The R code to do the analysis can be found <a href="https://docs.google.com/open?id=0B21DLJKq18K9NkNJb0lQRHNqbHM">here</a>. I used data from <a href="http://www.baseball-reference.com/players/p/pujolal01.shtml">Baseball Reference</a>.</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Andrew Landgraf</div>
-<div class='content'>
-Just a follow up: From May 6 to the end of the season he had a .305/.365/.569 split. The posterior expectation of .312/.379/.451 matches the average and on base percentage well, but his actual slugging is quite a bit higher than the posterior distribution would have predicted.<br /><br />Not sure what to make of this except to say he had a really bad start with slugging, which may have been caused more by random chance than the other two. And obviously the distributional assumptions are an approximation to reality.</div>
-</div>
-</div>
 ]]></content>
   </entry>
   

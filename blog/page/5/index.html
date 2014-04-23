@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="Correlation matrices are a common way to look at the dependence of a set of variables. When the variables have spatial relationships, the &hellip;">
+  <meta name="description" content="After signing a huge deal with the Angels, Pujols has been having a really bad year. He hasn&#8217;t hit a home run this year, breaking a career &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -46,6 +46,24 @@
 
 </head>
 
+
+<!-- mathjax config similar to math.stackexchange -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+
 <body   >
   <header role="banner"><hgroup>
   <h1><a href="/">Statistically Significant</a></h1>
@@ -78,6 +96,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/05/whats-up-with-alber-pujols/">What&#8217;s Up With Albert Pujols?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-05T00:00:00-04:00" pubdate data-updated="true">May 5<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/05/05/whats-up-with-alber-pujols/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+After signing a huge deal with the Angels, Pujols has been having a really bad year. He hasn&#8217;t hit a home run this year, breaking a career long streak. So I thought it would be a good idea to use some statistics to tell how good or bad we think Pujols will actually be this year.<br /><br />Coming into the year, he had a career .328/.420/.617 career AVG/OBP/SLG. Through one month, he has a .194/.237/.269. So what do we expect out of Pujols for the rest of the year?<br /><br />In Bayesian statistical terms, we can quantify our prior beliefs about Pujols from his history before this year. Below are histograms and fitted distributions of Pujols&#8217; yearly batting lines from 2001 to 2011. His numbers are well above normal and he has been the best player in baseball for a while.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-eBkY_jm8kn0/T6WDvtfUlZI/AAAAAAAAGss/dNE4TkjFC6I/s1600/pujols.bmp" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-eBkY_jm8kn0/T6WDvtfUlZI/AAAAAAAAGss/dNE4TkjFC6I/s1600/pujols.bmp" /></a></div>So coming into this year, we would expect him to have a batting average between .290 and .370, with .330 being the most likely, for example.<br /><br />Combining our prior expectations with the data we have observed from this year, we can get our posterior beliefs. When we do that, we get a posterior expectation that Pujols is a true .312/.379/.451 hitter. The league averages from 2001 to 2011 are .263/.331/.418, so he is still expected to be well above the average player, even with the poor start. If we use data from just this year, we do not have enough data to give us an accurate reflection of how good he is. If we combine the data with our prior beliefs, we get a better indication of what to expect. Below is a table that compares these numbers.<br /><br /><style type="text/css">.nobrtable br { display: none } </style><br /><div class="nobrtable"><table border="2" bordercolor="#3366cc" cellpadding="3" cellspacing="3" style="background-color: white;"><tbody><tr style="background-color: #3366cc; color: white; padding-bottom: 4px; padding-top: 5px;"> <th><br /></th><th>AVG</th><th>OBP</th><th>SLG</th></tr><tr><td>League</td><td>.263</td><td>.331</td><td>.418</td></tr><tr><td>Prior</td><td>.328</td><td>.420</td><td>.617</td></tr><tr><td>This Year</td><td>.194</td><td>.237</td><td>.269</td></tr><tr><td>Posterior</td><td>.312</td><td>.379</td><td>.451</td></tr></tbody></table></div><br />Finally, we can also get the whole posterior distribution (not just the expectation). I have plotted the prior and posterior distributions on the same graph. You can see that Pujols&#8217; bad month has caused our beliefs about him to decrease quite a bit. Most notable is the slugging percentage, which is likely because of his career-long homerless streak.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-ZmO18a8vj0w/T6WLW6LnjsI/AAAAAAAAGs4/ll2ab7sGJAg/s1600/pujols-prior+and+posterior.bmp" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-ZmO18a8vj0w/T6WLW6LnjsI/AAAAAAAAGs4/ll2ab7sGJAg/s1600/pujols-prior+and+posterior.bmp" /></a></div><br />What Bayesian analysis does is shrinks (or regresses) the data from this year to the prior average. This is&nbsp; the same idea of regressing to the overall mean that is talked about frequently in sabermetric blogs. The difference is that regressing to the mean usually regresses to the average player in the league. With Bayesian analysis, we can regress to our prior expectation about the specific player (Albert Pujols). I believe this approach will give us better results in most cases.<br /><br />The R code to do the analysis can be found <a href="https://docs.google.com/open?id=0B21DLJKq18K9NkNJb0lQRHNqbHM">here</a>. I used data from <a href="http://www.baseball-reference.com/players/p/pujolal01.shtml">Baseball Reference</a>.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+Just a follow up: From May 6 to the end of the season he had a .305/.365/.569 split. The posterior expectation of .312/.379/.451 matches the average and on base percentage well, but his actual slugging is quite a bit higher than the posterior distribution would have predicted.<br /><br />Not sure what to make of this except to say he had a really bad start with slugging, which may have been caused more by random chance than the other two. And obviously the distributional assumptions are an approximation to reality.</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -243,45 +308,6 @@ I guess you could call this On Bayes Percentage. *cough*<br /><br />Fresh off le
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/09/21/week-3-nfl-survival-odds/">Week 3 NFL Survival Odds</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-21T00:00:00-04:00" pubdate data-updated="true">Sep 21<span>st</span>, 2010</time>
-        
-         | <a href="/blog/2010/09/21/week-3-nfl-survival-odds/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Continuing my series of trying to figure out which team is best to pick for survival football and then ignoring it, I present my week 3 analysis. I used the same method as the <a href="http://alandgraf.blogspot.com/2010/09/nfl-survival-odds.html">past 2</a> <a href="http://alandgraf.blogspot.com/2010/09/week-2-nfl-survival-odds.html">weeks</a>, and didn&#8217;t make any updates to it since last week. <br />Here we go:<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/_qD9db1gpElc/TJlSf0OSRNI/AAAAAAAAFfk/NXfI3JzlHKg/s1600/NFLsurvOddsWk3.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="640" src="http://1.bp.blogspot.com/_qD9db1gpElc/TJlSf0OSRNI/AAAAAAAAFfk/NXfI3JzlHKg/s640/NFLsurvOddsWk3.jpg" width="146" /></a></div><div class="separator" style="clear: both; text-align: center;"> </div><div class="separator" style="clear: both; text-align: center;"><br /></div>NE (53%), BAL (20%), WAS (8%), and MIN (7%) are the most common teams picked in the Yahoo! leagues. They are also the top four teams according to my metric in a different order.<br />This week has NE favored by the most that they will be favored by for the rest of the season and by quite a bit so it makes sense that they are ranked at the top. Maybe the biggest difference between this analysis and the Yahoo! distribution is that Baltimore has 20% of Yahoo! but is just fourth best here. I would have to say that my numbers make more sense because Baltimore has three more games with a spread of 10 or higher and couple more with a spread higher than 6. I am surprised that Washington is up on both lists because they are only favored by 4 and playing an away game. Although they only have one more playable game and that is a 6 point favorite.<br />I would definitely pick New England this week if perfection is your goal.</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -299,7 +325,11 @@ Continuing my series of trying to figure out which team is best to pick for surv
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/">Hastie and Tibshirani Interview Jerome Friedman</a>
+        <a href="/blog/2014/04/22/yet-another-baseball-defensive-statistic/">Yet Another Baseball Defense Statistic</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman+-+Copy/">Hastie and Tibshirani Interview Jerome Friedman</a>
       </li>
     
       <li class="post">
@@ -312,10 +342,6 @@ Continuing my series of trying to figure out which team is best to pick for surv
     
       <li class="post">
         <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025&#8217;s Playlist</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/21/what-is-probability-of-16-seed-beating/">What Is the Probability of a 16 Seed Beating a 1 Seed?</a>
       </li>
     
   </ul>
