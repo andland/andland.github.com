@@ -4,7 +4,7 @@
   <title><![CDATA[Category: R | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/r/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-04-22T21:37:30-04:00</updated>
+  <updated>2014-04-22T21:41:26-04:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -36,7 +36,7 @@
 
 <p>Below is a summary of the results of the model for shortstops. I am only plotting the players with the at least 800 innings, for readability. A bonus of modeling the data like this is that we get standard error estimates as a result. I plotted the estimated effect of each player along with +/- 2 standard errors. We can be fairly certain that the effects for the top few shortstops is greater than 0 since their confidence intervals do not include 0. The same is true for the bottom few. Images for the other positions can be found <a href="https://github.com/andland/andland.github.com/tree/master/images/InsideEdge">here</a>.</p>
 
-<p><img src="/images/InsideEdge/SSList.png" title="Results for shortstops" ></p>
+<p><img src="/images/InsideEdge/SSlist.png" title="Results for shortstops" ></p>
 
 <p>The results seem to make sense for the most part. Simmons and Tulowitzki have reputations as being strong defenders and Derek Jeter has a reputation as a poor defender.</p>
 
