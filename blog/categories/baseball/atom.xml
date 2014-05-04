@@ -4,7 +4,7 @@
   <title><![CDATA[Category: baseball | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/baseball/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-04-27T14:34:42-04:00</updated>
+  <updated>2014-05-04T12:03:57-04:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -71,6 +71,8 @@
 <h3 id="code">Code</h3>
 
 <p>I have put the R code together to do this analysis in <a href="https://gist.github.com/andland/c6adb69ea365c2580859">a gist</a>. If there is interest, I will put together a repo with all the data as well.</p>
+
+<p><strong>Update</strong>: I have a <a href="https://github.com/andland/InsideEdgeFielding">Github repository</a> with the data, R code for the analysis, the results, and code for the Shiny app. Let me know what you think.</p>
 ]]></content>
   </entry>
   
