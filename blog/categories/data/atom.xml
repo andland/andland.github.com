@@ -4,7 +4,7 @@
   <title><![CDATA[Category: data | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/data/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-10-02T17:31:55-04:00</updated>
+  <updated>2014-12-12T10:21:10-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -78,9 +78,9 @@
   
   <entry>
     <title type="html"><![CDATA[Hastie and Tibshirani Interview Jerome Friedman]]></title>
-    <link href="http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman+-+Copy/"/>
+    <link href="http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/"/>
     <updated>2014-03-02T17:10:00-05:00</updated>
-    <id>http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman - Copy</id>
+    <id>http://andland.github.io/blog/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman</id>
     <content type="html"><![CDATA[<p><a href="http://www.stanford.edu/~hastie/">Trevor Hastie</a> and <a href="http://statweb.stanford.edu/~tibs/">Rob Tibshirani</a> are currently teaching a <a href="http://en.wikipedia.org/wiki/Massive_open_online_course">MOOC</a> covering an <a href="https://class.stanford.edu/courses/HumanitiesScience/StatLearning/Winter2014/about">introduction to statistical learning</a>. I am very familiar with most of the material in the course, having read <em>Elements of Statistical Learning</em> many times over.</p>
 
 <p>One great thing about the class, however, is that they are truely experts and have collaborated with many of the influencial researchers in their field. Because of this, when covering certain topics, they have included interviews with statisticians who made important developments to the field. When introducing the class to R, they interviewed <a href="https://www.youtube.com/watch?v=jk9S3RTAl38">John Chambers</a>, who was able to give a personal account of the history of S and R because he was one of the developers. Further, when covering resampling methods, they spoke with <a href="https://www.youtube.com/watch?v=6l9V1sINzhE">Brad Efron</a>, who talked about the history of the <a href="http://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29">bootstrap</a> and how he struggled to get it published.</p>
