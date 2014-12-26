@@ -4,7 +4,7 @@
   <title><![CDATA[Statistically Significant]]></title>
   <link href="http://andland.github.io/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2014-12-26T12:38:32-05:00</updated>
+  <updated>2014-12-26T12:59:51-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -12,6 +12,40 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Time Stacking and Time Slicing in R]]></title>
+    <link href="http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r/"/>
+    <updated>2014-12-24T12:00:00-05:00</updated>
+    <id>http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r</id>
+    <content type="html"><![CDATA[<p><a href="http://en.wikipedia.org/wiki/Time-lapse_photography">Time lapses</a> are a fun way to quickly show a long period of time. They typically involve setting up your camera on a tripod and taking photos at a regular interval, like every 5 seconds. After all the photos have been taken, they are combined into a movie at a much faster rate, for example 30 frames per second. </p>
+
+<p><a href="https://500px.com/blog/1051/tutorial-time-stack">Time stacking</a> is a way to combine all the photos into a single photo, instead of a movie. This is a common method to make <a href="http://en.wikipedia.org/wiki/Star_trail">star trails</a>, and <a href="https://www.flickr.com/photos/matt_molloy/">Matt Molloy</a> has recently been experimenting with it in many different settings. There are many possible ways to achieve a time stack, but the most common way is to combine the photos with a <a href="http://en.wikipedia.org/wiki/Blend_modes#Lighten_Only">lighten layer blend</a>. For every pixel in the final image, the combined photo will use the corresponding pixel from the photo that was the brightest in all of the photos. This gives the desired result of motion of the stars or clouds in a scene. </p>
+
+<p>Another way to combine the photos is through time slicing (see, for example, <a href="https://www.flickr.com/photos/matt_molloy/15619271557/">this photo</a>). In time slicing, the final combined image will contain a &ldquo;slice&rdquo; from each of the original photos. Time slices can go left-to-right, right-to-left, top-to-bottom, or bottom-to-top. For example, a time slice that goes from left to right will use vertical slices of the pixels. If you took 100 photos for your time lapse, each of which being 1000 pixels wide, the left-most 10 vertical  pixel slices of the final image would contain the corresponding pixels from the first photo, the 11th through 20th vertical  pixel slices would contain the corresponding pixels from the second photo, and so on. Different directions will produce different effects.</p>
+
+<p>There is free software available to do lighten layer blending of two photos, but I could not find any to automatically do it for a large number of photos. Similarly for the time slice, it is easy enough to manually slice a few photos, but not hundreds of photos. Therefore, I wrote a couple of scripts in <a href="http://www.r-project.org/">R</a> that would do this automatically. A gist of the scripts to create a time stack script and a time slice is <a href="https://gist.github.com/andland/efe66240184328f07429">here</a>. They both require you to give the directory containing the JPEG photos and the time slice script let&rsquo;s you enter the direction you would like it to go.</p>
+
+<div class="embed-video-container"><iframe width="640" height="480" src="http://www.youtube.com/embed/KnZQIeHPOYI" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>To try this out on my own photos, I used the time lapse I had created of <a href="https://www.youtube.com/watch?v=KnZQIeHPOYI">a sunset</a> (movie created with <a href="https://www.ffmpeg.org/">FFmpeg</a>), which consisted of 225 photos taken over 20 minutes. The source material isn&rsquo;t that great (the photos were out of focus), but you can still see the effects. </p>
+
+<p>The following picture is a time stack.</p>
+
+<p><img src="http://andland.github.io/images/TimeStack/TimeStack.JPG" title="Time Stack" /></p>
+
+<p>The following four pictures are the time slices with different directions.</p>
+
+<p><img src="http://andland.github.io/images/TimeStack/TimeSlice-E.JPG" title="Time Slice Left-to-Right" /></p>
+
+<p><img src="http://andland.github.io/images/TimeStack/TimeSlice-W.JPG" title="Time Slice Right-to-Left" /></p>
+
+<p><img src="http://andland.github.io/images/TimeStack/TimeSlice-N.JPG" title="Time Slice Bottom-to-Top" /></p>
+
+<p><img src="http://andland.github.io/images/TimeStack/TimeSlice-S.JPG" title="Time Slice Top-to-Bottom" /></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Yet Another Baseball Defense Statistic]]></title>
@@ -556,16 +590,6 @@ I was having some fun with PITCHf/x data and generalize additive models. <a href
     <id>http://andland.github.io/blog/2012/05/25/sending-text-in-r</id>
     <content type="html"><![CDATA[<div class='post'>
 Don&#8217;t you hate it when you are running a long piece of code and you keep checking the results every 15 minutes, hoping it will finish? There is a better way.<br /><br />I got the idea from <a href="http://jbdeaton.com/2012/send-yourself-an-sms-via-python/">here</a>. He uses a Python script and the text interface is not free. I thought someone must have already thought of this for R. There is an easy solution. You can send an email fairly easily in R. You can also send <a href="http://allthingsmarked.com/2006/09/04/howto-send-free-text-messages-through-email/">text messages as emails</a>. <a href="http://www.decisionstats.com/send-email-by-r/">This page </a>gives a few examples of how to send an email in R. Sending a text via email will depend on what carrier you have and I am sure standard text message fees apply.You can only send 20 emails a day with this package, but that probably won&#8217;t be a big deal.<br /><br />It is basically a one-liner. Here is the code I used:<br /><pre class="brush: r">install.packages("mail",repos="http://cran.case.edu/")<br />library(mail)<br />sendmail("5555555555@txt.att.net", <br />         subject="Notification from R",message="MCMC Finished", password="rmail")<br /></pre><br />That&#8217;s it!<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s1600/photo.PNG" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="320" src="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s320/photo.PNG" width="212" /></a></div></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cleveland Indians' Attendance]]></title>
-    <link href="http://andland.github.io/blog/2012/05/20/cleveland-indians/"/>
-    <updated>2012-05-20T00:00:00-04:00</updated>
-    <id>http://andland.github.io/blog/2012/05/20/cleveland-indians</id>
-    <content type="html"><![CDATA[<div class='post'>
-Recently, Chris Perez, the closer for the Indians, displayed <a href="http://throwinheat.mlblogs.com/2012/05/20/chris-perez-expands-on-his-comments-mark-shapiro-responds/">some frustration </a>with the fans for not supporting the team. Currently, they have the <a href="http://www.baseball-reference.com/leagues/current_attendance.shtml">lowest attendance </a>in the majors &#8211; by a decent margin. The Indians are averaging about 15,000 fans per home game, while the next closest team, the Oakland A&#8217;s, is averaging 19,000. It seemed like an odd time for Perez to bring this up because they <a href="http://www.baseball-reference.com/teams/CLE/2012-schedule-scores.shtml">have had </a>attendance in the 29,000s each of the last two home games. So that intrigued me to look into the numbers of what causes attendance to vary.<br /><br />I looked at <a href="http://www.baseball-reference.com/teams/CLE/2011-schedule-scores.shtml">2011 attendance data </a>for the Cleveland Indians only. I had a strong suspicion that a popular opponent would definitely and weekend games cause attendance to increase. Also, there is usually some press at the beginning of the season that claims no one wants to go to the games because it is too cold for baseball. (There is also more competing entertainment at the beginning of the season.)<br /><br />What I found to be significant (based on an exploratory approach) are summarized in the graph below. This plot explores the relationship of attendance with 5 other variables. I plotted attendance on the y-axis and the date on the x-axis. I don&#8217;t expect date to have any effect, but it organizes other aspects well (and you can see opening day had the highest attendance of the year). Instead of plotting points, I plotted the name of the opponent. You can see there are some larger attendances when they are playing the New York Yankees and the Cincinnati Reds, for example. The color of the team name indicates whether they are playing on the weekend or not and the size indicates the <a href="http://academic.udayton.edu/kissock/http/Weather/citylistUS.htm">temperature</a>. Probably the biggest effect, weekend games outdraw weekday games consistently. The colder temperatures are only in the beginning of the season, and seem to have a noticeable effect (at least for the coldest days).<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s1600/IndainsAttendance2011.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="633" src="https://lh3.ggpht.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s640/IndainsAttendance2011.jpeg" width="640" /></a></div><br /><br />I also looked into how many games above .500 the team was and how close they were in the division race. Neither of these showed any correlation, at least at the marginal level. This is interesting because the main reason Chris Perez is frustrated is that the team is winning, so the fans should be supporting them. This shows that wining did not make much of a difference within a single year. This should be more prevalent over multiple years.<br /><br />Some other information that might be useful is the quality of the opponent or whether the ace of the opposing pitching staff is starting. I only included temperature and not precipitation or any other weather information.<br /><br />Here is the basic R code I used: <br /><pre class="brush: r">library(ggplot2)<br />ggplot(data=home.attend,aes(x=Date,y=Attendance,colour=Weekend,label=Opp,size=Temp))+<br />  geom_text()+scale_size(to = c(2, 5))+theme_bw()&nbsp;</pre><pre class="brush: r">&nbsp;</pre><i><b>Update (9/21/2013)</b></i>:<br />Since attendance is still a hot topic, I created the same plot for the 2013 season so far.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="426" src="https://lh3.ggpht.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-mT8HBGEKwak/Uj5EauQomGI/AAAAAAAAH84/qB4e0VE6n94/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div><br /></div>
 ]]></content>
   </entry>
   

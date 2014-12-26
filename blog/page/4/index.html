@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="Random forests ™ are great. They are one of the best &#8220;black-box&#8221; supervised learning methods. If you have lots of data and lots of &hellip;">
+  <meta name="description" content="I have been toying around with Kaggle&#8217;s Million Song Dataset Challenge recently because I have some interest in collaborative filtering (using &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +96,45 @@ MathJax.Hub.Config({
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/20/the-magical-sparse-matrix/">The Magical Sparse Matrix</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-20T00:00:00-04:00" pubdate data-updated="true">Jul 20<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/07/20/the-magical-sparse-matrix/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+I have been toying around with Kaggle&#8217;s <a href="http://www.kaggle.com/c/msdchallenge/">Million Song Dataset Challenge</a> recently because I have some interest in <a href="http://en.wikipedia.org/wiki/Collaborative_filtering">collaborative filtering</a> (using <a href="http://www2.research.att.com/%7Evolinsky/papers/ieeecomputer.pdf" target="_blank">matrix factorization</a>). I haven&#8217;t made much progress with the competition (all 3 of my submissions are below the baseline), but I have learned a few things about dealing with large amounts of data.<br /><br />The goal of the competition is to predict the 500 most likely songs each of 110,000 users will listen to next. As the name implies, there are 1,000,000 songs in the full dataset. To simplify things, I decided to concentrate on the most popular songs. I created a 110,000 x 2,000 matrix of 0&#8217;s and 1&#8217;s. Row i, column j is 1 if user i had listened to song j (the jth most popular song) and 0 if user i had not. As you can imagine, there are a lot more 0&#8217;s than 1&#8217;s in this matrix. The first few rows and columns look like this:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 &#8230;</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 &#8230;</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 &#8230;</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">&#8230;</span></div><br />This matrix was about 430 Mb and took a while to load into MATLAB. So I wisened up and created a <a href="http://en.wikipedia.org/wiki/Sparse_matrix">sparse matrix</a>. A sparse matrix realizes that most of the values are 0&#8217;s and does not record them. Instead, it lists the locations of the non-zero elements and what the value is. For example, this is what the first few rows of the sparse matrix looks like:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">1 3 1<br />1 7 1<br />1 10 1<br />1 13 1<br />1 82 1<br />1 717 1<br />2 1111 1<br />2 2972 1<br />2 3516 1</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: small;">&#8230;</span></div><br />The first column is the row number, the second is the column number, and the third is the value at that location. In this application, all the values are 1. For this matrix, I used the 50,000 most popular songs (instead of just 2,000), and the size was much smaller &#8211; just 17 Mb.<br /><br />It is easy to load the sparse matrix into MATLAB with the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">spconvert</span> command, and many of MATLAB&#8217;s functions (like singular value decomposition) are optimized for sparse matrices.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -354,45 +393,6 @@ Don&#8217;t you hate it when you are running a long piece of code and you keep c
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/20/cleveland-indians/">Cleveland Indians&#8217; Attendance</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-20T00:00:00-04:00" pubdate data-updated="true">May 20<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/20/cleveland-indians/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Recently, Chris Perez, the closer for the Indians, displayed <a href="http://throwinheat.mlblogs.com/2012/05/20/chris-perez-expands-on-his-comments-mark-shapiro-responds/">some frustration </a>with the fans for not supporting the team. Currently, they have the <a href="http://www.baseball-reference.com/leagues/current_attendance.shtml">lowest attendance </a>in the majors &#8211; by a decent margin. The Indians are averaging about 15,000 fans per home game, while the next closest team, the Oakland A&#8217;s, is averaging 19,000. It seemed like an odd time for Perez to bring this up because they <a href="http://www.baseball-reference.com/teams/CLE/2012-schedule-scores.shtml">have had </a>attendance in the 29,000s each of the last two home games. So that intrigued me to look into the numbers of what causes attendance to vary.<br /><br />I looked at <a href="http://www.baseball-reference.com/teams/CLE/2011-schedule-scores.shtml">2011 attendance data </a>for the Cleveland Indians only. I had a strong suspicion that a popular opponent would definitely and weekend games cause attendance to increase. Also, there is usually some press at the beginning of the season that claims no one wants to go to the games because it is too cold for baseball. (There is also more competing entertainment at the beginning of the season.)<br /><br />What I found to be significant (based on an exploratory approach) are summarized in the graph below. This plot explores the relationship of attendance with 5 other variables. I plotted attendance on the y-axis and the date on the x-axis. I don&#8217;t expect date to have any effect, but it organizes other aspects well (and you can see opening day had the highest attendance of the year). Instead of plotting points, I plotted the name of the opponent. You can see there are some larger attendances when they are playing the New York Yankees and the Cincinnati Reds, for example. The color of the team name indicates whether they are playing on the weekend or not and the size indicates the <a href="http://academic.udayton.edu/kissock/http/Weather/citylistUS.htm">temperature</a>. Probably the biggest effect, weekend games outdraw weekday games consistently. The colder temperatures are only in the beginning of the season, and seem to have a noticeable effect (at least for the coldest days).<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s1600/IndainsAttendance2011.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="633" src="https://lh3.ggpht.com/-c7JBG0k4OBQ/T7kvpyZYOmI/AAAAAAAAG20/tC71mpum_lA/s640/IndainsAttendance2011.jpeg" width="640" /></a></div><br /><br />I also looked into how many games above .500 the team was and how close they were in the division race. Neither of these showed any correlation, at least at the marginal level. This is interesting because the main reason Chris Perez is frustrated is that the team is winning, so the fans should be supporting them. This shows that wining did not make much of a difference within a single year. This should be more prevalent over multiple years.<br /><br />Some other information that might be useful is the quality of the opponent or whether the ace of the opposing pitching staff is starting. I only included temperature and not precipitation or any other weather information.<br /><br />Here is the basic R code I used: <br /><pre class="brush: r">library(ggplot2)<br />ggplot(data=home.attend,aes(x=Date,y=Attendance,colour=Weekend,label=Opp,size=Temp))+<br />  geom_text()+scale_size(to = c(2, 5))+theme_bw()&nbsp;</pre><pre class="brush: r">&nbsp;</pre><i><b>Update (9/21/2013)</b></i>:<br />Since attendance is still a hot topic, I created the same plot for the 2013 season so far.<br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="426" src="https://lh3.ggpht.com/-MiH0WF4KyGU/Uj5E45dKMSI/AAAAAAAAH9A/3MoE4VGYjUA/s1600/IndainsAttendance2013.jpeg" width="640" /></a></div><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-mT8HBGEKwak/Uj5EauQomGI/AAAAAAAAH84/qB4e0VE6n94/s1600/IndainsAttendance2013.jpeg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><br /></a></div><br /></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -410,6 +410,10 @@ Recently, Chris Perez, the closer for the Indians, displayed <a href="http://thr
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/24/time-stack-time-slice-r/">Time Stacking and Time Slicing in R</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/22/yet-another-baseball-defensive-statistic/">Yet Another Baseball Defense Statistic</a>
       </li>
     
@@ -423,10 +427,6 @@ Recently, Chris Perez, the closer for the Indians, displayed <a href="http://thr
     
       <li class="post">
         <a href="/blog/2013/08/27/when-did-cd1025-book-summerfest-artists/">When Did CD102.5 Book the Summerfest Artists?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025&#8217;s Playlist</a>
       </li>
     
   </ul>

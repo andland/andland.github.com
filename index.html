@@ -9,7 +9,7 @@
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="Fangraphs recently published an interesting dataset that measures defensive efficiency of fielders. For each player, the Inside Edge dataset breaks &hellip;">
+  <meta name="description" content="Time lapses are a fun way to quickly show a long period of time. They typically involve setting up your camera on a tripod and taking photos at a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +96,69 @@ MathJax.Hub.Config({
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/24/time-stack-time-slice-r/">Time Stacking and Time Slicing in R</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-24T12:00:00-05:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
+        
+         | <a href="/blog/2014/12/24/time-stack-time-slice-r/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://en.wikipedia.org/wiki/Time-lapse_photography">Time lapses</a> are a fun way to quickly show a long period of time. They typically involve setting up your camera on a tripod and taking photos at a regular interval, like every 5 seconds. After all the photos have been taken, they are combined into a movie at a much faster rate, for example 30 frames per second. </p>
+
+<p><a href="https://500px.com/blog/1051/tutorial-time-stack">Time stacking</a> is a way to combine all the photos into a single photo, instead of a movie. This is a common method to make <a href="http://en.wikipedia.org/wiki/Star_trail">star trails</a>, and <a href="https://www.flickr.com/photos/matt_molloy/">Matt Molloy</a> has recently been experimenting with it in many different settings. There are many possible ways to achieve a time stack, but the most common way is to combine the photos with a <a href="http://en.wikipedia.org/wiki/Blend_modes#Lighten_Only">lighten layer blend</a>. For every pixel in the final image, the combined photo will use the corresponding pixel from the photo that was the brightest in all of the photos. This gives the desired result of motion of the stars or clouds in a scene. </p>
+
+<p>Another way to combine the photos is through time slicing (see, for example, <a href="https://www.flickr.com/photos/matt_molloy/15619271557/">this photo</a>). In time slicing, the final combined image will contain a &ldquo;slice&rdquo; from each of the original photos. Time slices can go left-to-right, right-to-left, top-to-bottom, or bottom-to-top. For example, a time slice that goes from left to right will use vertical slices of the pixels. If you took 100 photos for your time lapse, each of which being 1000 pixels wide, the left-most 10 vertical  pixel slices of the final image would contain the corresponding pixels from the first photo, the 11th through 20th vertical  pixel slices would contain the corresponding pixels from the second photo, and so on. Different directions will produce different effects.</p>
+
+<p>There is free software available to do lighten layer blending of two photos, but I could not find any to automatically do it for a large number of photos. Similarly for the time slice, it is easy enough to manually slice a few photos, but not hundreds of photos. Therefore, I wrote a couple of scripts in <a href="http://www.r-project.org/">R</a> that would do this automatically. A gist of the scripts to create a time stack script and a time slice is <a href="https://gist.github.com/andland/efe66240184328f07429">here</a>. They both require you to give the directory containing the JPEG photos and the time slice script let&rsquo;s you enter the direction you would like it to go.</p>
+
+<div class="embed-video-container"><iframe width="640" height="480" src="http://www.youtube.com/embed/KnZQIeHPOYI" frameborder="0" allowfullscreen=""></iframe></div>
+
+<p>To try this out on my own photos, I used the time lapse I had created of <a href="https://www.youtube.com/watch?v=KnZQIeHPOYI">a sunset</a> (movie created with <a href="https://www.ffmpeg.org/">FFmpeg</a>), which consisted of 225 photos taken over 20 minutes. The source material isn&rsquo;t that great (the photos were out of focus), but you can still see the effects. </p>
+
+<p>The following picture is a time stack.</p>
+
+<p><img src="/images/TimeStack/TimeStack.JPG" title="Time Stack" /></p>
+
+<p>The following four pictures are the time slices with different directions.</p>
+
+<p><img src="/images/TimeStack/TimeSlice-E.JPG" title="Time Slice Left-to-Right" /></p>
+
+<p><img src="/images/TimeStack/TimeSlice-W.JPG" title="Time Slice Right-to-Left" /></p>
+
+<p><img src="/images/TimeStack/TimeSlice-N.JPG" title="Time Slice Bottom-to-Top" /></p>
+
+<p><img src="/images/TimeStack/TimeSlice-S.JPG" title="Time Slice Top-to-Bottom" /></p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -323,45 +386,6 @@ In a <a href="http://alandgraf.blogspot.com/2013/08/downloading-and-analyzing-cd
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025&#8217;s Playlist</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-20T00:00:00-04:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-<a href="http://www.cd101.com/">CD1025</a> is an “alternative” radio station here in Columbus. They are one of the few remaining radio stations that are independently owned and they take great pride in it. For data nerds like me, they also put a real time list of recently played songs on <a href="http://cd1025.com/about/playlists/now-playing">their website</a>. The page has the most recent 50 songs played, but you can also click on “Older Tracks” to go back in time. When you do this, the URL ends “now-playing/?start=50”. If you got back again, it says “now-playing/?start=100”.<br /><br />Using this structure, I decided to see if I could download all of their historical data and see how far it goes back. In the code below, I use the XML package to go to the website and download the 50 songs and then increment the number by 50 to find the previous 50 songs. I am telling the code to keep doing this until I get to January 1, 2012.<br /><pre><code class="r">library(ggplot2)<br />theme_set(theme_bw())<br />library(XML)<br />library(lubridate)<br />library(sqldf)<br />startNum = 0<br />while (TRUE) {<br />    theurl &lt;- paste0("http://cd1025.com/about/playlists/now-playing/?start=", <br />        startNum)<br />    table &lt;- readHTMLTable(theurl, stringsAsFactors = FALSE)[[1]]<br />    if (startNum == 0) {<br />        playlist = table[, -1]<br />    } else {<br />        playlist = rbind(playlist, table[, -1])<br />    }<br />    dt = mdy(substring(table[1, 4], nchar(table[1, 4]) - 9, nchar(table[1, 4])))<br />    print(dt)<br />    if (dt &lt; mdy("1/1/12")) {<br />        break<br />    }<br />    startNum = startNum + 50<br />}<br /><br />playlist = unique(playlist)  # Remove Dupes<br /><br />write.csv(playlist, "CD101Playlist.csv", row.names = FALSE)<br /></code></pre>This takes a while and is fairly large. My file has over 150,000 songs. If you want just a little data, change the date to last week or so. The first thing I will do is parse the dates and times of the songs, order them, and look at the first few songs. You can see that data only goes back to March of 2012.<br /><pre><code class="r">dates = mdy(substring(playlist[, 3], nchar(playlist[, 3]) - 9, nchar(playlist[, <br />    3])))<br />times = hm(substring(playlist[, 3], 1, nchar(playlist[, 3]) - 10))<br />playlist$Month = ymd(paste(year(dates), month(dates), "1", sep = "-"))<br />playlist$Day = dates<br />playlist$Time = times<br />playlist = playlist[order(playlist$Day, playlist$Time), ]<br />head(playlist)<br /></code></pre><pre><code>##                     Artist                Song       Last.Played<br />## 151638 DEATH CAB FOR CUTIE   YOU ARE A TOURIST 12:34am03/01/2012<br />## 151637       SLEEPER AGENT          GET BURNED 12:38am03/01/2012<br />## 151636          WASHED OUT           AMOR FATI 12:41am03/01/2012<br />## 151635            COLDPLAY       CHARLIE BROWN 12:45am03/01/2012<br />## 151634           GROUPLOVE         TONGUE TIED 12:49am03/01/2012<br />## 151633               SUGAR YOUR FAVORITE THING 12:52am03/01/2012<br />##             Month        Day   Time<br />## 151638 2012-03-01 2012-03-01 34M 0S<br />## 151637 2012-03-01 2012-03-01 38M 0S<br />## 151636 2012-03-01 2012-03-01 41M 0S<br />## 151635 2012-03-01 2012-03-01 45M 0S<br />## 151634 2012-03-01 2012-03-01 49M 0S<br />## 151633 2012-03-01 2012-03-01 52M 0S<br /></code></pre>Using the sqldf package, I can easily see what the most played artists and songs are from the data I scraped.<br /><pre><code class="r">sqldf("Select Artist, Count(Artist) as PlayCount<br />       From playlist<br />       Group By Artist<br />       Order by PlayCount DESC<br />       Limit 10")<br /></code></pre><pre><code>##                   Artist PlayCount<br />## 1      SILVERSUN PICKUPS      2340<br />## 2         THE BLACK KEYS      2203<br />## 3                   MUSE      1988<br />## 4              THE SHINS      1885<br />## 5    OF MONSTERS AND MEN      1753<br />## 6            PASSION PIT      1552<br />## 7              GROUPLOVE      1544<br />## 8  RED HOT CHILI PEPPERS      1514<br />## 9                 METRIC      1495<br />## 10          ATLAS GENIUS      1494<br /></code></pre><pre><code class="r"><br />sqldf("Select Artist, Song, Count(Song) as PlayCount<br />      From playlist<br />      Group By Artist, Song<br />      Order by PlayCount DESC<br />      Limit 10")<br /></code></pre><pre><code>##                 Artist                    Song PlayCount<br />## 1          PASSION PIT             TAKE A WALK       828<br />## 2    SILVERSUN PICKUPS                PIT, THE       825<br />## 3         ATLAS GENIUS                 TROJANS       819<br />## 4        WALK THE MOON                ANNA SUN       742<br />## 5       THE BLACK KEYS LITTLE BLACK SUBMARINES       736<br />## 6          DIVINE FITS  WOULD THAT NOT BE NICE       731<br />## 7        THE LUMINEERS                  HO HEY       722<br />## 8       CAPITAL CITIES          SAFE AND SOUND       712<br />## 9  OF MONSTERS AND MEN          MOUNTAIN SOUND       711<br />## 10               ALT J            BREEZEBLOCKS       691<br /></code></pre>I am a little surprised that Silversun Pickups are the number one band, but everyone on the list makes sense. Looking at how the plays of the top artists have varied from month to month, you can see a few patterns. Muse has been more popular recently and The Shins and Grouplove have lost some steam.<br /><pre><code class="r">artist.month=sqldf("Select Month, Artist, Count(Song) as Num<br />      From playlist<br />      Group By Month, Artist<br />      Order by Month, Artist")<br />artist=sqldf("Select Artist, Count(Artist) as Num<br />      From playlist<br />      Group By Artist<br />      Order by Num DESC")<br />p=ggplot(subset(artist.month,Artist %in% head(artist$Artist,8)),aes(Month,Num))<br />p+geom_bar(stat="identity",aes(fill=Artist),position='fill',colour="grey")+</code></pre><pre><code class="r"> labs(y="Percentage of Plays")</code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-ZbWCMOMUX8E/UhPvnh1UoqI/AAAAAAAAH8I/EIAlTwFKjxg/s1600/PlayProportionByMonth.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-ZbWCMOMUX8E/UhPvnh1UoqI/AAAAAAAAH8I/EIAlTwFKjxg/s1600/PlayProportionByMonth.png" /></a></div><br />For the play count of the top artists, I see some odd numbers in June and July of 2012. The number of plays went way down.<br /><pre><code class="r">p + geom_area(aes(fill = Artist), position = "stack", colour = 1) + labs(y = "Number of Plays")<br /></code></pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/--0tLMWDJuAI/UhPvnsQAl2I/AAAAAAAAH8M/tl2RtleoH2k/s1600/PlayCountByMonth.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/--0tLMWDJuAI/UhPvnsQAl2I/AAAAAAAAH8M/tl2RtleoH2k/s1600/PlayCountByMonth.png" /></a></div><br />Looking into this further, I plotted the date and time that the song was played by the cumulative number of songs played since the beginning of the list. The plot should be a line with a constant slope, meaning that the plays per day are relatively constant. You can see in June and July of 2012 there are flat spots where there is no playlist history. <br /><pre><code class="r">qplot(playlist$Day + playlist$Time, 1:length(dates), geom = "path")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-jzAKuFMa_ak/UhPvnqrS-_I/AAAAAAAAH8E/DgJDVUUNyD8/s1600/PlaysByTime.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-jzAKuFMa_ak/UhPvnqrS-_I/AAAAAAAAH8E/DgJDVUUNyD8/s1600/PlaysByTime.png" /></a></div><br />There are also smaller flat spots in September and December, but I am going to decide that those are small enough not to affect any further analyses. From this, I am going to use data only from August 2012 to present.<br /><pre><code class="r">playlist = subset(playlist, Day &gt;= mdy("8/1/12"))<br /></code></pre>Next up, I am going to use this data to analyze the plays of artists from <a href="http://cd1025.com/summerfest">Summerfest</a>, and try to infer if the play counts varied once they were added to the bill.</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -377,6 +401,10 @@ In a <a href="http://alandgraf.blogspot.com/2013/08/downloading-and-analyzing-cd
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/24/time-stack-time-slice-r/">Time Stacking and Time Slicing in R</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/22/yet-another-baseball-defensive-statistic/">Yet Another Baseball Defense Statistic</a>
       </li>
     
@@ -390,10 +418,6 @@ In a <a href="http://alandgraf.blogspot.com/2013/08/downloading-and-analyzing-cd
     
       <li class="post">
         <a href="/blog/2013/08/27/when-did-cd1025-book-summerfest-artists/">When Did CD102.5 Book the Summerfest Artists?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/08/20/downloading-and-analyzing-cd1025s/">Downloading and Analyzing CD1025&#8217;s Playlist</a>
       </li>
     
   </ul>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: productivity - Statistically Significant</title>
+  <title>Time Stacking and Time Slicing in R - Statistically Significant</title>
   <meta name="author" content="Andrew Landgraf">
 
   
-  <meta name="description" content="Category: productivity">
+  <meta name="description" content="Time lapses are a fun way to quickly show a long period of time. They typically involve setting up your camera on a tripod and taking photos at a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://andland.github.ioblog/categories/productivity">
+  <link rel="canonical" href="http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Statistically Significant" type="application/atom+xml">
@@ -95,36 +95,122 @@ MathJax.Hub.Config({
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Productivity</h1>
+    
+      <h1 class="entry-title">Time Stacking and Time Slicing in R</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-24T12:00:00-05:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p><a href="http://en.wikipedia.org/wiki/Time-lapse_photography">Time lapses</a> are a fun way to quickly show a long period of time. They typically involve setting up your camera on a tripod and taking photos at a regular interval, like every 5 seconds. After all the photos have been taken, they are combined into a movie at a much faster rate, for example 30 frames per second. </p>
 
-  
-  <h2>2013</h2>
+<p><a href="https://500px.com/blog/1051/tutorial-time-stack">Time stacking</a> is a way to combine all the photos into a single photo, instead of a movie. This is a common method to make <a href="http://en.wikipedia.org/wiki/Star_trail">star trails</a>, and <a href="https://www.flickr.com/photos/matt_molloy/">Matt Molloy</a> has recently been experimenting with it in many different settings. There are many possible ways to achieve a time stack, but the most common way is to combine the photos with a <a href="http://en.wikipedia.org/wiki/Blend_modes#Lighten_Only">lighten layer blend</a>. For every pixel in the final image, the combined photo will use the corresponding pixel from the photo that was the brightest in all of the photos. This gives the desired result of motion of the stars or clouds in a scene. </p>
 
-<article>
-  
-<h1><a href="/blog/2013/04/18/easily-access-academic-journals-off/">Easily Access Academic Journals Off Campus with a Firefox Bookmark</a></h1>
-<time datetime="2013-04-18T00:00:00-04:00" pubdate><span class='month'>Apr</span> <span class='day'>18</span> <span class='year'>2013</span></time>
+<p>Another way to combine the photos is through time slicing (see, for example, <a href="https://www.flickr.com/photos/matt_molloy/15619271557/">this photo</a>). In time slicing, the final combined image will contain a &ldquo;slice&rdquo; from each of the original photos. Time slices can go left-to-right, right-to-left, top-to-bottom, or bottom-to-top. For example, a time slice that goes from left to right will use vertical slices of the pixels. If you took 100 photos for your time lapse, each of which being 1000 pixels wide, the left-most 10 vertical  pixel slices of the final image would contain the corresponding pixels from the first photo, the 11th through 20th vertical  pixel slices would contain the corresponding pixels from the second photo, and so on. Different directions will produce different effects.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/firefox/'>firefox</a>, <a class='category' href='/blog/categories/productivity/'>productivity</a></span>
-</footer>
+<p>There is free software available to do lighten layer blending of two photos, but I could not find any to automatically do it for a large number of photos. Similarly for the time slice, it is easy enough to manually slice a few photos, but not hundreds of photos. Therefore, I wrote a couple of scripts in <a href="http://www.r-project.org/">R</a> that would do this automatically. A gist of the scripts to create a time stack script and a time slice is <a href="https://gist.github.com/andland/efe66240184328f07429">here</a>. They both require you to give the directory containing the JPEG photos and the time slice script let&rsquo;s you enter the direction you would like it to go.</p>
 
+<div class="embed-video-container"><iframe width="640" height="480" src="http://www.youtube.com/embed/KnZQIeHPOYI" frameborder="0" allowfullscreen=""></iframe></div>
 
-</article>
+<p>To try this out on my own photos, I used the time lapse I had created of <a href="https://www.youtube.com/watch?v=KnZQIeHPOYI">a sunset</a> (movie created with <a href="https://www.ffmpeg.org/">FFmpeg</a>), which consisted of 225 photos taken over 20 minutes. The source material isn&rsquo;t that great (the photos were out of focus), but you can still see the effects. </p>
+
+<p>The following picture is a time stack.</p>
+
+<p><img src="/images/TimeStack/TimeStack.JPG" title="Time Stack" /></p>
+
+<p>The following four pictures are the time slices with different directions.</p>
+
+<p><img src="/images/TimeStack/TimeSlice-E.JPG" title="Time Slice Left-to-Right" /></p>
+
+<p><img src="/images/TimeStack/TimeSlice-W.JPG" title="Time Slice Right-to-Left" /></p>
+
+<p><img src="/images/TimeStack/TimeSlice-N.JPG" title="Time Slice Bottom-to-Top" /></p>
+
+<p><img src="/images/TimeStack/TimeSlice-S.JPG" title="Time Slice Top-to-Bottom" /></p>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Andrew Landgraf</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-24T12:00:00-05:00" pubdate data-updated="true">Dec 24<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/r/'>R</a>, <a class='category' href='/blog/categories/photography/'>photography</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r/" data-via="andland" data-counturl="http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/04/22/yet-another-baseball-defensive-statistic/" title="Previous Post: Yet Another Baseball Defense Statistic">&laquo; Yet Another Baseball Defense Statistic</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -192,7 +278,10 @@ MathJax.Hub.Config({
       var disqus_shortname = 'andland';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r/';
+        var disqus_url = 'http://andland.github.io/blog/2014/12/24/time-stack-time-slice-r/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
