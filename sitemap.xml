@@ -132,7 +132,7 @@
     </url>
     <url>
         <loc>http://andland.github.io/about/</loc>
-        <lastmod>2014-10-02T17:25:56-04:00</lastmod>
+        <lastmod>2015-01-31T12:51:53-05:00</lastmod>
     </url>
     <url>
         <loc>http://andland.github.io/blog/archives/</loc>
@@ -144,7 +144,11 @@
     </url>
     <url>
         <loc>http://andland.github.io/projects/</loc>
-        <lastmod>2014-04-13T19:23:18-04:00</lastmod>
+        <lastmod>2015-01-31T13:02:36-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://andland.github.io/projects/shiny.html</loc>
+        <lastmod>2015-01-30T17:29:11-05:00</lastmod>
     </url>
     <url>
         <loc>http://andland.github.io/robots.txt</loc>
