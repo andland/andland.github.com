@@ -4,7 +4,7 @@
   <title><![CDATA[Category: R | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/r/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2015-02-02T22:20:59-05:00</updated>
+  <updated>2015-04-08T20:42:40-04:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Monitoring Price Fluctuations of Book Trade-In Values on Amazon]]></title>
+    <link href="http://andland.github.io/blog/2015/04/08/amazon-tradein-price-fluctuations/"/>
+    <updated>2015-04-08T20:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2015/04/08/amazon-tradein-price-fluctuations</id>
+    <content type="html"><![CDATA[<p>I am planning to finish school soon and I would like to shed some weight before moving on. I have collected a fair number of books that I will likely never use again and it would be nice to get some money for them. Sites like Amazon and eBay let you sell your book to other customers, but Amazon will also buy some of your books directly (Trade-Ins), saving you the hassle of waiting for a buyer. </p>
+
+<p>Before selling, I remembered listening to a <a href="http://www.npr.org/blogs/money/2014/11/10/363103753/textbook-arbitrage-making-money-off-used-books">Planet Money episode</a> about a couple of guys that tried to make money off of buying and selling used textbooks on Amazon. Their strategy was to buy books at the end of a semester when students are itching to get rid of them, and sell them to other students at the beginning of the next semester. To back up their business, they have been scraping Amazon&rsquo;s website for years, keeping track of prices in order to find the optimal times to buy and sell.</p>
+
+<p>I collected a few books I was willing to part with and set up a scraper in R. I am primarily interested in selling my books to Amazon, so I tracked Amazon&rsquo;s Trade-In prices for these books. This was done fairly easily with Hadley Wickham&rsquo;s package <a href="https://github.com/hadley/rvest">rvest</a> and the Chrome extension <a href="http://selectorgadget.com/">Selector Gadget</a>. Selector Gadget tells me that the node I&rsquo;m interested in is <code>#tradeInButton_tradeInValue</code>. The code to do the scraping is below.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Amazon_scrape_prices.R</span><a href='https://gist.github.com/andland/52f8a97a111dcd8778aa#file-amazon_scrape_prices-r'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='r'><span class='line'>library<span class="p">(</span>rvest<span class="p">)</span><span class="o">&lt;/</span>p<span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span>p<span class="o">&gt;</span>urls_df <span class="o">=</span> read.csv<span class="p">(</span><span class="o">&amp;</span>ldquo<span class="p">;</span>AmazonBookURLs.csv<span class="o">&amp;</span>rdquo<span class="p">;,</span> stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> comment.char <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;)</span>
+</span><span class='line'>load<span class="p">(</span>file <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span>AmazonBookPrices.RData<span class="o">&amp;</span>rdquo<span class="p">;)</span>
+</span><span class='line'>price_df_temp <span class="o">=</span> data.frame<span class="p">(</span>Title <span class="o">=</span> urls_df<span class="o">$</span>Title<span class="p">,</span>
+</span><span class='line'>                      Date <span class="o">=</span> Sys.time<span class="p">(),</span>
+</span><span class='line'>                      Price <span class="o">=</span> <span class="kc">NA_real_</span><span class="p">,</span> stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+</span><span class='line'><span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>nrow<span class="p">(</span>urls_df<span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>  tradein_html <span class="o">=</span> urls_df<span class="o">$</span>URL<span class="p">[</span>i<span class="p">]</span> <span class="o">%&amp;gt;%</span> html<span class="p">()</span> <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    html_node<span class="p">(</span><span class="o">&amp;</span>ldquo<span class="p">;</span><span class="c1">#tradeInButton_tradeInValue&amp;rdquo;)</span>
+</span><span class='line'>  <span class="kr">if</span> <span class="p">(</span>is.null<span class="p">(</span>tradein_html<span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kr">next</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  price <span class="o">=</span> tradein_html <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    html_text<span class="p">()</span> <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    gsub<span class="p">(</span><span class="o">&amp;</span>ldquo<span class="p">;(</span><span class="o">^</span><span class="p">[[</span><span class="o">:</span>space<span class="o">:</span><span class="p">]]</span><span class="o">+</span>\<span class="o">$|</span><span class="p">[[</span><span class="o">:</span>space<span class="o">:</span><span class="p">]]</span><span class="o">+$</span><span class="p">)</span><span class="o">&amp;</span>rdquo<span class="p">;,</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;,</span> .<span class="p">)</span> <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    as.numeric<span class="p">()</span>
+</span><span class='line'>  price_df_temp<span class="o">$</span>Price<span class="p">[</span>i<span class="p">]</span> <span class="o">=</span> price
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>price_df <span class="o">=</span> rbind<span class="p">(</span>price_df<span class="p">,</span> price_df_temp<span class="p">)</span><span class="o">&lt;/</span>p<span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span>p<span class="o">&gt;</span>save<span class="p">(</span>price_df<span class="p">,</span> file <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span>AmazonBookPrices.RData<span class="o">&amp;</span>rdquo<span class="p">;)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>After manually collecting this data for less than a week, I am able to plot the trends for the eight books I am interested in selling. The plot and code are below.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>plot_amazon_prices.R</span><a href='https://gist.github.com/andland/52f8a97a111dcd8778aa#file-plot_amazon_prices-r'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='r'><span class='line'>library<span class="p">(</span>ggplot2<span class="p">);</span> theme_set<span class="p">(</span>theme_bw<span class="p">())</span>
+</span><span class='line'>library<span class="p">(</span>scales<span class="p">)</span><span class="o">&lt;/</span>p<span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span>p<span class="o">&gt;</span>price_df<span class="o">$</span>TitleTrunc <span class="o">=</span> paste0<span class="p">(</span>substring<span class="p">(</span>price_df<span class="o">$</span>TitleTrunc<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">30</span><span class="p">),</span> ifelse<span class="p">(</span>nchar<span class="p">(</span>price_df<span class="o">$</span>Title<span class="p">)</span> <span class="o">&amp;</span>gt<span class="p">;</span> <span class="m">30</span><span class="p">,</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>hellip<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;,</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;))</span>
+</span><span class='line'>ggplot<span class="p">(</span>price_df<span class="p">,</span> aes<span class="p">(</span>Date<span class="p">,</span> Price<span class="p">))</span> <span class="o">+</span>
+</span><span class='line'>  geom_step<span class="p">()</span> <span class="o">+</span> geom_point<span class="p">()</span> <span class="o">+</span> facet_wrap<span class="p">(</span><span class="o">~</span> TitleTrunc<span class="p">,</span> scales <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span>free_y<span class="o">&amp;</span>rdquo<span class="p">;)</span> <span class="o">+</span>
+</span><span class='line'>  scale_y_continuous<span class="p">(</span>labels <span class="o">=</span> dollar<span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>axis.text.x <span class="o">=</span> element_text<span class="p">(</span>angle <span class="o">=</span> <span class="m">90</span><span class="p">,</span> vjust <span class="o">=</span> <span class="m">0</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><img src="/images/AmazonScrape/prices.png" title="Amazon Trade-In Prices" ></p>
+
+<p>I am surprised how much the prices fluctuate. I expected them to be constant for the most part, with large changes once a week or less often. Apparently Amazon is doing quite a bit of tweaking to determine optimal price points. I would also guess that $2 is their minimum trade-in price. It looks like I missed out on my best chance to sell <em>A First Course in Stochastic Processes</em>, but that the price of <em>A Primer on Linear Models</em> will keep rising forever.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Time Stacking and Time Slicing in R]]></title>
@@ -127,16 +208,6 @@ In a <a href="http://alandgraf.blogspot.com/2013/08/downloading-and-analyzing-cd
     <id>http://andland.github.io/blog/2013/08/27/when-did-cd1025-book-summerfest-artists</id>
     <content type="html"><![CDATA[<div class="post">
 <iframe frameborder="0" height="4775" scrolling="no" src="https://dl.dropboxusercontent.com/u/17648661/CD101summerfest.html" width="100%">&amp;lt;p&amp;gt;Loading ...&amp;lt;/p&amp;gt;</iframe></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Downloading and Analyzing CD1025's Playlist]]></title>
-    <link href="http://andland.github.io/blog/2013/08/20/downloading-and-analyzing-cd1025s/"/>
-    <updated>2013-08-20T00:00:00-04:00</updated>
-    <id>http://andland.github.io/blog/2013/08/20/downloading-and-analyzing-cd1025s</id>
-    <content type="html"><![CDATA[<div class="post">
-<a href="http://www.cd101.com/">CD1025</a> is an “alternative” radio station here in Columbus. They are one of the few remaining radio stations that are independently owned and they take great pride in it. For data nerds like me, they also put a real time list of recently played songs on <a href="http://cd1025.com/about/playlists/now-playing">their website</a>. The page has the most recent 50 songs played, but you can also click on “Older Tracks” to go back in time. When you do this, the URL ends “now-playing/?start=50”. If you got back again, it says “now-playing/?start=100”.<br /><br />Using this structure, I decided to see if I could download all of their historical data and see how far it goes back. In the code below, I use the XML package to go to the website and download the 50 songs and then increment the number by 50 to find the previous 50 songs. I am telling the code to keep doing this until I get to January 1, 2012.<br /><pre><code class="r">library(ggplot2)<br />theme_set(theme_bw())<br />library(XML)<br />library(lubridate)<br />library(sqldf)<br />startNum = 0<br />while (TRUE) {<br />    theurl &lt;- paste0("http://cd1025.com/about/playlists/now-playing/?start=", <br />        startNum)<br />    table &lt;- readHTMLTable(theurl, stringsAsFactors = FALSE)[[1]]<br />    if (startNum == 0) {<br />        playlist = table[, -1]<br />    } else {<br />        playlist = rbind(playlist, table[, -1])<br />    }<br />    dt = mdy(substring(table[1, 4], nchar(table[1, 4]) - 9, nchar(table[1, 4])))<br />    print(dt)<br />    if (dt &lt; mdy("1/1/12")) {<br />        break<br />    }<br />    startNum = startNum + 50<br />}<br /><br />playlist = unique(playlist)  # Remove Dupes<br /><br />write.csv(playlist, "CD101Playlist.csv", row.names = FALSE)<br /></code></pre>This takes a while and is fairly large. My file has over 150,000 songs. If you want just a little data, change the date to last week or so. The first thing I will do is parse the dates and times of the songs, order them, and look at the first few songs. You can see that data only goes back to March of 2012.<br /><pre><code class="r">dates = mdy(substring(playlist[, 3], nchar(playlist[, 3]) - 9, nchar(playlist[, <br />    3])))<br />times = hm(substring(playlist[, 3], 1, nchar(playlist[, 3]) - 10))<br />playlist$Month = ymd(paste(year(dates), month(dates), "1", sep = "-"))<br />playlist$Day = dates<br />playlist$Time = times<br />playlist = playlist[order(playlist$Day, playlist$Time), ]<br />head(playlist)<br /></code></pre><pre><code>##                     Artist                Song       Last.Played<br />## 151638 DEATH CAB FOR CUTIE   YOU ARE A TOURIST 12:34am03/01/2012<br />## 151637       SLEEPER AGENT          GET BURNED 12:38am03/01/2012<br />## 151636          WASHED OUT           AMOR FATI 12:41am03/01/2012<br />## 151635            COLDPLAY       CHARLIE BROWN 12:45am03/01/2012<br />## 151634           GROUPLOVE         TONGUE TIED 12:49am03/01/2012<br />## 151633               SUGAR YOUR FAVORITE THING 12:52am03/01/2012<br />##             Month        Day   Time<br />## 151638 2012-03-01 2012-03-01 34M 0S<br />## 151637 2012-03-01 2012-03-01 38M 0S<br />## 151636 2012-03-01 2012-03-01 41M 0S<br />## 151635 2012-03-01 2012-03-01 45M 0S<br />## 151634 2012-03-01 2012-03-01 49M 0S<br />## 151633 2012-03-01 2012-03-01 52M 0S<br /></code></pre>Using the sqldf package, I can easily see what the most played artists and songs are from the data I scraped.<br /><pre><code class="r">sqldf("Select Artist, Count(Artist) as PlayCount<br />       From playlist<br />       Group By Artist<br />       Order by PlayCount DESC<br />       Limit 10")<br /></code></pre><pre><code>##                   Artist PlayCount<br />## 1      SILVERSUN PICKUPS      2340<br />## 2         THE BLACK KEYS      2203<br />## 3                   MUSE      1988<br />## 4              THE SHINS      1885<br />## 5    OF MONSTERS AND MEN      1753<br />## 6            PASSION PIT      1552<br />## 7              GROUPLOVE      1544<br />## 8  RED HOT CHILI PEPPERS      1514<br />## 9                 METRIC      1495<br />## 10          ATLAS GENIUS      1494<br /></code></pre><pre><code class="r"><br />sqldf("Select Artist, Song, Count(Song) as PlayCount<br />      From playlist<br />      Group By Artist, Song<br />      Order by PlayCount DESC<br />      Limit 10")<br /></code></pre><pre><code>##                 Artist                    Song PlayCount<br />## 1          PASSION PIT             TAKE A WALK       828<br />## 2    SILVERSUN PICKUPS                PIT, THE       825<br />## 3         ATLAS GENIUS                 TROJANS       819<br />## 4        WALK THE MOON                ANNA SUN       742<br />## 5       THE BLACK KEYS LITTLE BLACK SUBMARINES       736<br />## 6          DIVINE FITS  WOULD THAT NOT BE NICE       731<br />## 7        THE LUMINEERS                  HO HEY       722<br />## 8       CAPITAL CITIES          SAFE AND SOUND       712<br />## 9  OF MONSTERS AND MEN          MOUNTAIN SOUND       711<br />## 10               ALT J            BREEZEBLOCKS       691<br /></code></pre>I am a little surprised that Silversun Pickups are the number one band, but everyone on the list makes sense. Looking at how the plays of the top artists have varied from month to month, you can see a few patterns. Muse has been more popular recently and The Shins and Grouplove have lost some steam.<br /><pre><code class="r">artist.month=sqldf("Select Month, Artist, Count(Song) as Num<br />      From playlist<br />      Group By Month, Artist<br />      Order by Month, Artist")<br />artist=sqldf("Select Artist, Count(Artist) as Num<br />      From playlist<br />      Group By Artist<br />      Order by Num DESC")<br />p=ggplot(subset(artist.month,Artist %in% head(artist$Artist,8)),aes(Month,Num))<br />p+geom_bar(stat="identity",aes(fill=Artist),position='fill',colour="grey")+</code></pre><pre><code class="r"> labs(y="Percentage of Plays")</code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-ZbWCMOMUX8E/UhPvnh1UoqI/AAAAAAAAH8I/EIAlTwFKjxg/s1600/PlayProportionByMonth.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-ZbWCMOMUX8E/UhPvnh1UoqI/AAAAAAAAH8I/EIAlTwFKjxg/s1600/PlayProportionByMonth.png" /></a></div><br />For the play count of the top artists, I see some odd numbers in June and July of 2012. The number of plays went way down.<br /><pre><code class="r">p + geom_area(aes(fill = Artist), position = "stack", colour = 1) + labs(y = "Number of Plays")<br /></code></pre><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/--0tLMWDJuAI/UhPvnsQAl2I/AAAAAAAAH8M/tl2RtleoH2k/s1600/PlayCountByMonth.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/--0tLMWDJuAI/UhPvnsQAl2I/AAAAAAAAH8M/tl2RtleoH2k/s1600/PlayCountByMonth.png" /></a></div><br />Looking into this further, I plotted the date and time that the song was played by the cumulative number of songs played since the beginning of the list. The plot should be a line with a constant slope, meaning that the plays per day are relatively constant. You can see in June and July of 2012 there are flat spots where there is no playlist history. <br /><pre><code class="r">qplot(playlist$Day + playlist$Time, 1:length(dates), geom = "path")<br /></code></pre><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-jzAKuFMa_ak/UhPvnqrS-_I/AAAAAAAAH8E/DgJDVUUNyD8/s1600/PlaysByTime.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-jzAKuFMa_ak/UhPvnqrS-_I/AAAAAAAAH8E/DgJDVUUNyD8/s1600/PlaysByTime.png" /></a></div><br />There are also smaller flat spots in September and December, but I am going to decide that those are small enough not to affect any further analyses. From this, I am going to use data only from August 2012 to present.<br /><pre><code class="r">playlist = subset(playlist, Day &gt;= mdy("8/1/12"))<br /></code></pre>Next up, I am going to use this data to analyze the plays of artists from <a href="http://cd1025.com/summerfest">Summerfest</a>, and try to infer if the play counts varied once they were added to the bill.</div>
 ]]></content>
   </entry>
   

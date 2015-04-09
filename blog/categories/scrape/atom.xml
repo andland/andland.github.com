@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: scrape | Statistically Significant]]></title>
+  <link href="http://andland.github.io/blog/categories/scrape/atom.xml" rel="self"/>
+  <link href="http://andland.github.io/"/>
+  <updated>2015-04-08T20:42:40-04:00</updated>
+  <id>http://andland.github.io/</id>
+  <author>
+    <name><![CDATA[Andrew Landgraf]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Monitoring Price Fluctuations of Book Trade-In Values on Amazon]]></title>
+    <link href="http://andland.github.io/blog/2015/04/08/amazon-tradein-price-fluctuations/"/>
+    <updated>2015-04-08T20:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2015/04/08/amazon-tradein-price-fluctuations</id>
+    <content type="html"><![CDATA[<p>I am planning to finish school soon and I would like to shed some weight before moving on. I have collected a fair number of books that I will likely never use again and it would be nice to get some money for them. Sites like Amazon and eBay let you sell your book to other customers, but Amazon will also buy some of your books directly (Trade-Ins), saving you the hassle of waiting for a buyer. </p>
+
+<p>Before selling, I remembered listening to a <a href="http://www.npr.org/blogs/money/2014/11/10/363103753/textbook-arbitrage-making-money-off-used-books">Planet Money episode</a> about a couple of guys that tried to make money off of buying and selling used textbooks on Amazon. Their strategy was to buy books at the end of a semester when students are itching to get rid of them, and sell them to other students at the beginning of the next semester. To back up their business, they have been scraping Amazon&rsquo;s website for years, keeping track of prices in order to find the optimal times to buy and sell.</p>
+
+<p>I collected a few books I was willing to part with and set up a scraper in R. I am primarily interested in selling my books to Amazon, so I tracked Amazon&rsquo;s Trade-In prices for these books. This was done fairly easily with Hadley Wickham&rsquo;s package <a href="https://github.com/hadley/rvest">rvest</a> and the Chrome extension <a href="http://selectorgadget.com/">Selector Gadget</a>. Selector Gadget tells me that the node I&rsquo;m interested in is <code>#tradeInButton_tradeInValue</code>. The code to do the scraping is below.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Amazon_scrape_prices.R</span><a href='https://gist.github.com/andland/52f8a97a111dcd8778aa#file-amazon_scrape_prices-r'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='r'><span class='line'>library<span class="p">(</span>rvest<span class="p">)</span><span class="o">&lt;/</span>p<span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span>p<span class="o">&gt;</span>urls_df <span class="o">=</span> read.csv<span class="p">(</span><span class="o">&amp;</span>ldquo<span class="p">;</span>AmazonBookURLs.csv<span class="o">&amp;</span>rdquo<span class="p">;,</span> stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> comment.char <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;)</span>
+</span><span class='line'>load<span class="p">(</span>file <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span>AmazonBookPrices.RData<span class="o">&amp;</span>rdquo<span class="p">;)</span>
+</span><span class='line'>price_df_temp <span class="o">=</span> data.frame<span class="p">(</span>Title <span class="o">=</span> urls_df<span class="o">$</span>Title<span class="p">,</span>
+</span><span class='line'>                      Date <span class="o">=</span> Sys.time<span class="p">(),</span>
+</span><span class='line'>                      Price <span class="o">=</span> <span class="kc">NA_real_</span><span class="p">,</span> stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+</span><span class='line'><span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>nrow<span class="p">(</span>urls_df<span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>  tradein_html <span class="o">=</span> urls_df<span class="o">$</span>URL<span class="p">[</span>i<span class="p">]</span> <span class="o">%&amp;gt;%</span> html<span class="p">()</span> <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    html_node<span class="p">(</span><span class="o">&amp;</span>ldquo<span class="p">;</span><span class="c1">#tradeInButton_tradeInValue&amp;rdquo;)</span>
+</span><span class='line'>  <span class="kr">if</span> <span class="p">(</span>is.null<span class="p">(</span>tradein_html<span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>    <span class="kr">next</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  price <span class="o">=</span> tradein_html <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    html_text<span class="p">()</span> <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    gsub<span class="p">(</span><span class="o">&amp;</span>ldquo<span class="p">;(</span><span class="o">^</span><span class="p">[[</span><span class="o">:</span>space<span class="o">:</span><span class="p">]]</span><span class="o">+</span>\<span class="o">$|</span><span class="p">[[</span><span class="o">:</span>space<span class="o">:</span><span class="p">]]</span><span class="o">+$</span><span class="p">)</span><span class="o">&amp;</span>rdquo<span class="p">;,</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;,</span> .<span class="p">)</span> <span class="o">%&amp;gt;%</span>
+</span><span class='line'>    as.numeric<span class="p">()</span>
+</span><span class='line'>  price_df_temp<span class="o">$</span>Price<span class="p">[</span>i<span class="p">]</span> <span class="o">=</span> price
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>price_df <span class="o">=</span> rbind<span class="p">(</span>price_df<span class="p">,</span> price_df_temp<span class="p">)</span><span class="o">&lt;/</span>p<span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span>p<span class="o">&gt;</span>save<span class="p">(</span>price_df<span class="p">,</span> file <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span>AmazonBookPrices.RData<span class="o">&amp;</span>rdquo<span class="p">;)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>After manually collecting this data for less than a week, I am able to plot the trends for the eight books I am interested in selling. The plot and code are below.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>plot_amazon_prices.R</span><a href='https://gist.github.com/andland/52f8a97a111dcd8778aa#file-plot_amazon_prices-r'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='r'><span class='line'>library<span class="p">(</span>ggplot2<span class="p">);</span> theme_set<span class="p">(</span>theme_bw<span class="p">())</span>
+</span><span class='line'>library<span class="p">(</span>scales<span class="p">)</span><span class="o">&lt;/</span>p<span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span>p<span class="o">&gt;</span>price_df<span class="o">$</span>TitleTrunc <span class="o">=</span> paste0<span class="p">(</span>substring<span class="p">(</span>price_df<span class="o">$</span>TitleTrunc<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">30</span><span class="p">),</span> ifelse<span class="p">(</span>nchar<span class="p">(</span>price_df<span class="o">$</span>Title<span class="p">)</span> <span class="o">&amp;</span>gt<span class="p">;</span> <span class="m">30</span><span class="p">,</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>hellip<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;,</span> <span class="o">&amp;</span>ldquo<span class="p">;</span><span class="o">&amp;</span>rdquo<span class="p">;))</span>
+</span><span class='line'>ggplot<span class="p">(</span>price_df<span class="p">,</span> aes<span class="p">(</span>Date<span class="p">,</span> Price<span class="p">))</span> <span class="o">+</span>
+</span><span class='line'>  geom_step<span class="p">()</span> <span class="o">+</span> geom_point<span class="p">()</span> <span class="o">+</span> facet_wrap<span class="p">(</span><span class="o">~</span> TitleTrunc<span class="p">,</span> scales <span class="o">=</span> <span class="o">&amp;</span>ldquo<span class="p">;</span>free_y<span class="o">&amp;</span>rdquo<span class="p">;)</span> <span class="o">+</span>
+</span><span class='line'>  scale_y_continuous<span class="p">(</span>labels <span class="o">=</span> dollar<span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>axis.text.x <span class="o">=</span> element_text<span class="p">(</span>angle <span class="o">=</span> <span class="m">90</span><span class="p">,</span> vjust <span class="o">=</span> <span class="m">0</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><img src="/images/AmazonScrape/prices.png" title="Amazon Trade-In Prices" ></p>
+
+<p>I am surprised how much the prices fluctuate. I expected them to be constant for the most part, with large changes once a week or less often. Apparently Amazon is doing quite a bit of tweaking to determine optimal price points. I would also guess that $2 is their minimum trade-in price. It looks like I missed out on my best chance to sell <em>A First Course in Stochastic Processes</em>, but that the price of <em>A Primer on Linear Models</em> will keep rising forever.</p>
+]]></content>
+  </entry>
+  
+</feed>

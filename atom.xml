@@ -4,7 +4,7 @@
   <title><![CDATA[Statistically Significant]]></title>
   <link href="http://andland.github.io/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2015-02-02T22:20:59-05:00</updated>
+  <updated>2015-04-08T20:42:40-04:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Monitoring Price Fluctuations of Book Trade-In Values on Amazon]]></title>
+    <link href="http://andland.github.io/blog/2015/04/08/amazon-tradein-price-fluctuations/"/>
+    <updated>2015-04-08T20:00:00-04:00</updated>
+    <id>http://andland.github.io/blog/2015/04/08/amazon-tradein-price-fluctuations</id>
+    <content type="html"><![CDATA[<p>I am planning to finish school soon and I would like to shed some weight before moving on. I have collected a fair number of books that I will likely never use again and it would be nice to get some money for them. Sites like Amazon and eBay let you sell your book to other customers, but Amazon will also buy some of your books directly (Trade-Ins), saving you the hassle of waiting for a buyer. </p>
+
+<p>Before selling, I remembered listening to a <a href="http://www.npr.org/blogs/money/2014/11/10/363103753/textbook-arbitrage-making-money-off-used-books">Planet Money episode</a> about a couple of guys that tried to make money off of buying and selling used textbooks on Amazon. Their strategy was to buy books at the end of a semester when students are itching to get rid of them, and sell them to other students at the beginning of the next semester. To back up their business, they have been scraping Amazon&rsquo;s website for years, keeping track of prices in order to find the optimal times to buy and sell.</p>
+
+<p>I collected a few books I was willing to part with and set up a scraper in R. I am primarily interested in selling my books to Amazon, so I tracked Amazon&rsquo;s Trade-In prices for these books. This was done fairly easily with Hadley Wickham&rsquo;s package <a href="https://github.com/hadley/rvest">rvest</a> and the Chrome extension <a href="http://selectorgadget.com/">Selector Gadget</a>. Selector Gadget tells me that the node I&rsquo;m interested in is <code>#tradeInButton_tradeInValue</code>. The code to do the scraping is below.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span>Amazon_scrape_prices.R</span><a href="https://gist.github.com/andland/52f8a97a111dcd8778aa#file-amazon_scrape_prices-r">link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+</pre></td><td class="code"><pre><code class="r"><span class="line">library<span class="p">(</span>rvest<span class="p">)</span>
+</span><span class="line">
+</span><span class="line">urls_df <span class="o">=</span> read.csv<span class="p">(</span><span class="s">&quot;AmazonBookURLs.csv&quot;</span><span class="p">,</span> stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> comment.char <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</span><span class="line">load<span class="p">(</span>file <span class="o">=</span> <span class="s">&quot;AmazonBookPrices.RData&quot;</span><span class="p">)</span>
+</span><span class="line">price_df_temp <span class="o">=</span> data.frame<span class="p">(</span>Title <span class="o">=</span> urls_df<span class="o">$</span>Title<span class="p">,</span>
+</span><span class="line">                      Date <span class="o">=</span> Sys.time<span class="p">(),</span>
+</span><span class="line">                      Price <span class="o">=</span> <span class="kc">NA_real_</span><span class="p">,</span> stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+</span><span class="line"><span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>nrow<span class="p">(</span>urls_df<span class="p">))</span> <span class="p">{</span>
+</span><span class="line">  tradein_html <span class="o">=</span> urls_df<span class="o">$</span>URL<span class="p">[</span>i<span class="p">]</span> <span class="o">%&gt;%</span> html<span class="p">()</span> <span class="o">%&gt;%</span>
+</span><span class="line">    html_node<span class="p">(</span><span class="s">&quot;#tradeInButton_tradeInValue&quot;</span><span class="p">)</span>
+</span><span class="line">  <span class="kr">if</span> <span class="p">(</span>is.null<span class="p">(</span>tradein_html<span class="p">))</span> <span class="p">{</span>
+</span><span class="line">    <span class="kr">next</span>
+</span><span class="line">  <span class="p">}</span>
+</span><span class="line">  price <span class="o">=</span> tradein_html <span class="o">%&gt;%</span>
+</span><span class="line">    html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+</span><span class="line">    gsub<span class="p">(</span><span class="s">&quot;(^[[:space:]]+\\$|[[:space:]]+$)&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> .<span class="p">)</span> <span class="o">%&gt;%</span>
+</span><span class="line">    as.numeric<span class="p">()</span>
+</span><span class="line">  price_df_temp<span class="o">$</span>Price<span class="p">[</span>i<span class="p">]</span> <span class="o">=</span> price
+</span><span class="line"><span class="p">}</span>
+</span><span class="line">price_df <span class="o">=</span> rbind<span class="p">(</span>price_df<span class="p">,</span> price_df_temp<span class="p">)</span>
+</span><span class="line">
+</span><span class="line">save<span class="p">(</span>price_df<span class="p">,</span> file <span class="o">=</span> <span class="s">&quot;AmazonBookPrices.RData&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>After manually collecting this data for less than a week, I am able to plot the trends for the eight books I am interested in selling. The plot and code are below.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span>plot_amazon_prices.R</span><a href="https://gist.github.com/andland/52f8a97a111dcd8778aa#file-plot_amazon_prices-r">link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="r"><span class="line">library<span class="p">(</span>ggplot2<span class="p">);</span> theme_set<span class="p">(</span>theme_bw<span class="p">())</span>
+</span><span class="line">library<span class="p">(</span>scales<span class="p">)</span>
+</span><span class="line">
+</span><span class="line">price_df<span class="o">$</span>TitleTrunc <span class="o">=</span> paste0<span class="p">(</span>substring<span class="p">(</span>price_df<span class="o">$</span>TitleTrunc<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">30</span><span class="p">),</span> ifelse<span class="p">(</span>nchar<span class="p">(</span>price_df<span class="o">$</span>Title<span class="p">)</span> <span class="o">&gt;</span> <span class="m">30</span><span class="p">,</span> <span class="s">&quot;...&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
+</span><span class="line">ggplot<span class="p">(</span>price_df<span class="p">,</span> aes<span class="p">(</span>Date<span class="p">,</span> Price<span class="p">))</span> <span class="o">+</span>
+</span><span class="line">  geom_step<span class="p">()</span> <span class="o">+</span> geom_point<span class="p">()</span> <span class="o">+</span> facet_wrap<span class="p">(</span><span class="o">~</span> TitleTrunc<span class="p">,</span> scales <span class="o">=</span> <span class="s">&quot;free_y&quot;</span><span class="p">)</span> <span class="o">+</span>
+</span><span class="line">  scale_y_continuous<span class="p">(</span>labels <span class="o">=</span> dollar<span class="p">)</span> <span class="o">+</span> theme<span class="p">(</span>axis.text.x <span class="o">=</span> element_text<span class="p">(</span>angle <span class="o">=</span> <span class="m">90</span><span class="p">,</span> vjust <span class="o">=</span> <span class="m">0</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><img src="http://andland.github.io/images/AmazonScrape/prices.png" title="Amazon Trade-In Prices" /></p>
+
+<p>I am surprised how much the prices fluctuate. I expected them to be constant for the most part, with large changes once a week or less often. Apparently Amazon is doing quite a bit of tweaking to determine optimal price points. I would also guess that $2 is their minimum trade-in price. It looks like I missed out on my best chance to sell <em>A First Course in Stochastic Processes</em>, but that the price of <em>A Primer on Linear Models</em> will keep rising forever.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Time Stacking and Time Slicing in R]]></title>
@@ -580,16 +661,6 @@ To learn something about how computers handle numbers, especially as it relates 
     <id>http://andland.github.io/blog/2012/05/30/space-time-swing-probability-plot-for</id>
     <content type="html"><![CDATA[<div class='post'>
 I was having some fun with PITCHf/x data and generalize additive models. <a href="http://en.wikipedia.org/wiki/PITCHf/x">PITCHf/x</a> keeps track of the trajectory, path, location of every pitch in the MLB. It is pretty accurate and opens up baseball to more analyses than ever before. <a href="http://en.wikipedia.org/wiki/Generalized_additive_model">Generalized additive models</a> (GAMs) are statistical models that put minimal assumptions on the type of model you are fitting. Traditional statistical models are linear, in that they assume that the response variable you are modelling is a linear function of the explanatory variables. GAMs just assumes that the relationship is &#8220;smooth.&#8221; <a href="http://www.stat.ubc.ca/%7Ematias/rgam/binomial.png">Here </a>is a good example of a relationship that may have traditionally been modeled as linear, but it is a much better assumption that the relationship is smooth.<br /><br />I fit a GAM to PITCHf/x data. The response is whether or not Ichiro swung. The explanatory variables are pitch location on the x, pitch location on the z, and the day of the year. Obviously, we expect the probability of swinging to change as the pitch is closer or further away from the center of the strike zone. Additionally, I was interested in seeing his swinging propensity changed as the year went on.<br /><br /><div class="separator" style="clear: both; text-align: center;"><object class="BLOGGER-youtube-video" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" data-thumbnail-src="http://i.ytimg.com/vi/44X9VXXjYPI/0.jpg" height="266" width="320"><param name="movie" value="http://www.youtube.com/v/44X9VXXjYPI?version=3&f=user_uploads&c=google-webdrive-0&app=youtube_gdata" />  <param name="bgcolor" value="#FFFFFF" />  <embed width="320" height="266"  src="http://www.youtube.com/v/44X9VXXjYPI?version=3&f=user_uploads&c=google-webdrive-0&app=youtube_gdata" type="application/x-shockwave-flash"></embed></object></div><br />You can see that the probability of swinging is smooth in both location and time. Also, you can see (ever so slightly) that the probability of swinging increased as the year went on. Looking at <a href="http://www.baseball-reference.com/players/split.cgi?id=suzukic01&amp;year=2010&amp;t=b#half">the splits</a>, you can see that his walk percentage was 28/395 (7.1%) in the first half and 17/337 (5.0%) in the second half. This is in agreement with the swing probability increasing,<br /><br />I used the <a href="http://people.bath.ac.uk/sw283/mgcv/tampere/mgcv.pdf">mgcv </a>package in R to run the GAM. I created an image for every day and stitched them together into a movie with <a href="http://ffmpeg.org/">ffmpeg</a>. The R code is <a href="https://docs.google.com/open?id=0B21DLJKq18K9ejNUX0RXQnlJam8">here</a>.</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sending a Text in R]]></title>
-    <link href="http://andland.github.io/blog/2012/05/25/sending-text-in-r/"/>
-    <updated>2012-05-25T00:00:00-04:00</updated>
-    <id>http://andland.github.io/blog/2012/05/25/sending-text-in-r</id>
-    <content type="html"><![CDATA[<div class='post'>
-Don&#8217;t you hate it when you are running a long piece of code and you keep checking the results every 15 minutes, hoping it will finish? There is a better way.<br /><br />I got the idea from <a href="http://jbdeaton.com/2012/send-yourself-an-sms-via-python/">here</a>. He uses a Python script and the text interface is not free. I thought someone must have already thought of this for R. There is an easy solution. You can send an email fairly easily in R. You can also send <a href="http://allthingsmarked.com/2006/09/04/howto-send-free-text-messages-through-email/">text messages as emails</a>. <a href="http://www.decisionstats.com/send-email-by-r/">This page </a>gives a few examples of how to send an email in R. Sending a text via email will depend on what carrier you have and I am sure standard text message fees apply.You can only send 20 emails a day with this package, but that probably won&#8217;t be a big deal.<br /><br />It is basically a one-liner. Here is the code I used:<br /><pre class="brush: r">install.packages("mail",repos="http://cran.case.edu/")<br />library(mail)<br />sendmail("5555555555@txt.att.net", <br />         subject="Notification from R",message="MCMC Finished", password="rmail")<br /></pre><br />That&#8217;s it!<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s1600/photo.PNG" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="320" src="http://1.bp.blogspot.com/-DaUTmyXUfks/T7_mu1CRtII/AAAAAAAAG8Y/Ike9L7_C_yI/s320/photo.PNG" width="212" /></a></div></div>
 ]]></content>
   </entry>
   
