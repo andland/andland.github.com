@@ -4,7 +4,7 @@
   <title><![CDATA[Category: baseball | Statistically Significant]]></title>
   <link href="http://andland.github.io/blog/categories/baseball/atom.xml" rel="self"/>
   <link href="http://andland.github.io/"/>
-  <updated>2015-12-05T12:35:38-05:00</updated>
+  <updated>2015-12-15T18:39:03-05:00</updated>
   <id>http://andland.github.io/</id>
   <author>
     <name><![CDATA[Andrew Landgraf]]></name>
@@ -58,9 +58,11 @@
 
 <h3 id="results">Results</h3>
 
-<p><a href="http://spark.rstudio.com/andland/InsideEdgeBaseballFielding/"><img src="/images/InsideEdge/shiny.png" title="Shiny app" ></a></p>
+<p><img src="/images/InsideEdge/shiny.png" title="Shiny app" ></p>
 
-<p>Finally, I put together a <a href="http://www.rstudio.com/shiny/">Shiny</a> app to display <a href="http://spark.rstudio.com/andland/InsideEdgeBaseballFielding/">the results</a>. You can search by team, position, and innings played. A team of &lsquo;- - -&lsquo; means the player played for multiple teams over this period. You can also choose to display the results as a rate statistic (extra plays made per season) or a count statistic (extra plays made over the two seasons). To get a seasonal number, I assume position players played 150 games with 8.5 innings in each game. For pitchers, I assumed that they pitched 30 games, 6 innings each. </p>
+<p>[<strong>Update</strong>: The Shiny app is no longer live, but you can view the resulting estimates in the <a href="https://github.com/andland/InsideEdgeFielding/blob/master/Shiny/InsideEdgeModelResults.csv">Github repository</a>.]</p>
+
+<p>Finally, I put together a <a href="http://www.rstudio.com/shiny/">Shiny</a> app to display <a href="https://github.com/andland/InsideEdgeFielding/blob/master/Shiny/InsideEdgeModelResults.csv">the results</a>. You can search by team, position, and innings played. A team of &lsquo;- - -&lsquo; means the player played for multiple teams over this period. You can also choose to display the results as a rate statistic (extra plays made per season) or a count statistic (extra plays made over the two seasons). To get a seasonal number, I assume position players played 150 games with 8.5 innings in each game. For pitchers, I assumed that they pitched 30 games, 6 innings each. </p>
 
 <h3 id="conclusions-and-future-work">Conclusions and future work</h3>
 
