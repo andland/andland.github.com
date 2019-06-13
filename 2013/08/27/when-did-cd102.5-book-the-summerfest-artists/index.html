@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content=" &amp;lt;p&amp;gt;Loading ...&amp;lt;/p&amp;gt; ">
+  <meta name="description" content="CD1025&rsquo;s Playlist and Summerfest Last time, I showed you how to download CD1025&rsquo;s playlist back to last year and did some exploratory analysis to find that there were some gaps in the data. Using this data, I would like to look at the artists that are playing in this week&rsquo;s Summerfest. Summerfest is one of the biggest shows that CD1025 puts on every year and is hyped quite a bit on the station.">
 
   
   <link rel="alternate" hreflang="en-us" href="/2013/08/27/when-did-cd102.5-book-the-summerfest-artists/">
@@ -113,12 +113,12 @@
   <meta property="og:site_name" content="Statistically Significant">
   <meta property="og:url" content="/2013/08/27/when-did-cd102.5-book-the-summerfest-artists/">
   <meta property="og:title" content="When Did CD102.5 Book the Summerfest Artists? | Statistically Significant">
-  <meta property="og:description" content=" &amp;lt;p&amp;gt;Loading ...&amp;lt;/p&amp;gt; "><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="CD1025&rsquo;s Playlist and Summerfest Last time, I showed you how to download CD1025&rsquo;s playlist back to last year and did some exploratory analysis to find that there were some gaps in the data. Using this data, I would like to look at the artists that are playing in this week&rsquo;s Summerfest. Summerfest is one of the biggest shows that CD1025 puts on every year and is hyped quite a bit on the station."><meta property="og:image" content="/img/icon-192.png">
   <meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2013-08-27T00:00:00&#43;00:00">
   
-  <meta property="article:modified_time" content="2013-08-27T00:00:00&#43;00:00">
+  <meta property="article:modified_time" content="2019-06-13T17:24:26-04:00">
   
 
   
@@ -329,7 +329,7 @@
 
 
 <meta content="2013-08-27 00:00:00 &#43;0000 UTC" itemprop="datePublished">
-<meta content="2013-08-27 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+<meta content="2019-06-13 17:24:26 -0400 EDT" itemprop="dateModified">
 
 <div class="article-metadata">
 
@@ -341,8 +341,10 @@
     
     
       
+          Last updated on
+      
     
-    <time>Aug 27, 2013</time>
+    <time>Jun 13, 2019</time>
   </span>
   
 
@@ -351,7 +353,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    1 min read
+    4 min read
   </span>
   
 
@@ -439,8 +441,130 @@
 
     <div class="article-style" itemprop="articleBody">
       
-<div class='post'>
-<iframe frameborder="0" height="4775" scrolling="no" src="https://www.dropbox.com/s/atit9fmf0hrla1q/CD101summerfest.html" width="100%">&amp;lt;p&amp;gt;Loading ...&amp;lt;/p&amp;gt;</iframe></div>
+
+<h1 id="cd1025-s-playlist-and-summerfest">CD1025&rsquo;s Playlist and Summerfest</h1>
+
+<p><a href="http://alandgraf.blogspot.com/2013/08/downloading-and-analyzing-cd1025s.html" target="_blank">Last time</a>, I showed you how to download CD1025&rsquo;s playlist back to last year and did some exploratory analysis to find that there were some gaps in the data. Using this data, I would like to look at the artists that are playing in this week&rsquo;s <a href="http://cd1025.com/summerfest" target="_blank">Summerfest</a>. Summerfest is one of the biggest shows that CD1025 puts on every year and is hyped quite a bit on the station. I would like to look into whether they play the headliners more once they have booked the artists.</p>
+
+<p>I am going to concentrate on data from January 1st and on so I don&rsquo;t include too much irrelevant data. Below is a function where I can input a number related to which headliner I want and it will plot the plays per day of that artist from January 1st to the most recent history. I also plot a smooth curve and a vertical line when the lineup was announced on June 24th.</p>
+
+<pre><code class="language-r">playlist=subset(playlist,Day&gt;=mdy(&quot;1/1/13&quot;))
+plays.per.day=sqldf(&quot;Select Day, Count(Artist) as Num
+      From playlist
+      Group By Day
+      Order by Day&quot;)
+summerfest.artists=c(&quot;MATT AND KIM&quot;,&quot;COLD WAR KIDS&quot;,&quot;RA RA RIOT&quot;,&quot;SMITH WESTERNS&quot;,
+                       &quot;J. RODDY WALSTON AND THE BUSINESS&quot;,&quot;CAYUCAS&quot;,
+                       &quot;THAO AND THE GET DOWN STAY DOWN&quot;,&quot;DALE EARNHARDT JR. JR.&quot;)
+
+plot.plays &lt;- function(artist.num) {
+  summerfest=summerfest.artists[artist.num]
+  song.per.day=sqldf(paste0(&quot;Select Day, Count(Artist) as Num
+                      From playlist
+                      Where Artist='&quot;,summerfest,&quot;'
+                      Group By Day
+                      Order by Day&quot;))
+  song.per.day=merge(plays.per.day[,1,drop=FALSE],song.per.day,all.x=TRUE)
+  song.per.day$Num[is.na(song.per.day$Num)]=0
+  
+  qplot(Day,Num,data=song.per.day,geom=&quot;point&quot;)+labs(x=&quot;Date&quot;,y=&quot;Plays&quot;,title=summerfest,colour=NULL)+
+    geom_vline(xintercept=as.numeric(mdy(&quot;6/24/13&quot;)),lty=2)+
+    geom_smooth(method=&quot;gam&quot;,family=poisson,formula=y~s(x),se=F,aes(colour=&quot;Smooth&quot;),size=2)
+}
+</code></pre>
+
+<p>Doing this with the first artist, Matt and Kim, you can see that the plays per day steadily increased sharply some time in late March and stayed about constant there until the announcement. After the announcement, surprisingly, the plays have decreased. The fact that the plays increased in late March indicates to me that it is possible that they booked Matt and Kim then and increased them in the rotation in order to make the band more familiar to the audience. Of course, there are many other (possibly more reasonable) reasons that the play count increased, so I may be reading into it too much.</p>
+
+<pre><code class="language-r">plot.plays(1)
+</code></pre>
+
+<p><img src="/post/2013-08-27-when-did-cd1025-book-summerfest-artists/MattAndKimPlays.png" alt="plot of chunk MattAndKimPlays" /></p>
+
+<p>I would like to statistically determine when the number of plays changed the most and from that infer when the station had booked the artist. To do this I assume a change point model. Since we are dealing with counts, I will assume that the number of plays in a day follows a Poisson distribution. In a change point model, there is some day, $\tau$, where the mean parameter of the Poisson distribution changes. Before that date, the play counts follow a Poisson with mean $\lambda_1$ and after the mean is $\lambda_2$ ($\lambda_1 \neq \lambda_2$).</p>
+
+<p>Let $X_i$ be the number of plays for Matt and Kim on date $i$. The generative model is</p>
+
+<p>$$ X_i \sim Poisson(\lambda_1), i \leq \tau$$</p>
+
+<p>$$X_i \sim Poisson(\lambda_2), i &gt; \tau$$</p>
+
+<p>and therefore the likelihood is</p>
+
+<p>$$\prod_{i=\text{Jan 1}}^{\tau-1} \frac{\lambda_1^{x_i}}{x_i !} e^{\lambda_1}$$</p>
+
+<p>$$\prod_{i=\tau}^{\text{June 23}} \frac{\lambda_2^{x_i}}{x_i !} e^{\lambda_2}$$</p>
+
+<p>If $\tau=t$ is known, maximizing the likelihood with respect to $\lambda_1$ and $\lambda_2$ is easy.</p>
+
+<p>$$\hat{\lambda}_1 = \bar{x}[\leq t]$$</p>
+
+<p>$$\hat{\lambda}_2 = \bar{x}[&gt; t]$$</p>
+
+<p>which are the average play counts per day before and after $t$.</p>
+
+<p>We can easily find the $\hat{\tau}$ that maximizes the likelihood by looping $t$ through every  day from January 1 to June 22, finding the maximum likelihood estimates, and calculating the likelihood. The $t$ that gives the highest likelihood and the corresponding $\lambda$s are the MLEs. A function for the maximized log likelihood is given below for a given $t$.</p>
+
+<pre><code class="language-r">log.like.known = function(t) {
+    pre = song.per.day$Day &lt;= t
+    post = song.per.day$Day &gt; t &amp; song.per.day$Day &lt; mdy(&quot;6/24/13&quot;)
+    lambda1hat = sum(song.per.day$Num[pre])/sum(pre)
+    lambda2hat = sum(song.per.day$Num[post])/sum(post)
+    sum(song.per.day$Num[pre]) * log(lambda1hat) + sum(song.per.day$Num[post]) * 
+        log(lambda2hat) + -sum(pre) * lambda1hat - lambda2hat * sum(post)
+}
+</code></pre>
+
+<p>In the code below, I plot the maximized log likelihood for every given $\tau$. You can see that it peaks in the middle of March (March 19th to be specific).</p>
+
+<pre><code class="language-r">summerfest=summerfest.artists[1]
+song.per.day=sqldf(paste0(&quot;Select Day, Count(Artist) as Num
+                    From playlist
+                    Where Artist='&quot;,summerfest,&quot;'
+                    Group By Day
+                    Order by Day&quot;))
+song.per.day=merge(plays.per.day[,1,drop=FALSE],song.per.day,all.x=TRUE)
+song.per.day$Num[is.na(song.per.day$Num)]=0
+
+dts=seq(mdy(01012013),mdy(06222013),by=&quot;1 day&quot;)
+loglikes=sapply(dts,log.like.known)
+tauhat=dts[which.max(loglikes)]
+qplot(dts,loglikes)+geom_vline(xintercept=as.numeric(tauhat),lty=2)+
+  labs(x=&quot;Date&quot;,y=&quot;Log Likelihood&quot;)
+</code></pre>
+
+<p><img src="/post/2013-08-27-when-did-cd1025-book-summerfest-artists/MattAndKimTauLike.png" alt="plot of chunk MattAndKimTauLike" /></p>
+
+<p>Combining this information with the previous plot, we can visualize our break point model. First I recalculate the $\lambda$s now that the $\hat{\tau}$ is known. Then I plot the fitted model on the previous plot.</p>
+
+<pre><code class="language-r">pre=song.per.day$Day&lt;=tauhat
+post=song.per.day$Day&gt;tauhat &amp; song.per.day$Day&lt;mdy(&quot;6/24/13&quot;)
+lambda1hat=sum(song.per.day$Num[pre])/sum(pre)
+lambda2hat=sum(song.per.day$Num[post])/sum(post)
+seg.dat=data.frame(Day=c(mdy(01012013),tauhat,tauhat,mdy(06232013)),
+                   Num=c(lambda1hat,lambda1hat,lambda2hat,lambda2hat))
+plot.plays(1)+geom_path(data=seg.dat,aes(colour=&quot;Changepoint&quot;),lty=3,size=2)
+</code></pre>
+
+<p><img src="/post/2013-08-27-when-did-cd1025-book-summerfest-artists/MattAndKimPlaysFitted.png" alt="plot of chunk MattAndKimPlaysFitted" /></p>
+
+<p>The changepoint model seems to fit the data pretty well. You can see that the average plays per day before March 19th was about 0.75, and it jumped up to 3.25 after March 19th. I think this is fairly strong evidence that CD1025 booked Matt and Kim around then and increased their exposure.</p>
+
+<p>Below, I have done the same with the other headliners. Plays for Cold War Kids have increased gradually, possibly because they recently released an album. The plays for Ra Ra Riot and Smith Westerns, on the other hand, increased quite dramatically. Based on this, I think we can make pretty good guesses of when the headliners were booked, with the possible exception of Cold War Kids.</p>
+
+<pre><code class="language-r">plot.plays.change(2)
+</code></pre>
+
+<p><img src="/post/2013-08-27-when-did-cd1025-book-summerfest-artists/ColdwarKidsPlaysFitted.png" alt="plot of chunk ColdwarKidsPlaysFitted" /></p>
+
+<pre><code class="language-r">plot.plays.change(3)
+</code></pre>
+
+<p><img src="/post/2013-08-27-when-did-cd1025-book-summerfest-artists/RaRaRiotPlaysFitted.png" alt="plot of chunk RaRaRiotPlaysFitted" /></p>
+
+<pre><code class="language-r">plot.plays.change(4)
+</code></pre>
+
+<p><img src="/post/2013-08-27-when-did-cd1025-book-summerfest-artists/SmithWesternsPlaysFitted.png" alt="plot of chunk SmithWesternsPlaysFitted" /></p>
 
     </div>
 
@@ -576,6 +700,9 @@
 
     
     
+    
+    <script src="/js/mathjax-config.js"></script>
+    
 
     
     
@@ -594,6 +721,8 @@
       
 
       
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
       
     
 
