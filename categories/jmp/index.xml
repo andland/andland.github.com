@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JMP on Statistically Significant</title>
+    <link>/categories/jmp/</link>
+    <description>Recent content in JMP on Statistically Significant</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Mar 2011 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="/categories/jmp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Using JMP to Create a Map</title>
+      <link>/2011/03/10/using-jmp-to-create-a-map/</link>
+      <pubDate>Thu, 10 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>/2011/03/10/using-jmp-to-create-a-map/</guid>
+      <description>
+&lt;div class=&#39;post&#39;&gt;
+I am a big fan of SAS&#39;s JMP software. It is the first statistical program I learned and I really like how the emphasize visualization. In their most recent update, JMP 9 now has the ability to create maps. I have been itching to test this out for a little while and I came across a &lt;a href=&#34;http://blog.cgpgrey.com/how-many-americans-have-a-passport-the-percentages-state-by-state/&#34;&gt;map on the internet &lt;/a&gt;that I thought would be a good test. It is the percentage of the population of each state that has a passport.&lt;br /&gt;&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;http://andrewsullivan.theatlantic.com/.a/6a00d83451c45669e2014e868f74e0970d-550wi&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; height=&#34;353&#34; src=&#34;http://andrewsullivan.theatlantic.com/.a/6a00d83451c45669e2014e868f74e0970d-550wi&#34; width=&#34;400&#34; /&gt;&amp;nbsp;&lt;/a&gt;&lt;/div&gt;&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;br /&gt;&lt;/div&gt;&lt;br /&gt;Luckily, the website has the source data so I &#34;jumped&#34; right in. It was really easy.&lt;br /&gt;&lt;ol&gt;&lt;li&gt;Copy and paste the data into JMP.&amp;nbsp;&lt;/li&gt;&lt;li&gt;Open the Graph Builder under the Graph menu.&amp;nbsp;&lt;/li&gt;&lt;li&gt;Drag the State field into the shape area on the lower left corner.&lt;/li&gt;&lt;/ol&gt;&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;https://lh4.googleusercontent.com/-lfAtOpUGw0w/TXltfam1YpI/AAAAAAAAFrc/9Prld6kfodc/s1600/JMPMAP1.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; height=&#34;404&#34; src=&#34;https://lh4.googleusercontent.com/-lfAtOpUGw0w/TXltfam1YpI/AAAAAAAAFrc/9Prld6kfodc/s640/JMPMAP1.png&#34; width=&#34;640&#34; /&gt;&lt;/a&gt;&lt;/div&gt;You can see the outline of the USA in the map. JMP recognizes that the state field is filled with US state names, so it knows to open the shapefile of the US states.&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; 4. Drag the Population with Passport field onto the main map. You can also drag it into the Color area.&lt;br /&gt;&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;https://lh6.googleusercontent.com/-DPzzTB6dRYc/TXlvrZUn45I/AAAAAAAAFrg/8JoGc11lp5Y/s1600/JMPMAP2.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; height=&#34;377&#34; src=&#34;https://lh6.googleusercontent.com/-DPzzTB6dRYc/TXlvrZUn45I/AAAAAAAAFrg/8JoGc11lp5Y/s640/JMPMAP2.png&#34; width=&#34;640&#34; /&gt;&lt;/a&gt;&lt;/div&gt;&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; 5. Right click on the color and select &#34;Gradient...&#34; to customize the colors as you like. I changed it to &#34;White to Blue&#34; and checked the &#34;Reverse Colors&#34; check box to match the original map.&lt;br /&gt;&lt;br /&gt;Below is the final result. Very quick and easy with a pretty result.&lt;br /&gt;&lt;div class=&#34;separator&#34; style=&#34;clear: both; text-align: center;&#34;&gt;&lt;a href=&#34;https://lh3.googleusercontent.com/-uahR9PsA2D4/TXlvrybSM0I/AAAAAAAAFrk/FB-iMviw_oA/s1600/JMPMAP3.png&#34; imageanchor=&#34;1&#34; style=&#34;margin-left: 1em; margin-right: 1em;&#34;&gt;&lt;img border=&#34;0&#34; src=&#34;https://lh3.googleusercontent.com/-uahR9PsA2D4/TXlvrybSM0I/AAAAAAAAFrk/FB-iMviw_oA/s1600/JMPMAP3.png&#34; /&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;div class=&#39;comments&#39;&gt;
+&lt;div class=&#39;comment&#39;&gt;
+&lt;div class=&#39;author&#39;&gt;Xan Gregg&lt;/div&gt;
+&lt;div class=&#39;content&#39;&gt;
+Nice work. You might try the reverse the labels instead of the colors -- I usually like the bigger numbers to be at the top of the legend list. (I also like bigger numbers to be associated with darker colors, but I realize you&amp;#39;re trying to duplicate that feature of the original.)&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>photography on Statistically Significant</title>
+    <link>/categories/photography/</link>
+    <description>Recent content in photography on Statistically Significant</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 24 Dec 2014 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="/categories/photography/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Time Stacking and Time Slicing in R</title>
+      <link>/2014/12/24/time-stacking-and-time-slicing-in-r/</link>
+      <pubDate>Wed, 24 Dec 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/2014/12/24/time-stacking-and-time-slicing-in-r/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Time-lapse_photography&#34; target=&#34;_blank&#34;&gt;Time lapses&lt;/a&gt; are a fun way to quickly show a long period of time. They typically involve setting up your camera on a tripod and taking photos at a regular interval, like every 5 seconds. After all the photos have been taken, they are combined into a movie at a much faster rate, for example 30 frames per second.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://500px.com/blog/1051/tutorial-time-stack&#34; target=&#34;_blank&#34;&gt;Time stacking&lt;/a&gt; is a way to combine all the photos into a single photo, instead of a movie. This is a common method to make &lt;a href=&#34;http://en.wikipedia.org/wiki/Star_trail&#34; target=&#34;_blank&#34;&gt;star trails&lt;/a&gt;, and &lt;a href=&#34;https://www.flickr.com/photos/matt_molloy/&#34; target=&#34;_blank&#34;&gt;Matt Molloy&lt;/a&gt; has recently been experimenting with it in many different settings. There are many possible ways to achieve a time stack, but the most common way is to combine the photos with a &lt;a href=&#34;http://en.wikipedia.org/wiki/Blend_modes#Lighten_Only&#34; target=&#34;_blank&#34;&gt;lighten layer blend&lt;/a&gt;. For every pixel in the final image, the combined photo will use the corresponding pixel from the photo that was the brightest in all of the photos. This gives the desired result of motion of the stars or clouds in a scene.&lt;/p&gt;
+
+&lt;p&gt;Another way to combine the photos is through time slicing (see, for example, &lt;a href=&#34;https://www.flickr.com/photos/matt_molloy/15619271557/&#34; target=&#34;_blank&#34;&gt;this photo&lt;/a&gt;). In time slicing, the final combined image will contain a &amp;ldquo;slice&amp;rdquo; from each of the original photos. Time slices can go left-to-right, right-to-left, top-to-bottom, or bottom-to-top. For example, a time slice that goes from left to right will use vertical slices of the pixels. If you took 100 photos for your time lapse, each of which being 1000 pixels wide, the left-most 10 vertical  pixel slices of the final image would contain the corresponding pixels from the first photo, the 11th through 20th vertical  pixel slices would contain the corresponding pixels from the second photo, and so on. Different directions will produce different effects.&lt;/p&gt;
+
+&lt;p&gt;There is free software available to do lighten layer blending of two photos, but I could not find any to automatically do it for a large number of photos. Similarly for the time slice, it is easy enough to manually slice a few photos, but not hundreds of photos. Therefore, I wrote a couple of scripts in &lt;a href=&#34;http://www.r-project.org/&#34; target=&#34;_blank&#34;&gt;R&lt;/a&gt; that would do this automatically. A gist of the scripts to create a time stack script and a time slice is &lt;a href=&#34;https://gist.github.com/andland/efe66240184328f07429&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. They both require you to give the directory containing the JPEG photos and the time slice script let&amp;rsquo;s you enter the direction you would like it to go.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/KnZQIeHPOYI&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To try this out on my own photos, I used the time lapse I had created of &lt;a href=&#34;https://www.youtube.com/watch?v=KnZQIeHPOYI&#34; target=&#34;_blank&#34;&gt;a sunset&lt;/a&gt; (movie created with &lt;a href=&#34;https://www.ffmpeg.org/&#34; target=&#34;_blank&#34;&gt;FFmpeg&lt;/a&gt;), which consisted of 225 photos taken over 20 minutes. The source material isn&amp;rsquo;t that great (the photos were out of focus), but you can still see the effects.&lt;/p&gt;
+
+&lt;p&gt;The following picture is a time stack.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/TimeStack/TimeStack.JPG&#34; alt=&#34;Time Stack&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The following four pictures are the time slices with different directions.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/TimeStack/TimeSlice-E.JPG&#34; alt=&#34;Time Slice Left-to-Right&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/TimeStack/TimeSlice-W.JPG&#34; alt=&#34;Time Slice Right-to-Left&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/TimeStack/TimeSlice-N.JPG&#34; alt=&#34;Time Slice Bottom-to-Top&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/TimeStack/TimeSlice-S.JPG&#34; alt=&#34;Time Slice Top-to-Bottom&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

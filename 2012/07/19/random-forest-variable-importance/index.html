@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.3.1">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Andrew J. Landgraf">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Random forests ™ are great. They are one of the best &#34;black-box&#34; supervised learning methods. If you have lots of data and lots of predictor variables, you can do worse than random forests. They can deal with messy, real data. If there are lots of extraneous predictors, it has no problem. It automatically does a good job of finding interactions as well. There are no assumptions that the response has a linear (or even smooth) relationship with the predictors.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2012/07/19/random-forest-variable-importance/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#4caf50">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.e0d2efbe79ed0cff78216d15b0b66338.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2012/07/19/random-forest-variable-importance/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@andland">
+  <meta property="twitter:creator" content="@andland">
+  
+  <meta property="og:site_name" content="Statistically Significant">
+  <meta property="og:url" content="/2012/07/19/random-forest-variable-importance/">
+  <meta property="og:title" content="Random Forest Variable Importance | Statistically Significant">
+  <meta property="og:description" content="Random forests ™ are great. They are one of the best &#34;black-box&#34; supervised learning methods. If you have lots of data and lots of predictor variables, you can do worse than random forests. They can deal with messy, real data. If there are lots of extraneous predictors, it has no problem. It automatically does a good job of finding interactions as well. There are no assumptions that the response has a linear (or even smooth) relationship with the predictors."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2012-07-19T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2012-07-19T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Random Forest Variable Importance | Statistically Significant</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Statistically Significant</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Random Forest Variable Importance</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2012-07-19 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2012-07-19 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jul 19, 2012</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/2012/07/19/random-forest-variable-importance/#disqus_thread"></a>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/statistics/">statistics</a>, <a href="/categories/random-forest/">Random forest</a>, <a href="/categories/r/">R</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Random%20Forest%20Variable%20Importance&amp;url=%2f2012%2f07%2f19%2frandom-forest-variable-importance%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2f2012%2f07%2f19%2frandom-forest-variable-importance%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2f2012%2f07%2f19%2frandom-forest-variable-importance%2f&amp;title=Random%20Forest%20Variable%20Importance"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2f2012%2f07%2f19%2frandom-forest-variable-importance%2f&amp;title=Random%20Forest%20Variable%20Importance"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Random%20Forest%20Variable%20Importance&amp;body=%2f2012%2f07%2f19%2frandom-forest-variable-importance%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<div class='post'>
+<a href="http://en.wikipedia.org/wiki/Random_forest">Random</a> <a href="http://www.stat.berkeley.edu/%7Ebreiman/RandomForests/">forests</a> ™ are great. They are one of the best "black-box" supervised learning methods. If you have lots of data and lots of predictor variables, you can do worse than random forests. They can deal with messy, real data. If there are lots of extraneous predictors, it has no problem. It automatically does a good job of finding interactions as well. There are no assumptions that the response has a linear (or even smooth) relationship with the predictors.<br /><br />As cited in the Wikipedia article, they do lack some interpretability. But what they lack in interpretation, they more than make up for in prediction power, which I believe is much more important than interpretation in most cases. Even though you cannot easily tell how one variable affects the prediction, you can easily create a <i>partial dependence plot</i> which shows how the response will change as you change the predictor. You can also do this for two variables at once to see the interaction of the two.<br /><br />Also helping in the interpretation is that they can output a list of predictor variables that they believe to be important in predicting the outcome. If nothing else, you can subset the data to only include the most "important" variables, and use that with another model. The randomForest package in R has two measures of importance. <a href="http://rss.acs.unt.edu/Rdoc/library/randomForest/html/importance.html">One </a>is "total decrease in node impurities from splitting on the variable, averaged over all trees." I do not know much about this one, and will not talk about it further. The other is based on a <a href="http://en.wikipedia.org/wiki/Resampling_%28statistics%29#Permutation_tests">permutation test</a>. The idea is that if the variable is not important (the null hypothesis), then rearranging the values of that variable will not degrade prediction accuracy. Random forests use out-of-bag (OOB) samples to measure prediction accuracy.<br /><br />In my experience, it does a pretty good job of finding the most important predictors, but it has issues with correlated predictors. For example, I was working on a problem where I was predicting the price that electricity trades. One feature that I knew would be very important was the amount of electricity being used at that same time. But I thought there might also be a relationship between price and the electricity being used a few hours before and after. When I ran the random forest with these variables, the electricity used 1 hour after was found to be more important than the electricity used at the same time. When including the 1 hour after electricity use instead of the current hour electricity use, the cross validation (CV) error increased. Using both did not significantly change the CV error compared to using just current hour. Because the electricity used at the current hour and the hour after are very correlated, it had trouble telling which one was more important. In truth, given the electricity use at the current hour, the electricity use at the hour after did not improve the predictive accuracy.<br /><br />Why does the importance measure give more weight correlated predictors? <a href="http://www.biomedcentral.com/1471-2105/9/307/">Strobl et al.</a> give some intuition behind what is happening and propose a solution. Basically, the permutation test is ill-posed. The permutation test is testing that the variable is independent of the response as well as all other predictors. Since the correlated predictors are obviously not independent, we get high importance scores. They propose a permutation test where you condition on the correlated predictors. This is a little tricky when the correlated predictors are continuous, but you can read the paper for more details.<br /><br />Another way to think of it is that, since each split only considers a subset of the possible variables, a variable that is correlated with an "important" variable may be considered without the "important" variable. This would cause the correlated variable to be selected for the split. The correlated value does hold some predictive value, but only because of the truly important variable, so it is understandable why this procedure would consider it important.<br /><br />I ran a simulation experiment (similar to the one in the paper) to demonstrate the issue. I simulated 5 predictor variables. Only the first one is related to the response, but the second one has a correlation of about 0.7 with the first one. Luckily, Strobl et al. included their version of importance in the package <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">party</span> in <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">R</span>. I compare variable importance from the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">randomForest </span>package and the importance with and without taking correlated predictors into account from the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">party<span style="font-family: inherit;"> </span></span><span style="font-family: inherit;">pac</span>kage.<br /><br /><pre class="brush: r"># simulate the data<br />x1=rnorm(1000)<br />x2=rnorm(1000,x1,1)<br />y=2*x1+rnorm(1000,0,.5)<br />df=data.frame(y,x1,x2,x3=rnorm(1000),x4=rnorm(1000),x5=rnorm(1000))<br /><br /># run the randomForest implementation<br />library(randomForest)<br />rf1 &lt;- randomForest(y~., data=df, mtry=2, ntree=50, importance=TRUE)<br />importance(rf1,type=1)<br /><br /># run the party implementation<br />library(party)<br />cf1 &lt;- cforest(y~.,data=df,control=cforest_unbiased(mtry=2,ntree=50))<br />varimp(cf1)<br />varimp(cf1,conditional=TRUE)<br /></pre><br />For the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">randomForest</span>, the ratio of importance of the the first and second variable is 4.53. For <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">party</span> without accounting for correlation it is 7.35. And accounting for correlation, it is 369.5. The higher ratios are better because it means that the importance of the first variable is more prominent. party's implementation is clearly doing the job.<br /><br />There is a downside. It takes much longer to calculate importance with correlated predictors than without. For the party package in this example, it took 0.39 seconds to run without and 204.34 seconds with. I could not even run the correlated importance on the electricity price example. There might be a research opportunity to get a quicker approximation.<br /><br />Possibly up next: confidence limits for random forest predictions.</div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Abhijeet Patil</div>
+<div class='content'>
+hi,m new to random forest.. i ve some doubts..<br />1)&quot;we need to choose m number of variables randomly for each node..&quot;-can u pleas explain it..<br />OR<br />2)&quot;take 1 bootstrap sample,choose some variables and create a decision tree&quot;-is it correct??<br /></div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Could you tell me what the numbers mean when ctree and randonForest return variable importance numbers please? I can get the output but I don&#39;t know how to interpret them.<br /><br />Than you very much.</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+HI Andrew, When i tried to calculate the variable importance, I get the error <br />&quot;Error in model.matrix.default(as.formula(f), data = blocks) : <br />  allocMatrix: too many elements specified&quot;<br /><br />I&#39;m not sure how to deal with it because I have 2 factor levels which I&#39;m predicting with 23 continuous variable predictors (about 2200 data points. I know it&#39;s a lot to work with, but not sure how to get the correct VarImp values with this large data set.<br /><br />I tried increasing the threshold, but it didn&#39;t help. fit.varimp=varimp(fit.cf,threshold=0.8,conditional=TRUE)<br /><br />Do you have any suggestions? Thanks.</div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew Landgraf</div>
+<div class='content'>
+Unfortunately, I didn&#39;t set the seed. #nexttime</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+you should provide the seed to reproduce your example</div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew</div>
+<div class='content'>
+It should be able to give you a solution. I have no idea what ramifications this would have on accuracy or variable importance.</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+I have microarray data on 30 entries and thought of using RF to identify important response genes. I understand that this is a N&lt;&lt;p type of problems, but will &#39;party&#39; be able to come up with a solution?</div>
+</div>
+<div class='comment'>
+<div class='author'>Andrew</div>
+<div class='content'>
+The simple answer is using the partialPlot function in the randomForest package for R (http://rgm2.lab.nig.ac.jp/RGM2/func.php?rd_id=randomForest:partialPlot). <br /><br />What it is doing isn&#39;t all that complicated. Say you want a partial dependence plot for the variable X_1. For each value of X_1=x that you want to plot, you take the average of the prediction with X_1=x and the other explanatory variables equal to the n values that they are in the data set. You are trying to average out the other variables.</div>
+</div>
+<div class='comment'>
+<div class='author'>nanounanue</div>
+<div class='content'>
+Great explanation!<br /><br />I have a question for you: In your text you said:<br /><br />&quot;&quot;&quot;<br /> ... Even though you cannot easily tell how one variable affects the prediction, you can easily create a partial dependence plot which shows how the response will change as you change the predictor. You can also do this for two variables at once to see the interaction of the two.<br />&quot;&quot;&quot;<br /><br />Could you provide, please, an example of how build the partial dependence plot?<br /><br /><br />Thank you for the post and thanks in advance</div>
+</div>
+<div class='comment'>
+<div class='author'>Anonymous</div>
+<div class='content'>
+Great post!  Thank you.</div>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu55984dfb8f2011d19787822cabaad933_1435681_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Andrew J. Landgraf</a></h5>
+      <h6 class="card-subtitle">Data Scientist</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://www.linkedin.com/in/andrewjlandgraf/" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://scholar.google.co.uk/citations?user=B5V0hz4AAAAJ" target="_blank" rel="noopener">
+              <i class="ai ai-google-scholar"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/andland" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "andland" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+    <script id="dsq-count-scr" src="//andland.disqus.com/count.js" async></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.9ef1b53ee2bde6c7f33b150c6ba4d452.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

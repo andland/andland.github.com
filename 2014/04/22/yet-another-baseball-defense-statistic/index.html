@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.3.1">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Andrew J. Landgraf">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Fangraphs recently published an interesting dataset that measures defensive efficiency of fielders. For each player, the Inside Edge dataset breaks their opportunities to make plays into five categories, ranging from almost impossible to routine. It also records the proportion of times that the player successfully made the play. With this data, we can see how successful each player is for each type of play. I wanted to think of a way to combine these five proportions into one fielding metric.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2014/04/22/yet-another-baseball-defense-statistic/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#4caf50">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.e0d2efbe79ed0cff78216d15b0b66338.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2014/04/22/yet-another-baseball-defense-statistic/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@andland">
+  <meta property="twitter:creator" content="@andland">
+  
+  <meta property="og:site_name" content="Statistically Significant">
+  <meta property="og:url" content="/2014/04/22/yet-another-baseball-defense-statistic/">
+  <meta property="og:title" content="Yet Another Baseball Defense Statistic | Statistically Significant">
+  <meta property="og:description" content="Fangraphs recently published an interesting dataset that measures defensive efficiency of fielders. For each player, the Inside Edge dataset breaks their opportunities to make plays into five categories, ranging from almost impossible to routine. It also records the proportion of times that the player successfully made the play. With this data, we can see how successful each player is for each type of play. I wanted to think of a way to combine these five proportions into one fielding metric."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2014-04-22T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2014-04-22T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Yet Another Baseball Defense Statistic | Statistically Significant</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Statistically Significant</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Yet Another Baseball Defense Statistic</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2014-04-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2014-04-22 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  <span itemprop="author name" itemtype="http://schema.org/Person"><a href="/authors/admin/">Andrew J. Landgraf</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Apr 22, 2014</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/2014/04/22/yet-another-baseball-defense-statistic/#disqus_thread"></a>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/statistics/">statistics</a>, <a href="/categories/data/">data</a>, <a href="/categories/baseball/">baseball</a>, <a href="/categories/r/">R</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Yet%20Another%20Baseball%20Defense%20Statistic&amp;url=%2f2014%2f04%2f22%2fyet-another-baseball-defense-statistic%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2f2014%2f04%2f22%2fyet-another-baseball-defense-statistic%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2f2014%2f04%2f22%2fyet-another-baseball-defense-statistic%2f&amp;title=Yet%20Another%20Baseball%20Defense%20Statistic"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2f2014%2f04%2f22%2fyet-another-baseball-defense-statistic%2f&amp;title=Yet%20Another%20Baseball%20Defense%20Statistic"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Yet%20Another%20Baseball%20Defense%20Statistic&amp;body=%2f2014%2f04%2f22%2fyet-another-baseball-defense-statistic%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><a href="http://www.fangraphs.com" target="_blank">Fangraphs</a> recently published an interesting dataset that measures defensive efficiency of fielders. For each player, the <a href="http://www.fangraphs.com/blogs/inside-edge-fielding-data/" target="_blank">Inside Edge</a> dataset breaks their opportunities to make plays into five categories, ranging from almost impossible to routine. It also records the proportion of times that the player successfully made the play. With this data, we can see how successful each player is for each type of play. I wanted to think of a way to combine these five proportions into one fielding metric. From here on, I will assume that there is no error in categorizing a play as easy or hard and that there is no bias in the categorizations.</p>
+
+<h3 id="model">Model</h3>
+
+<p>The model I will build is motivated by <a href="http://en.wikipedia.org/wiki/Ordered_logit" target="_blank">ordinal regression</a>. If we only were concerned with the success rate in one of the categories, we could use standard logistic regression, and the probability that player $i$ successfully made a play would be assumed to be $\sigma(\theta_i)$, where $\sigma()$ is the <a href="https://en.wikipedia.org/wiki/Logistic_function" target="_blank">logistic function</a>. Using our prior knowledge that plays categorized as easy should have a higher success rate than plays categorized as difficult, I would like to generalize this.</p>
+
+<p>Say there are only two categories: easy and hard. We could model the probability that player $i$ successfully made an hard play as $\sigma(\theta_i)$ and the probability that he made an easy play as $\sigma(\theta_i+\gamma)$. Here, we would assume that $\gamma$ is the same for all players. This assumption implies that if player $i$ is better than player $j$ at easy plays, he will also be better at hard plays. This is a reasonable assumption, but maybe not true in all cases.</p>
+
+<p>Since we have five different categories of difficulty, we can generalize this by having $\gamma_k, k=1,\ldots,4$. Again, these $\gamma_k$&rsquo;s would be the same for everyone. A picture of what this looks like for shortstops is below. In this model, every player will effectively be shifting the curve either left or right. A positive $\theta_i$ means the player is better than average and cause the curve to shift left and vice versa for negative $\theta_i$.</p>
+
+<p><img src="/img/InsideEdge/LogitOrdered.png" alt="Logit Ordered" /></p>
+
+<p>I modeled this as a multi-level mixed effects model, with the players being random effects and the $\gamma_k$&rsquo;s being fixed. Technically, I should optimize subject to the condition that the $\gamma_k$&rsquo;s are increasing, but the unconstrained optimization always yields increasing $\gamma_k$&rsquo;s because there is a big difference between success rate in the categories. I used combined data from 2012 and 2013 seasons and included all players with at least one success and one failure. I modeled each position separately. Modeling player effects as random, there is a fair amount of regression to the mean built in. In this sense, I am more trying to estimate the true ability of the player, rather than measuring what he did during the two years. This is an important distinction, which may differ from other defensive statistics.</p>
+
+<h3 id="model-fit">Model fit</h3>
+
+<p>Below is a summary of the results of the model for shortstops. I am only plotting the players with the at least 800 innings, for readability. A bonus of modeling the data like this is that we get standard error estimates as a result. I plotted the estimated effect of each player along with +/- 2 standard errors. We can be fairly certain that the effects for the top few shortstops is greater than 0 since their confidence intervals do not include 0. The same is true for the bottom few. Images for the other positions can be found <a href="https://github.com/andland/andland.github.com/tree/master/images/InsideEdge" target="_blank">here</a>.</p>
+
+<p><img src="/img/InsideEdge/SSlist.png" alt="Results for Shortstops" /></p>
+
+<p>The results seem to make sense for the most part. Simmons and Tulowitzki have reputations as being strong defenders and Derek Jeter has a reputation as a poor defender.</p>
+
+<p>Further, I can validate this data by comparing it to other defensive metrics. One that is readily available on Fangraphs is UZR per 150 games. For each position, I took the correlation of my estimated effect with UZR per 150 games, weighted by the number of innings played. Pitchers and catchers do not have UZR&rsquo;s so I cannot compare them. The correlations, which are in the plot below, range from about 0.2 to 0.65.</p>
+
+<p><img src="/img/InsideEdge/CorrelationWithUZR.png" alt="Correlation with UZR" /></p>
+
+<h3 id="interpreting-parameters">Interpreting parameters</h3>
+
+<p>In order to make this fielding metric more useful, I would like to convert the parameters to something more interpretable. One option which makes a lot of sense is &ldquo;plays made above/below average&rdquo;. Given an estimated $\theta_i$ for a player, we can calculate the probability that he would make a play in each of the five categories. We can then compare those probabilities to the probability an average player would make a play in each of the categories, which would be fit with $\theta=0$. Finally, we can weight these differences in probabilities by the relative rate that plays of various difficulties occur.</p>
+
+<p>For example, assuming there are only two categories again, suppose a player has a 0.10 and 0.05 higher probability than average of making hard and easy plays, respectively. Further assume that 75% of all plays are hard and 25% are easy. On a random play, the improvement in probability over an average player of making a play is $.10(.75)+.05(.25)=0.0875$. If a player has an opportunity for 300 plays in an average season, this player would be $300 \times 0.0875=26.25$ plays better than average over a typical season.</p>
+
+<p>I will assume that the number of opportunities to make plays is directly related to the number of innings played. To convert innings to opportunities, I took the median number of opportunities per inning for each position. For example, shortstops had the highest opportunities per inning at 0.40 and catchers had the lowest at 0.08. The plot below shows the distribution of opportunities per inning for each position.</p>
+
+<p><img src="/img/InsideEdge/PlaysPerInning.png" alt="Plays Per Inning by Position" /></p>
+
+<p>We can extend this to the impact on saving runs from being scored as well by assuming each successful play saves $x$ runs. I will not do this for this analysis.</p>
+
+<h3 id="results">Results</h3>
+
+<p><img src="/img/InsideEdge/shiny.png" alt="Shiny app" /></p>
+
+<p>[<strong>Update</strong>: The Shiny app is no longer live, but you can view the resulting estimates in the <a href="https://github.com/andland/InsideEdgeFielding/blob/master/Shiny/InsideEdgeModelResults.csv" target="_blank">Github repository</a>.]</p>
+
+<p>Finally, I put together a <a href="http://www.rstudio.com/shiny/" target="_blank">Shiny</a> app to display <a href="https://github.com/andland/InsideEdgeFielding/blob/master/Shiny/InsideEdgeModelResults.csv" target="_blank">the results</a>. You can search by team, position, and innings played. A team of &lsquo;- - -&rsquo; means the player played for multiple teams over this period. You can also choose to display the results as a rate statistic (extra plays made per season) or a count statistic (extra plays made over the two seasons). To get a seasonal number, I assume position players played 150 games with 8.5 innings in each game. For pitchers, I assumed that they pitched 30 games, 6 innings each.</p>
+
+<h3 id="conclusions-and-future-work">Conclusions and future work</h3>
+
+<p>I don&rsquo;t know if I will do anything more with this data, but if I could do it again, I may have modeled each year separately instead of combining the two years together. With that, it would have been interesting to model the effect of age by observing how a player&rsquo;s ability to make a play changes from one year to the next. I also think it would be interesting to see how changing positions affects a players efficiency. For example, we could have a $9 \times 9$ matrix of fixed effects that represent the improvement or degradation in ability as a player switches from their main position to another one. Further assumptions would be needed to make sure the $\theta$&rsquo;s are on the same scale for every position.</p>
+
+<p>At the very least, this model and its results can be considered another data point in the analysis of a player&rsquo;s fielding ability. One thing we need to be concerned about is the classification of each play into the difficultness categories. The human eye can be fooled into thinking a routine play is hard just because a fielder dove to make the play, when a superior fielder could have made it look easier.</p>
+
+<h3 id="code">Code</h3>
+
+<p>I have put the R code together to do this analysis in <a href="https://gist.github.com/andland/c6adb69ea365c2580859" target="_blank">a gist</a>. If there is interest, I will put together a repo with all the data as well.</p>
+
+<p><strong>Update</strong>: I have a <a href="https://github.com/andland/InsideEdgeFielding" target="_blank">Github repository</a> with the data, R code for the analysis, the results, and code for the Shiny app. Let me know what you think.</p>
+
+    </div>
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu55984dfb8f2011d19787822cabaad933_1435681_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Andrew J. Landgraf</a></h5>
+      <h6 class="card-subtitle">Data Scientist</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://www.linkedin.com/in/andrewjlandgraf/" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://scholar.google.co.uk/citations?user=B5V0hz4AAAAJ" target="_blank" rel="noopener">
+              <i class="ai ai-google-scholar"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/andland" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "andland" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+    <script id="dsq-count-scr" src="//andland.disqus.com/count.js" async></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.9ef1b53ee2bde6c7f33b150c6ba4d452.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

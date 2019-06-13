@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/about/</loc>
+    <lastmod>2019-06-12T15:42:56-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-06-12T15:42:56-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/authors/admin/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2015/04/08/monitoring-price-fluctuations-of-book-trade-in-values-on-amazon/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/data/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/scrape/</loc>
+    <lastmod>2015-04-08T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2014/12/24/time-stacking-and-time-slicing-in-r/</loc>
+    <lastmod>2014-12-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/photography/</loc>
+    <lastmod>2014-12-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2014/04/22/yet-another-baseball-defense-statistic/</loc>
+    <lastmod>2014-04-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/baseball/</loc>
+    <lastmod>2014-04-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/statistics/</loc>
+    <lastmod>2014-04-22T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2014/03/02/hastie-and-tibshirani-interview-jerome-friedman/</loc>
+    <lastmod>2014-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2013/12/27/top-songs-by-artist-on-cd102.5-in-2013/</loc>
+    <lastmod>2013-12-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/visualization/</loc>
+    <lastmod>2013-12-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/ggplot/</loc>
+    <lastmod>2013-12-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/shiny/</loc>
+    <lastmod>2013-12-27T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/08/27/when-did-cd102.5-book-the-summerfest-artists/</loc>
+    <lastmod>2013-08-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2013/08/20/downloading-and-analyzing-cd1025s-playlist/</loc>
+    <lastmod>2013-08-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/exploratory-data-analysis/</loc>
+    <lastmod>2013-08-20T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/gam/</loc>
+    <lastmod>2013-04-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/04/21/what-is-the-probability-of-a-16-seed-beating-a-1-seed/</loc>
+    <lastmod>2013-04-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/college-basketball/</loc>
+    <lastmod>2013-04-21T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/04/18/easily-access-academic-journals-off-campus-with-a-firefox-bookmark/</loc>
+    <lastmod>2013-04-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/firefox/</loc>
+    <lastmod>2013-04-18T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/productivity/</loc>
+    <lastmod>2013-04-18T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/02/24/copying-data-from-excel-to-r-and-back/</loc>
+    <lastmod>2013-02-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/bayesian/</loc>
+    <lastmod>2013-01-23T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/01/23/text-decryption-using-mcmc/</loc>
+    <lastmod>2013-01-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/optimization/</loc>
+    <lastmod>2013-01-23T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/deep-learning/</loc>
+    <lastmod>2013-01-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/01/14/restricted-boltzmann-machines-in-r/</loc>
+    <lastmod>2013-01-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/collaborative-filtering/</loc>
+    <lastmod>2013-01-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/machine-learning/</loc>
+    <lastmod>2013-01-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/factor-analysis/</loc>
+    <lastmod>2013-01-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2013/01/09/factor-analysis-of-baseballs-hall-of-fame-voters/</loc>
+    <lastmod>2013-01-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/hall-of-fame/</loc>
+    <lastmod>2013-01-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/election/</loc>
+    <lastmod>2012-11-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/polls/</loc>
+    <lastmod>2012-11-05T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2012/11/05/quick-post-about-getting-and-plotting-polls-in-r/</loc>
+    <lastmod>2012-11-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/08/24/finding-the-best-subset-of-a-gam-using-tabu-search-and-visualizing-it-in-r/</loc>
+    <lastmod>2012-08-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/tabu-search/</loc>
+    <lastmod>2012-08-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2012/08/10/a-matrix-factorization-model-for-hitter/pitcher-matchups/</loc>
+    <lastmod>2012-08-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/matrix-factorization/</loc>
+    <lastmod>2012-08-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/libfm/</loc>
+    <lastmod>2012-08-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/matlab/</loc>
+    <lastmod>2012-07-20T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2012/07/20/the-magical-sparse-matrix/</loc>
+    <lastmod>2012-07-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/07/19/random-forest-variable-importance/</loc>
+    <lastmod>2012-07-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/random-forest/</loc>
+    <lastmod>2012-07-19T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2012/06/15/rounding-in-r/</loc>
+    <lastmod>2012-06-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/05/30/space-time-swing-probability-plot-for-ichiro/</loc>
+    <lastmod>2012-05-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/05/25/sending-a-text-in-r/</loc>
+    <lastmod>2012-05-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/05/20/cleveland-indians-attendance/</loc>
+    <lastmod>2012-05-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/05/05/whats-up-with-albert-pujols/</loc>
+    <lastmod>2012-05-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/02/17/visualizing-the-correlations-of-a-matrix/</loc>
+    <lastmod>2012-02-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2012/02/12/unsupervised-image-segmentation-with-spectral-clustering-with-r/</loc>
+    <lastmod>2012-02-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/image-segmentation/</loc>
+    <lastmod>2012-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/spectral-clustering/</loc>
+    <lastmod>2012-02-12T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/jmp/</loc>
+    <lastmod>2011-03-10T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/2011/03/10/using-jmp-to-create-a-map/</loc>
+    <lastmod>2011-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2010/12/31/empirical-bayes-estimation-of-on-base-percentage/</loc>
+    <lastmod>2010-12-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2010/09/21/week-3-nfl-survival-odds/</loc>
+    <lastmod>2010-09-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2010/09/20/week-2-nfl-survival-odds/</loc>
+    <lastmod>2010-09-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2010/09/08/nfl-survival-odds/</loc>
+    <lastmod>2010-09-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2010/08/29/why-we-blog/</loc>
+    <lastmod>2010-08-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/projects/</loc>
+  </url>
+  
+  <url>
+    <loc>/publication_types/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/publication/</loc>
+  </url>
+  
+  <url>
+    <loc>/talk/</loc>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

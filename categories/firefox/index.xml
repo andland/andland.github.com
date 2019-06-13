@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>firefox on Statistically Significant</title>
+    <link>/categories/firefox/</link>
+    <description>Recent content in firefox on Statistically Significant</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 18 Apr 2013 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="/categories/firefox/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Easily Access Academic Journals Off Campus with a Firefox Bookmark</title>
+      <link>/2013/04/18/easily-access-academic-journals-off-campus-with-a-firefox-bookmark/</link>
+      <pubDate>Thu, 18 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>/2013/04/18/easily-access-academic-journals-off-campus-with-a-firefox-bookmark/</guid>
+      <description>
+&lt;div class=&#39;post&#39;&gt;
+As a grad student, I do lots of searches for research related to my own. When I am off campus, a lot of the relevant results are not open access. In that case, I have to log onto my school&#39;s library website and search for the journal or article there. It is quite a hassle. Luckily, I recently noticed that the website is predictably modified after I log into the library. I go to Ohio State University, and before and after logging in the websites will be &lt;span style=&#34;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace;&#34;&gt;http://www.jstor.org/...&lt;/span&gt; and &lt;span style=&#34;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace;&#34;&gt;http://www.jstor.org.proxy.lib.ohio-state.edu/...&lt;/span&gt;, for example. It doesn&#39;t matter which journal or website I am looking at. If OSU has access, it will show up with &lt;span style=&#34;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace;&#34;&gt;.proxy.lib.ohio-state.edu&lt;/span&gt; after the .com/.org/etc. &lt;br /&gt;&lt;br /&gt;So I was able to save myself a few steps by typing that in instead of going through the library&#39;s website. I should also be sure to note that typing this in brings you to an OSU log in screen. Only those with valid access can use this shortcut, but I assume other schools have the same setup.&lt;br /&gt;&lt;br /&gt;This is still more busy work than I would like, so I searched for ways to automatically do this. &lt;a href=&#34;http://lifehacker.com/5731656/how-to-perform-nearly-any-task-from-your-browsers-address-bar&#34;&gt;Lifehacker&lt;/a&gt; has some address bar shortcuts, but nothing that quite works. I came across a&amp;nbsp; Firefox add-on called &lt;a href=&#34;https://addons.mozilla.org/en-us/firefox/addon/url-swap/&#34;&gt;URL Swap&lt;/a&gt; that seems like it could do the trick. However, when setting it up, I happened to find &lt;a href=&#34;http://stackoverflow.com/questions/13212976/automatically-modify-url-in-firefox&#34;&gt;this post&lt;/a&gt; on Stack Overflow. The second answer has exactly what I am looking for, changing &lt;span style=&#34;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace;&#34;&gt;.ExtraPart&lt;/span&gt; to &lt;span style=&#34;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace;&#34;&gt;.proxy.lib.ohio-state.edu&lt;/span&gt;. &lt;br /&gt;&lt;br /&gt;I created a bookmark on my bookmarks toolbar with the javascript:&lt;br /&gt;&lt;blockquote class=&#34;tr_bq&#34;&gt;&lt;span style=&#34;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace;&#34;&gt;javascript:(function(){ var curloc = window.location.toString(); var newloc = curloc.substring(0, curloc.indexOf(&amp;#34;/&amp;#34;, 8)) + &amp;#34;.proxy.lib.ohio-state.edu&amp;#34; + curloc.substring(curloc.indexOf(&amp;#34;/&amp;#34;, 8)); location.href=newloc; })()&lt;/span&gt;&lt;/blockquote&gt;&lt;br /&gt;and it works perfectly. This trick is so useful I wanted to share it to save others some time.&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

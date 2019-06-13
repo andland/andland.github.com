@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.3.1">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Andrew J. Landgraf">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Matrix factorization has been proven to be one of the best ways to do collaborative filtering. The most common example of collaborative filtering is to predict how much a viewer will like a movie. The power of matrix factorization was a key development of the Netflix Prize (see http://www2.research.att.com/~volinsky/papers/ieeecomputer.pdf).
+Using the movie rating example, the idea is that there are some underlying features of the movie and underlying attributes of the user that interact to determine if the user will like the movie.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/2012/08/10/a-matrix-factorization-model-for-hitter/pitcher-matchups/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#4caf50">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.e0d2efbe79ed0cff78216d15b0b66338.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/2012/08/10/a-matrix-factorization-model-for-hitter/pitcher-matchups/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@andland">
+  <meta property="twitter:creator" content="@andland">
+  
+  <meta property="og:site_name" content="Statistically Significant">
+  <meta property="og:url" content="/2012/08/10/a-matrix-factorization-model-for-hitter/pitcher-matchups/">
+  <meta property="og:title" content="A Matrix Factorization Model for Hitter/Pitcher Matchups | Statistically Significant">
+  <meta property="og:description" content="Introduction Matrix factorization has been proven to be one of the best ways to do collaborative filtering. The most common example of collaborative filtering is to predict how much a viewer will like a movie. The power of matrix factorization was a key development of the Netflix Prize (see http://www2.research.att.com/~volinsky/papers/ieeecomputer.pdf).
+Using the movie rating example, the idea is that there are some underlying features of the movie and underlying attributes of the user that interact to determine if the user will like the movie."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2012-08-10T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2012-08-10T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>A Matrix Factorization Model for Hitter/Pitcher Matchups | Statistically Significant</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Statistically Significant</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">A Matrix Factorization Model for Hitter/Pitcher Matchups</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2012-08-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2012-08-10 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Aug 10, 2012</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    6 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/2012/08/10/a-matrix-factorization-model-for-hitter/pitcher-matchups/#disqus_thread"></a>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/libfm/">libFM</a>, <a href="/categories/baseball/">baseball</a>, <a href="/categories/collaborative-filtering/">collaborative filtering</a>, <a href="/categories/matrix-factorization/">Matrix Factorization</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=A%20Matrix%20Factorization%20Model%20for%20Hitter%2fPitcher%20Matchups&amp;url=%2f2012%2f08%2f10%2fa-matrix-factorization-model-for-hitter%2fpitcher-matchups%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2f2012%2f08%2f10%2fa-matrix-factorization-model-for-hitter%2fpitcher-matchups%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2f2012%2f08%2f10%2fa-matrix-factorization-model-for-hitter%2fpitcher-matchups%2f&amp;title=A%20Matrix%20Factorization%20Model%20for%20Hitter%2fPitcher%20Matchups"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2f2012%2f08%2f10%2fa-matrix-factorization-model-for-hitter%2fpitcher-matchups%2f&amp;title=A%20Matrix%20Factorization%20Model%20for%20Hitter%2fPitcher%20Matchups"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=A%20Matrix%20Factorization%20Model%20for%20Hitter%2fPitcher%20Matchups&amp;body=%2f2012%2f08%2f10%2fa-matrix-factorization-model-for-hitter%2fpitcher-matchups%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<div class='post'>
+<h3>Introduction </h3>Matrix factorization has been proven to be one of the best ways to do collaborative filtering. The most common example of collaborative filtering is to predict how much a viewer will like a movie. The power of matrix factorization was a key development of the Netflix Prize (see <a href="http://www2.research.att.com/%7Evolinsky/papers/ieeecomputer.pdf">http://www2.research.att.com/~volinsky/papers/ieeecomputer.pdf</a>).<br /><br />Using the movie rating example, the idea is that there are some underlying features of the movie and underlying attributes of the user that interact to determine if the user will like the movie. So if the user typically likes comedies, and the movie is a comedy, these will interact and the user will like the movie. The best part is that in order to determine these features, we do not need to use any background information on the movie or the user. For example, we don't need someone to manually code whether each movie is a comedy or not. Matrix factorization just needs a set of historical ratings, which is usually easily available.<br /><br />Using only a few features, we could probably interpret what each of them mean (comedy, drama, foreign, blockbuster, ...). They found in the Netflix competition that increasing the number of underlying features that make up a user and a movie almost always improved accuracy (they used up to 1500 features). With that many features, they can no longer be interpreted as in the example.<br /><br /><h3>Baseball Data</h3>I find this method interesting, and I wanted to apply it to some real data. One idea I had is predicting whether the result of a pitcher-batter match-up in baseball. Usually in baseball, the analysts cry "small sample size" if someone reports that a pitcher is particularly good/bad versus a batter. In order to get an accurate assessment that does not suffer from random variation, we need 100 or more at bats, which usually takes a few years at least.<br /><br />It seems that matrix factorization might be a natural fit, because we are not predicting the specific interaction of the batter/pitcher. Instead, we are estimating some underlying features of the batter and the pitcher. We can estimate these features from all of the match-ups that the batter and pitcher have been in -- not just the ones against each other.<br /><br />One example of a feature that I hoped to extract is batter and pitcher handedness. It is well known that batters fair poorly against pitchers of the same handedness and do better against pitchers of the opposite handedness. Other examples might relate to whether the pitcher can throw fast and how well the batter does against fast pitches; similarly with breaking balls, etc.<br /><br />In the Netflix competition, each user rates movies on a 1 to 5 star scale, and rates the movie only once. The outcome of a match-up is different as there is no obvious "rating" of the outcome. I used improvement in expected number of runs scored of the outcome of a plate appearance as the "rating" to be predicted (from <a href="http://www.tangotiger.net/RE9902event.html">here</a>). So a single is worth 0.474 runs and an out is worth -0.299 runs. Also, in baseball, there will be many match-ups between the batter and pitcher. I could have averaged the outcomes, but I left the multiple records in the data as is.<br /><br />I used 2010 data and removed all pitchers that were hitting and batters that were pitching. According to my data, there were 65,128 unique batter-pitcher match-ups (with about 173,000 plate appearances). I used 5,000 match-ups as validation, 5,000 as testing, and the remaining as training.<br /><br /><h3>Model Fitting</h3>The first model I used as a baseline just included "biases" for the batter and pitcher, as well as an overall league average bias. In the baseline, there are no factors or interactions. So the result of the match-up between a batter i and pitcher j would be estimated as the overall average bias plus the batter i bias plus the pitcher j bias. In math terms:<br /><br /><a href="http://www.codecogs.com/eqnedit.php?latex=%5Cdpi%7B120%7D%20%5Cmu@plus;b_i@plus;p_j" target="_blank"><img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%5Cmu+b_i+p_j" title="\dpi{120} \mu+b_i+p_j" /></a><br /><br />Higher values for the batter bias mean the batter is better better than average and lower values for the pitcher bias means the pitcher is better than average.<br /><br />So as to not overfit the data, I used L2 regularization on the batter and pitcher biases. For this and future estimation, I used the validation data to determine the best penalty and I used a gradient descent method to solve for the parameters.<br /><br />Adding in the factor interaction, the result of the match-up between a batter i and pitcher j is<br /><br /><a href="http://www.codecogs.com/eqnedit.php?latex=%5Cdpi%7B120%7D%20%5Cmu@plus;b_i@plus;p_j%20@plus;%20%5Cboldsymbol%7Bo%7D_i%5ET%20%5Cboldsymbol%7Bd%7D_j" target="_blank"><img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%5Cmu+b_i+p_j%20+%20%5Cboldsymbol%7Bo%7D_i%5ET%20%5Cboldsymbol%7Bd%7D_j" title="\dpi{120} \mu+b_i+p_j + \boldsymbol{o}_i^T \boldsymbol{d}_j" /></a><br /><br />where <a href="http://www.codecogs.com/eqnedit.php?latex=%5Cdpi%7B120%7D%20%5Cboldsymbol%7Bo%7D_i" target="_blank"><img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%5Cboldsymbol%7Bo%7D_i" title="\dpi{120} \boldsymbol{o}_i" /></a> is a vector of offensive features for batter i and <a href="http://www.codecogs.com/eqnedit.php?latex=%5Cdpi%7B120%7D%20%5Cboldsymbol%7Bd%7D_j" target="_blank"><img src="http://latex.codecogs.com/png.latex?%5Cdpi%7B120%7D%20%5Cboldsymbol%7Bd%7D_j" title="\dpi{120} \boldsymbol{d}_j" /></a> is a set of defensive features for pitcher j. The two vectors must be of the same length which we can determine. Again, I used L2 regularization on the feature vectors.<br /><br /><h3>Results</h3>I fit the matrix factorization model using 0, 1, 2, 5, and 10 features. The model with 0 features corresponds to the baseline model. As stated above, I was hoping to see that handedness would show up as one of the first features.<br /><br />I fit the models with the training set, tuned the regularization parameters with the validation set, and finally I am comparing the models with the test set. Unfortunately, the baseline model performed the best of all and the performance degraded as more features were added. A plot of the test mean squared errors is below. The difference between the models is small, but I believe that is because the regularization parameter is shrinking the factor vectors to 0.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-8doS-OZmBzs/UCUmUQWdo_I/AAAAAAAAHKA/CmE1rs9YYOc/s1600/MatFactTestMSE.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-8doS-OZmBzs/UCUmUQWdo_I/AAAAAAAAHKA/CmE1rs9YYOc/s1600/MatFactTestMSE.png" /></a></div>A further baseline model could have been used -- an overall mean with no biases. The MSE for all but the 10-factor  model were better than this average. So the biases help, but unfortunately the factorization did not.<br /><br />I compared the factor vectors of the pitchers by their handedness and I found no difference between righties and lefties.<br /><br /><h3>Summary</h3>The outcome of this analysis was not what I hoped for, but I still learned something about matrix factorization and its implementation. I think the moral of the story is that it is hard to predict batter-pitcher match-ups, probably because there is a lot of variation in every at bat. Matrix factorization has been successfully applied in situations where the data is much more sparse than this application, so this difference may be a reason for its failure. I plan to try this again with the <a href="http://www.libfm.org/">libFM</a> software to see if I get the same results.<br /><br /><i><b>Update:</b></i><br />I implemented this in libFM and basically got the same results, so I guess I was doing it correctly. If I work on this further, I wonder if adding attributes about the pitcher explicitly would help. I would include an indicator for righty/lefty or maybe home/away.</div>
+
+    </div>
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu55984dfb8f2011d19787822cabaad933_1435681_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Andrew J. Landgraf</a></h5>
+      <h6 class="card-subtitle">Data Scientist</h6>
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://www.linkedin.com/in/andrewjlandgraf/" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://scholar.google.co.uk/citations?user=B5V0hz4AAAAJ" target="_blank" rel="noopener">
+              <i class="ai ai-google-scholar"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/andland" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "andland" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+    <script id="dsq-count-scr" src="//andland.disqus.com/count.js" async></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.9ef1b53ee2bde6c7f33b150c6ba4d452.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

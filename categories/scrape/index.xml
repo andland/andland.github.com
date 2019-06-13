@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>scrape on Statistically Significant</title>
+    <link>/categories/scrape/</link>
+    <description>Recent content in scrape on Statistically Significant</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 Apr 2015 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="/categories/scrape/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Monitoring Price Fluctuations of Book Trade-In Values on Amazon</title>
+      <link>/2015/04/08/monitoring-price-fluctuations-of-book-trade-in-values-on-amazon/</link>
+      <pubDate>Wed, 08 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/2015/04/08/monitoring-price-fluctuations-of-book-trade-in-values-on-amazon/</guid>
+      <description>&lt;p&gt;I am planning to finish school soon and I would like to shed some weight before moving on. I have collected a fair number of books that I will likely never use again and it would be nice to get some money for them. Sites like Amazon and eBay let you sell your book to other customers, but Amazon will also buy some of your books directly (Trade-Ins), saving you the hassle of waiting for a buyer.&lt;/p&gt;
+
+&lt;p&gt;Before selling, I remembered listening to a &lt;a href=&#34;http://www.npr.org/blogs/money/2014/11/10/363103753/textbook-arbitrage-making-money-off-used-books&#34; target=&#34;_blank&#34;&gt;Planet Money episode&lt;/a&gt; about a couple of guys that tried to make money off of buying and selling used textbooks on Amazon. Their strategy was to buy books at the end of a semester when students are itching to get rid of them, and sell them to other students at the beginning of the next semester. To back up their business, they have been scraping Amazon&amp;rsquo;s website for years, keeping track of prices in order to find the optimal times to buy and sell.&lt;/p&gt;
+
+&lt;p&gt;I collected a few books I was willing to part with and set up a scraper in R. I am primarily interested in selling my books to Amazon, so I tracked Amazon&amp;rsquo;s Trade-In prices for these books. This was done fairly easily with Hadley Wickham&amp;rsquo;s package &lt;a href=&#34;https://github.com/hadley/rvest&#34; target=&#34;_blank&#34;&gt;rvest&lt;/a&gt; and the Chrome extension &lt;a href=&#34;http://selectorgadget.com/&#34; target=&#34;_blank&#34;&gt;Selector Gadget&lt;/a&gt;. Selector Gadget tells me that the node I&amp;rsquo;m interested in is &lt;code&gt;#tradeInButton_tradeInValue&lt;/code&gt;. The code to do the scraping is below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(rvest)
+ 
+urls_df = read.csv(&amp;quot;AmazonBookURLs.csv&amp;quot;, stringsAsFactors = FALSE, comment.char = &amp;quot;&amp;quot;)
+load(file = &amp;quot;AmazonBookPrices.RData&amp;quot;)
+price_df_temp = data.frame(Title = urls_df$Title,
+                      Date = Sys.time(),
+                      Price = NA_real_, stringsAsFactors = FALSE)
+for (i in 1:nrow(urls_df)) {
+  tradein_html = urls_df$URL[i] %&amp;gt;% html() %&amp;gt;%
+    html_node(&amp;quot;#tradeInButton_tradeInValue&amp;quot;)
+  if (is.null(tradein_html)) {
+    next
+  }
+  price = tradein_html %&amp;gt;%
+    html_text() %&amp;gt;%
+    gsub(&amp;quot;(^[[:space:]]+\\$|[[:space:]]+$)&amp;quot;, &amp;quot;&amp;quot;, .) %&amp;gt;%
+    as.numeric()
+  price_df_temp$Price[i] = price
+}
+price_df = rbind(price_df, price_df_temp)
+ 
+save(price_df, file = &amp;quot;AmazonBookPrices.RData&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After manually collecting this data for less than a week, I am able to plot the trends for the eight books I am interested in selling. The plot and code are below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(ggplot2); theme_set(theme_bw())
+library(scales)
+ 
+price_df$TitleTrunc = paste0(substring(price_df$TitleTrunc, 1, 30), ifelse(nchar(price_df$Title) &amp;gt; 30, &amp;quot;...&amp;quot;, &amp;quot;&amp;quot;))
+ggplot(price_df, aes(Date, Price)) +
+  geom_step() + geom_point() + facet_wrap(~ TitleTrunc, scales = &amp;quot;free_y&amp;quot;) +
+  scale_y_continuous(labels = dollar) + theme(axis.text.x = element_text(angle = 90, vjust = 0))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;/img/AmazonScrape/prices.png&#34; alt=&#34;Amazon Trade-In Prices&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I am surprised how much the prices fluctuate. I expected them to be constant for the most part, with large changes once a week or less often. Apparently Amazon is doing quite a bit of tweaking to determine optimal price points. I would also guess that $2 is their minimum trade-in price. It looks like I missed out on my best chance to sell &lt;em&gt;A First Course in Stochastic Processes&lt;/em&gt;, but that the price of &lt;em&gt;A Primer on Linear Models&lt;/em&gt; will keep rising forever.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
